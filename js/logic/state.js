@@ -14,157 +14,161 @@ import { getLockedPlayer, todayUTC } from './challenge.js';
 
 // ── Static configuration ──────────────────────────────────────────────────────
 
+// All 18 current AFL clubs. Bucket keys are Club_Decade (no spaces) — see
+// scripts/validate_players.js's CLUB_FIRST_YEAR for which decades each newer
+// club is actually eligible for (West Coast/Brisbane 1987+, Adelaide 1991+,
+// Fremantle 1995+, Port Adelaide 1997+, Gold Coast 2011+, GWS 2012+). The
+// draft wheel (draft.js spinResult) only ever lands on a (club, decade)
+// combo that actually has players in the DB, so listing all 18 here is safe
+// even while most clubs have zero data yet — as more players.json coverage
+// is added, those combos become spinnable automatically with no code change.
 export const TEAMS = [
-  'Lakers','Bulls','Warriors','Celtics','Heat','Spurs','Knicks',
-  'Jazz','Pistons','Magic','Suns','Nuggets','Sixers',
-  'Rockets','Thunder','Bucks','Mavericks','Cavaliers',
-  'Blazers','Nets','Kings','Raptors','Hawks','Hornets','Pacers','Clippers','Timberwolves','Pelicans',
-  'Grizzlies','Wizards',
+  'Carlton', 'Collingwood', 'Essendon', 'Geelong', 'Hawthorn', 'Melbourne',
+  'NorthMelbourne', 'Richmond', 'StKilda', 'WesternBulldogs', 'Sydney',
+  'WestCoast', 'BrisbaneLions', 'Adelaide', 'Fremantle', 'PortAdelaide',
+  'GoldCoast', 'GWS',
 ];
 
-export const DECADES = ['1960s','1970s','1980s','1990s','2000s','2010s','2020s'];
+export const DECADES = ['1970s', '1980s', '1990s', '2000s', '2010s', '2020s'];
 
-export const POSITIONS     = ['PG','SG','SF','PF','C'];
+// Defence -> forward axis. See docs/afl-port-plan.md §3.2.
+export const POSITIONS     = ['KD', 'HB', 'MID', 'RUC', 'KF', 'SF'];
 export const ALL_POSITIONS  = [...POSITIONS]; // starters-only format — no bench
-export const TOTAL_ROUNDS   = 5;
+export const TOTAL_ROUNDS   = 6;
 
 /**
- * Snake draft pick order for 1v1 (10 total picks, 5 per player).
- * Pattern: 1-2-2-1-1-2-2-1-1-2
+ * Snake draft pick order for 1v1 (12 total picks, 6 per player).
+ * Pattern: 1-2-2-1-1-2-2-1-1-2-2-1 — extends the same alternating-round
+ * snake the NBA original used, just carried out to a 6th round.
  * Indexed by overall pick number (0 = first pick).
- * Eliminates the structural first-pick advantage of strict alternation.
  */
-export const SNAKE_ORDER = [1, 2, 2, 1, 1, 2, 2, 1, 1, 2];
+export const SNAKE_ORDER = [1, 2, 2, 1, 1, 2, 2, 1, 1, 2, 2, 1];
 
 export const ERA_DESC = {
-  '1960s': 'Chamberlain · West · Russell',
-  '1970s': 'Kareem · Erving · Frazier',
-  '1980s': 'Bird · Magic · Jordan',
-  '1990s': 'Jordan · Shaq · Barkley',
-  '2000s': 'Kobe · AI · T-Mac',
-  '2010s': 'LeBron · Curry · Durant',
-  '2020s': 'Jokic · LeBron · Booker',
+  '1970s': 'Jesaulenko · Hudson · Hart',
+  '1980s': 'Matthews · Lockett · Krakouer',
+  '1990s': 'Carey · Ablett · Voss',
+  '2000s': 'Judd · Cousins · Franklin',
+  '2010s': 'Dangerfield · Martin · Ablett Jr',
+  '2020s': 'Petracca · Neale · Cripps',
 };
 
+// Approximate guernsey colors — good enough for badges/accents now;
+// refine during Phase 7 branding work (docs/afl-port-plan.md).
 export const TEAM_COLORS = {
-  Lakers:     { bg: '#552583', accent: '#FDB927' },
-  Bulls:      { bg: '#CE1141', accent: '#ffffff' },
-  Warriors:   { bg: '#1D428A', accent: '#FFC72C' },
-  Celtics:    { bg: '#007A33', accent: '#ffffff' },
-  Heat:       { bg: '#98002E', accent: '#F9A01B' },
-  Spurs:      { bg: '#C4CED4', accent: '#000000' },
-  Knicks:     { bg: '#006BB6', accent: '#F58426' },
-  Jazz:       { bg: '#002B5C', accent: '#F9A01B' },
-  Pistons:    { bg: '#C8102E', accent: '#1D428A' },
-  Magic:      { bg: '#0077C0', accent: '#C4CED4' },
-  Suns:       { bg: '#1D1160', accent: '#E56020' },
-  Nuggets:    { bg: '#0E2240', accent: '#FEC524' },
-  Sixers:     { bg: '#006BB6', accent: '#ED174C' },
-  Rockets:    { bg: '#CE1141', accent: '#000000' },
-  Thunder:    { bg: '#007AC3', accent: '#FDBB30' },
-  Bucks:      { bg: '#00471B', accent: '#EEE1C6' },
-  Mavericks:  { bg: '#00538C', accent: '#B8C4CA' },
-  Cavaliers:  { bg: '#860038', accent: '#FDBB30' },
-  Blazers:    { bg: '#E03A3E', accent: '#000000' },
-  Nets:       { bg: '#000000', accent: '#ffffff' },
-  Kings:      { bg: '#5A2D81', accent: '#63727A' },
-  Raptors:    { bg: '#CE1141', accent: '#000000' },
-  Hawks:      { bg: '#E03A3E', accent: '#C1D32F' },
-  Hornets:    { bg: '#1D1160', accent: '#00788C' },
-  Pacers:     { bg: '#002D62', accent: '#FDBB30' },
-  Clippers:      { bg: '#C8102E', accent: '#1D428A' },
-  Timberwolves:  { bg: '#0C2340', accent: '#78BE20' },
-  Pelicans:      { bg: '#002B5C', accent: '#B4975A' },
-  Grizzlies:     { bg: '#5D76A9', accent: '#12173F' },
-  Wizards:       { bg: '#002B5C', accent: '#E31837' },
+  Carlton:         { bg: '#0F1131', accent: '#FFFFFF' },
+  Collingwood:     { bg: '#000000', accent: '#FFFFFF' },
+  Essendon:        { bg: '#CC2031', accent: '#000000' },
+  Geelong:         { bg: '#0A2240', accent: '#FFFFFF' },
+  Hawthorn:        { bg: '#4D2004', accent: '#FBBF15' },
+  Melbourne:       { bg: '#0F1131', accent: '#C62126' },
+  NorthMelbourne:  { bg: '#013B9B', accent: '#FFFFFF' },
+  Richmond:        { bg: '#000000', accent: '#FFD200' },
+  StKilda:         { bg: '#ED1C24', accent: '#000000' },
+  WesternBulldogs: { bg: '#00539F', accent: '#DA1A32' },
+  Sydney:          { bg: '#ED171F', accent: '#FFFFFF' },
+  WestCoast:       { bg: '#003087', accent: '#F2A900' },
+  BrisbaneLions:   { bg: '#7A003C', accent: '#FDBE57' },
+  Adelaide:        { bg: '#002B5C', accent: '#E21937' },
+  Fremantle:       { bg: '#2A1A54', accent: '#FFFFFF' },
+  PortAdelaide:    { bg: '#008E9B', accent: '#000000' },
+  GoldCoast:       { bg: '#D2062B', accent: '#FBB917' },
+  GWS:             { bg: '#F57920', accent: '#231F20' },
 };
 
+// Six AFL archetypes replacing the NBA six. See docs/afl-port-plan.md §3.3.
 export const ARCHETYPE_STYLE = {
-  'Playmaker':         { bg: '#dbeafe', text: '#1d4ed8' },
-  'Sharpshooter':      { bg: '#fef3c7', text: '#92400e' },
-  'Lockdown Defender': { bg: '#f3e8ff', text: '#6d28d9' },
-  'Slasher':           { bg: '#ede9fe', text: '#5b21b6' },
-  'Paint Beast':       { bg: '#dcfce7', text: '#15803d' },
-  'Two-Way Star':      { bg: '#ffedd5', text: '#9a3412' },
+  'Ball Magnet':        { bg: '#dbeafe', text: '#1d4ed8' },
+  'Goal Sneak':         { bg: '#fef3c7', text: '#92400e' },
+  'Lockdown Defender':  { bg: '#f3e8ff', text: '#6d28d9' },
+  'Power Forward':      { bg: '#ede9fe', text: '#5b21b6' },
+  'Intercept Marker':   { bg: '#dcfce7', text: '#15803d' },
+  'Ruck Bull':          { bg: '#ffedd5', text: '#9a3412' },
 };
 
+// Seven premiership-winning AFL coaches, one per rough era. Internal `id`s
+// are kept identical to the NBA original (auerbach/holzman/riley/jackson/
+// popovich/kerr/rivers) — chemistry.js and simulation.js branch on these ids,
+// so keeping them stable means only the DISPLAY fields needed to change here.
 export const COACHES = [
   {
     id:     'auerbach',
-    name:   'Red Auerbach',
-    era:    '1960s',
-    system: 'Celtic Pride',
-    desc:   'Defense-first — Twin Towers, Defensive Anchor, and All-Defensive Team bonuses amplified; interior defense penalties negated.',
+    name:   'Ron Barassi',
+    era:    '1970s',
+    system: 'Barassi Drive',
+    desc:   'Defense-first — Tall Timber, Defensive Anchor, and All-Australian Defence bonuses amplified; interior defense penalties negated.',
     accent: '#4ade80',
   },
   {
     id:     'holzman',
-    name:   'Red Holzman',
+    name:   'Tom Hafey',
     era:    '1970s',
-    system: 'Hit the Open Man',
-    desc:   'Unselfish ball-movement — Floor General and Perimeter Lockdown bonuses amplified ×1.5.',
+    system: 'Run and Carry',
+    desc:   'Unselfish ball movement — Onball General and Perimeter Lockdown bonuses amplified ×1.5.',
     accent: '#0369a1',
   },
   {
     id:     'riley',
-    name:   'Pat Riley',
+    name:   'Allan Jeans',
     era:    '1980s',
-    system: 'Grit & Grind / Showtime',
-    desc:   'Defense and transition driven — Showtime Transition and All-Defensive Team amplified ×1.5; Defensive Liability penalty negated.',
+    system: 'Hawthorn Discipline',
+    desc:   'Defense and transition driven — End-to-End Rush and All-Australian Defence amplified ×1.5; Defensive Liability penalty negated.',
     accent: '#f87171',
   },
   {
     id:     'jackson',
-    name:   'Phil Jackson',
+    name:   'Kevin Sheedy',
     era:    '1990s',
-    system: 'Triangle Offense',
-    desc:   'Star-driven — Dynamic Duo and Heliocentric Engine bonuses amplified ×1.5; Clashing Egos penalty softened to −2%.',
+    system: 'Positional Flexibility',
+    desc:   'Star-driven — Dynamic Duo and Go-To Gun bonuses amplified ×1.5; Clashing Egos penalty softened to −2%.',
     accent: '#c084fc',
   },
   {
     id:     'popovich',
-    name:   'Gregg Popovich',
+    name:   'Leigh Matthews',
     era:    '2000s',
-    system: 'The Beautiful Game',
-    desc:   'Offense-first — The Beautiful Game rewards efficient team scoring; Floor General bonus amplified ×1.5.',
+    system: 'Contested Footy',
+    desc:   'Contested-first — rewards efficient clearance work; Onball General bonus amplified ×1.5.',
     accent: '#60a5fa',
   },
   {
     id:     'kerr',
-    name:   'Steve Kerr',
+    name:   'Alastair Clarkson',
     era:    '2010s',
-    system: 'Motion Offense',
-    desc:   'Spacing and ball-movement driven — Small Ball Heat, Three-and-D Paradigm, and Floor General bonuses amplified; Defensive Sieve penalty heightened.',
+    system: 'Cluster Press',
+    desc:   'Pressure and precision driven — Sharpshooting Swarm, Two-Way Precision, and Onball General bonuses amplified; Defensive Sieve penalty heightened.',
     accent: '#fbbf24',
   },
   {
     id:     'rivers',
-    name:   'Doc Rivers',
+    name:   'Chris Fagan',
     era:    '2020s',
-    system: 'Ubuntu',
-    desc:   'Cohesion-first — Dynamic Duo and All-Defensive Team bonuses amplified ×1.5; Clashing Egos penalty fully negated.',
+    system: 'Team First',
+    desc:   'Cohesion-first — Dynamic Duo and All-Australian Defence bonuses amplified ×1.5; Clashing Egos penalty fully negated.',
     accent: '#34d399',
   },
 ];
 
-// ── Playoff CPU opponents ─────────────────────────────────────────────────────
-
+// ── Finals CPU opponents ──────────────────────────────────────────────────────
+// Real premiership-winning AFL sides. Strength values are carried over
+// unchanged from the NBA original's calibrated Elo-like scale (only the
+// display names changed) so the finals bracket math stays tuned.
 export const CPU_TEAMS = [
-  { name: '96 Bulls',       strength: 2.38 },
-  { name: '17 Warriors',    strength: 2.37 },
-  { name: '86 Celtics',     strength: 2.25 },
-  { name: '87 Lakers',      strength: 2.20 },
-  { name: '01 Lakers',      strength: 2.15 },
-  { name: '13 Heat',        strength: 2.00 },
-  { name: '14 Spurs',       strength: 1.95 },
-  { name: '04 Pistons',     strength: 1.94 },
-  { name: '16 Cavaliers',   strength: 1.93 },
-  { name: '94 Rockets',     strength: 1.92 },
-  { name: '11 Mavericks',   strength: 1.91 },
-  { name: '08 Celtics',     strength: 1.90 },
-  { name: '05 Spurs',       strength: 1.89 },
-  { name: '03 Spurs',       strength: 1.88 },
-  { name: '89 Pistons',     strength: 1.87 },
+  { name: "'89 Hawthorn",        strength: 2.38 },
+  { name: "'15 Hawthorn",        strength: 2.37 },
+  { name: "'03 Brisbane Lions",  strength: 2.25 },
+  { name: "'86 Hawthorn",        strength: 2.20 },
+  { name: "'99 North Melbourne", strength: 2.15 },
+  { name: "'01 Brisbane Lions",  strength: 2.00 },
+  { name: "'11 Geelong",         strength: 1.95 },
+  { name: "'80 Richmond",        strength: 1.94 },
+  { name: "'20 Richmond",        strength: 1.93 },
+  { name: "'96 North Melbourne", strength: 1.92 },
+  { name: "'21 Melbourne",       strength: 1.91 },
+  { name: "'19 Richmond",        strength: 1.90 },
+  { name: "'22 Geelong",         strength: 1.89 },
+  { name: "'02 Brisbane Lions",  strength: 1.88 },
+  { name: "'24 Brisbane Lions",  strength: 1.87 },
 ];
 
 // ── Utility ───────────────────────────────────────────────────────────────────
@@ -230,23 +234,24 @@ export const pick = arr => arr[Math.floor((_seededRng ? _seededRng() : Math.rand
  */
 export const pickCosmetic = arr => arr[Math.floor(Math.random() * arr.length)];
 
-// ── Playoff helpers ───────────────────────────────────────────────────────────
+// ── Finals helpers ────────────────────────────────────────────────────────────
 
 /**
- * Returns a playoff seed (1–8) based on the regular-season win total.
+ * Returns a finals seed (1–8) based on the regular-season win total (out of
+ * 22 games).
  * @param {number} wins
  * @returns {number}
  */
 export function getPlayerSeed(wins) {
-  // Smooth ladder across seeds 1–8 (previously cliffed ≥41→#4 / else→#8,
-  // leaving seeds 5–7 unused and making mid-.500 teams feel like lottery picks).
-  if (wins >= 70) return 1;
-  if (wins >= 60) return 2;
-  if (wins >= 55) return 3;
-  if (wins >= 50) return 4;
-  if (wins >= 45) return 5;
-  if (wins >= 42) return 6;
-  if (wins >= 40) return 7;
+  // Smooth ladder across seeds 1–8, scaled from the NBA original's 82-game
+  // bands (70/60/55/50/45/42/40) to a 22-game home-and-away season.
+  if (wins >= 19) return 1;
+  if (wins >= 16) return 2;
+  if (wins >= 15) return 3;
+  if (wins >= 14) return 4;
+  if (wins >= 12) return 5;
+  if (wins >= 11) return 6;
+  if (wins >= 10) return 7;
   return 8;
 }
 
@@ -270,16 +275,17 @@ export function buildBracket(playerSeed, playerStrength) {
     if (!seeds[i]) seeds[i] = { ...cpuSorted[cpuIdx++], isPlayer: false };
   }
 
-  // Classic 1v8, 4v5, 3v6, 2v7 bracket — adjacent pairs advance together
-  // (applyPlayoffRound pairs winners [0,1] and [2,3]), so this order makes the
-  // 1v8 winner meet the 4v5 winner in the semis and keeps the top two seeds
-  // apart until the Finals. The previous [1v8, 2v7, 3v6, 4v5] order forced the
-  // #1 and #2 seeds to eliminate each other a round early.
+  // AFL Final Eight seed pairing for the first week: qualifying finals are
+  // 1v4 and 2v3 (winners get the double-chance bye into the Preliminary
+  // Final); elimination finals are 5v8 and 6v7. playoffs.js's
+  // getBracketDisplayState()/applyPlayoffRound() interpret these four
+  // matchups against the real Final Eight structure (see docs/afl-port-plan.md
+  // §6.4) rather than a symmetric single-elimination tree.
   return [
-    [seeds[0], seeds[7]],
-    [seeds[3], seeds[4]],
-    [seeds[2], seeds[5]],
-    [seeds[1], seeds[6]],
+    [seeds[0], seeds[3]], // QF1: 1 v 4
+    [seeds[1], seeds[2]], // QF2: 2 v 3
+    [seeds[4], seeds[7]], // EF1: 5 v 8
+    [seeds[5], seeds[6]], // EF2: 6 v 7
   ];
 }
 
@@ -306,6 +312,8 @@ export let S = {
   p1Round: 0, p2Round: 0,
   draftLog: [],
 };
+
+const EMPTY_ROSTER = () => ({ KD: null, HB: null, MID: null, RUC: null, KF: null, SF: null });
 
 /**
  * Resets S to a fresh drafting state.
@@ -350,7 +358,7 @@ export function startGame(era = 'all') {
     availablePlayers: [],
     draftBoard:       [],       // pick board — all available players from the current spin's team/decade
     selectedPlayer:   null,
-    roster: { PG: null, SG: null, SF: null, PF: null, C: null },
+    roster: EMPTY_ROSTER(),
     result:  null,
     playoffs: null,
     teamName: '',
@@ -403,8 +411,8 @@ export function startGame1v1() {
     mode,
     currentPlayer: 1,
     p1Coach, p1Era, p2Coach, p2Era,
-    p1Roster: { PG: null, SG: null, SF: null, PF: null, C: null },
-    p2Roster: { PG: null, SG: null, SF: null, PF: null, C: null },
+    p1Roster: EMPTY_ROSTER(),
+    p2Roster: EMPTY_ROSTER(),
     p1Round:  0,
     p2Round:  0,
     draftLog: [],
@@ -430,7 +438,7 @@ export function startGame1v1() {
     selectedPlayer: null,
 
     // Solo-mode fields kept to avoid undefined refs
-    roster: { PG: null, SG: null, SF: null, PF: null, C: null },
+    roster: EMPTY_ROSTER(),
     round: 0,
     result: null,
     playoffs: null,

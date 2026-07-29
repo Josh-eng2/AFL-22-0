@@ -39,9 +39,9 @@ export function bestAiSlot(player, roster) {
  * @param {string|null} coachId
  */
 function scoreCandidate(player, roster, coachId) {
-  // 74–99 window = the old 60–95 rating window's percentile equivalents on the
-  // `overall` (era-adjusted 2K) scale.
-  const ratingNorm = Math.max(0, Math.min(1, ((player.overall ?? 82) - 74) / 25));
+  // 74–99 window carried over from the NBA original's percentile-equivalent
+  // scoring band on the `overall` scale.
+  const ratingNorm = Math.max(0, Math.min(1, ((player.overall ?? 77) - 74) / 25));
   const popNorm    = Math.max(0, Math.min(1, ((player.popularity ?? 50) - 35) / 65));
 
   const slots = emptySlots(roster);

@@ -11,6 +11,25 @@ export function rosterFull() {
   return ALL_POSITIONS.every(p => S.roster[p] !== null);
 }
 
+// Decades that actually have at least one player in the live DB. The AFL
+// stub DB currently only covers 1990s/2010s (see docs/afl-port-plan.md) —
+// DECADES lists all six so the game is ready to grow into full coverage,
+// but availableDecades() must never offer a decade with zero data, or once
+// every populated decade gets used up in S.usedDecades the "remaining" pool
+// becomes 100% empty decades and every spin dead-ends (soft-locks the
+// draft). Memoized — DB is immutable after startup.
+let _decadesWithDataCache = null;
+function decadesWithData() {
+  if (_decadesWithDataCache) return _decadesWithDataCache;
+  const set = new Set();
+  for (const key of Object.keys(DB || {})) {
+    const d = key.split('_')[1];
+    if (d) set.add(d);
+  }
+  _decadesWithDataCache = set;
+  return _decadesWithDataCache;
+}
+
 /** Decades still eligible for drafting in the current game. */
 export function availableDecades() {
   const era = isDualDraft()
@@ -19,8 +38,10 @@ export function availableDecades() {
   if (era !== 'all') return [era];
   // Daily challenges with a multi-decade window (e.g. "pre-1990 only") narrow
   // the spin pool without locking to a single era.
-  const window    = S.dailyChallenge?.params?.allowedDecades ?? null;
-  const pool      = window ? DECADES.filter(d => window.includes(d)) : DECADES;
+  const window   = S.dailyChallenge?.params?.allowedDecades ?? null;
+  const withData = decadesWithData();
+  let pool       = DECADES.filter(d => withData.has(d));
+  if (window) pool = pool.filter(d => window.includes(d));
   const remaining = pool.filter(d => !S.usedDecades.includes(d));
   return remaining.length > 0 ? remaining : pool.slice();
 }
@@ -121,12 +142,12 @@ export function useSkip(kind) {
 // the on-court quality signal the draft steers toward when seeking stars/GOATs.
 const TIER_RANK = { starter: 0, star: 1, goat: 2 };
 
-/** Quality tier derived from the player's `overall` (era-adjusted 2K rating).
- * Cutoffs 92/97 are the old rating-scale 82/90 cutoffs' percentile
- * equivalents, keeping the star/goat pool sizes essentially unchanged
- * (~24% / ~8% of all entries). */
+/** Quality tier derived from the player's `overall` rating. Cutoffs 92/97
+ * are carried over from the NBA original's percentile-equivalent bands;
+ * revisit once a real AFL composite rating (docs/afl-port-plan.md §4.4)
+ * replaces the current rating-mirrors-overall placeholder. */
 export function playerTier(p) {
-  const overall = p.overall ?? 82;
+  const overall = p.overall ?? 77;
   if (overall >= 97) return 'goat';
   if (overall >= 92) return 'star';
   return 'starter';

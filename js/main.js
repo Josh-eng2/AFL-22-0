@@ -68,7 +68,7 @@ async function init() {
       // HashChangeEvent may be unavailable in older engines — click path still works.
     }
   } catch (err) {
-    console.error('[82-0] init failed:', err);
+    console.error('[AFL 22-0] init failed:', err);
     cgLoadingStop();
     // Replace the "Loading players…" spinner with an actual error — otherwise
     // a failed init leaves the overlay spinning forever with no way out.

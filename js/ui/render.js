@@ -125,8 +125,8 @@ export function archetypeBadge(arch) {
   const c = ARCHETYPE_STYLE[arch] || { bg: '#27272a', text: '#a1a1aa' };
   if (isDark()) {
     const bright = {
-      'Playmaker': '#93c5fd', 'Sharpshooter': '#fcd34d', 'Lockdown Defender': '#c4b5fd',
-      'Slasher': '#c4b5fd', 'Paint Beast': '#4ade80', 'Two-Way Star': '#fb923c',
+      'Ball Magnet': '#93c5fd', 'Goal Sneak': '#fcd34d', 'Lockdown Defender': '#c4b5fd',
+      'Power Forward': '#c4b5fd', 'Intercept Marker': '#4ade80', 'Ruck Bull': '#fb923c',
     };
     const text = bright[arch] || c.text;
     return `<span class="inline-block text-[9px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded-full mt-0.5" style="background:${text}20;color:${text}">${arch}</span>`;
@@ -134,8 +134,9 @@ export function archetypeBadge(arch) {
   return `<span class="inline-block text-[9px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded-full mt-0.5" style="background:${c.bg};color:${c.text}">${arch}</span>`;
 }
 
-/** Per-game stat display (PPG/RPG/APG/SPG/BPG) — real & simulated values carry
- *  2 decimals of precision for the math; the UI only needs 1 for readability. */
+/** Per-game stat display (goals/marks/disposals/tackles/clearances) — real &
+ *  simulated values carry 2 decimals of precision for the math; the UI only
+ *  needs 1 for readability. */
 export function fmtPG(n) {
   return (Number(n) || 0).toFixed(1);
 }
@@ -307,7 +308,7 @@ function renderHeader(showRestart = false) {
              page had no h1 at all. Text matches what's visible on screen. -->
         <h1 class="app-header__brand">
           ${iconBall('h-5 w-5 text-primary')}
-          <span>82-0</span>
+          <span>22-0</span>
         </h1>
         <div class="app-header__actions">
           ${coachObj ? `<span class="header-pill header-pill--muted">${coachObj.system}</span>` : ''}
@@ -332,7 +333,7 @@ function renderFooter() {
   return `
   <footer class="w-full mt-auto" style="padding:2px 0">
     <p style="font-size:6px;color:var(--border);text-align:center;user-select:none;letter-spacing:0.02em;line-height:1">
-      82-0.com is an independent fan project not affiliated with the NBA or its teams. ·
+      An independent fan project not affiliated with the AFL or its clubs. ·
       <a href="privacy.html" target="_blank" rel="noopener noreferrer" style="color:var(--border);text-decoration:underline;user-select:auto">Privacy &amp; Terms</a>
     </p>
   </footer>`;
@@ -511,13 +512,13 @@ function renderModeSelect() {
   // it deliberately — is a returning player from now on. Idempotent.
   markReturning();
   let trophies = [];
-  try { trophies = JSON.parse(cgGetItem('nba820_trophies') || '[]'); } catch (e) {}
+  try { trophies = JSON.parse(cgGetItem('afl220_trophies') || '[]'); } catch (e) {}
   return `
   <div class="flex flex-col min-h-screen main-gradient">
     <header class="sticky top-0 z-50 w-full bg-white border-b border-border mode-header" style="box-shadow:0 1px 3px var(--header-shadow)">
       <div class="mx-auto flex h-14 max-w-2xl items-center justify-between px-4 mode-header__inner">
         <div class="w-20 mode-header__spacer"></div>
-        <img src="logo-badge.svg" alt="82-0" class="mode-header__logo" style="height:52px;width:auto;margin-top:2px"/>
+        <img src="logo-badge.svg" alt="22-0" class="mode-header__logo" style="height:52px;width:auto;margin-top:2px"/>
         <div class="flex items-center gap-1.5 justify-end mode-header__actions">
           <button data-action="open-daily-stats" class="text-[11px] px-2 py-1 rounded-full border border-border bg-card2 text-muted-fg hover:border-primary hover:text-primary transition-all cursor-pointer" title="Daily Challenge Stats" aria-label="Daily Challenge Stats">📊</button>
           <button data-action="open-leaderboard" class="text-[11px] px-2 py-1 rounded-full border border-border bg-card2 text-muted-fg hover:border-primary hover:text-primary transition-all cursor-pointer" title="Personal Best" aria-label="Personal Best">🏅</button>
@@ -740,10 +741,10 @@ function renderColdOpenBanner() {
   return `
   <div class="rounded-2xl p-3.5 flex items-center gap-3 animate-fade-up card-shadow draft-cold-open"
     style="background:var(--surface-orange);border:1.5px solid #fed7aa">
-    <span class="text-2xl flex-shrink-0">🏀</span>
+    <span class="text-2xl flex-shrink-0">🏉</span>
     <div class="min-w-0">
-      <p class="text-sm font-black text-foreground leading-tight">Welcome to 82-0 — your first pick is waiting.</p>
-      <p class="text-xs text-muted-fg mt-0.5">Coach <b>${coach ? coach.name : ''}</b> is running the show${coach ? ` (${coach.system})` : ''}. Draft 5 legends, then chase the perfect season.</p>
+      <p class="text-sm font-black text-foreground leading-tight">Welcome to 22-0 — your first pick is waiting.</p>
+      <p class="text-xs text-muted-fg mt-0.5">Coach <b>${coach ? coach.name : ''}</b> is running the show${coach ? ` (${coach.system})` : ''}. Draft 6 legends, then chase the perfect season.</p>
     </div>
   </div>`;
 }
@@ -906,7 +907,7 @@ function render1v1RosterPanel(roster, playerNum, isActive) {
     return `<div class="flex items-center gap-1.5 py-1 border-b border-border last:border-0 ${p ? 'locked' : ''}">
       <span class="text-[10px] font-black w-5 flex-shrink-0" style="color:${p ? color : '#cbd5e1'}">${label}</span>
       <span class="text-[11px] font-semibold flex-1 truncate ${p ? 'text-foreground' : 'text-muted-fg/40'}">${p ? p.name.split(' ').slice(-1)[0] : '—'}</span>
-      ${p ? `<span class="text-[10px] text-muted-fg flex-shrink-0">${fmtPG(p.ppg)}pt</span>` : ''}
+      ${p ? `<span class="text-[10px] text-muted-fg flex-shrink-0">${fmtPG(p.goals)}g</span>` : ''}
     </div>`;
   }).join('');
 
@@ -1326,7 +1327,7 @@ function renderDraftCard(p, index) {
       </div>
       <p class="font-bold text-sm text-foreground leading-tight mb-1.5 draft-card__name">${p.name}</p>
       <div class="flex flex-wrap gap-x-2 gap-y-0.5 draft-card__stats">
-        ${[['PPG', p.ppg], ['RPG', p.rpg], ['APG', p.apg], ['SPG', p.spg], ['BPG', p.bpg]].map(([l, v]) =>
+        ${[['GLS', p.goals], ['MKS', p.marks], ['DSP', p.disposals], ['TCK', p.tackles], ['CLR', p.clearances]].map(([l, v]) =>
           `<span class="text-[10px] text-muted-fg"><span class="font-semibold text-foreground">${fmtPG(v)}</span> ${l}</span>`
         ).join('')}
       </div>
@@ -1381,7 +1382,7 @@ function renderRosterSlot(pos, canPlace) {
     const labelColor  = fitColors[fitType];
     const ppgLine = S.mode === 'blind'
       ? ''
-      : `<span class="text-[10px] text-muted-fg leading-none">${fmtPG(p.ppg)}pt</span>`;
+      : `<span class="text-[10px] text-muted-fg leading-none">${fmtPG(p.goals)}g</span>`;
 
     return `
     <div class="rounded-xl border bg-white p-2 flex flex-col items-center gap-0.5 text-center overflow-hidden card-shadow locked draft-roster-slot ${fitClass}"
@@ -1507,7 +1508,7 @@ function renderSimulateCard() {
     ? 'Simulate Defense Season →'
     : S.mode === 'fans'
     ? 'Simulate Fans First Season →'
-    : 'Simulate 82 Games →';
+    : 'Simulate 22 Games →';
   const btnColor = isDual && isP1 ? '#d97706' : isDynasty ? '#b45309' : '#2563eb';
   const btnHover = isDual && isP1 ? '#b45309' : isDynasty ? '#92400e' : '#1d4ed8';
   const subtitle = isDual && isP1
@@ -1575,7 +1576,7 @@ export function computeAutopsy() {
       icon:   '🧪',
       title:  eliteOverall ? 'One gap still cost you games' : 'Your chemistry sprung a leak',
       detail: (eliteOverall
-        ? `Your starting five's chemistry grades out ${tier.label} overall — but this one gap let opponents exploit it all season: `
+        ? `Your starting six's chemistry grades out ${tier.label} overall — but this one gap let opponents exploit it all season: `
         : '') + chemPenalty.replace('🔴', '').trim(),
       fix:    'One roster change removes this penalty — check the Team Chemistry Report below.',
     };
@@ -1587,7 +1588,7 @@ export function computeAutopsy() {
   // ── 4. Balanced but not elite anywhere ────────────────────────────────────
   return {
     icon:   '📊',
-    title:  'No single flaw — just not championship-caliber yet',
+    title:  'No single flaw — just not flag-caliber yet',
     detail: 'Every category is solid but none is dominant. There is no one weak link to fix — the whole roster needs to level up.',
     fix:    'Target players with elite composite stats across all five categories.',
   };
@@ -1623,8 +1624,8 @@ function _renderBalanceDiagnosis(d) {
   // Team-wide gap — no single player to blame, but the fix is still specific.
   return {
     icon:   '📉',
-    title:  `Your ${statLabel} fell below championship level`,
-    detail: `The starting five's combined ${statLabel} didn't reach the baseline for title contenders — no one starter is the villain, but the collective gap gave opponents a free lane all season.`,
+    title:  `Your ${statLabel} fell below flag-contender level`,
+    detail: `The starting six's combined ${statLabel} didn't reach the baseline for flag contenders — no one starter is the villain, but the collective gap gave opponents a free lane all season.`,
     fix:    `Next draft, target ${recommendedFix}.`,
   };
 }
@@ -1675,7 +1676,7 @@ export function renderSeasonTickerRows() {
 
 function renderSeasonSim() {
   const idx    = S.seasonRevealIdx || 0;
-  const total  = (S.seasonGames || []).length || 82;
+  const total  = (S.seasonGames || []).length || 22;
   const played = (S.seasonGames || []).slice(0, idx);
   const w      = played.filter(g => g.won).length;
   const l      = played.length - w;
@@ -1913,17 +1914,17 @@ function renderResults() {
   const simById   = Object.fromEntries((r.playerStats || []).map(l => [l.id, l]));
   const leaders   = r.statLeaders || null;
   const leaderRows = leaders ? [
-    { icon: '🏀', label: 'Points',   key: 'ppg', e: leaders.scoring    },
-    { icon: '🪃', label: 'Rebounds', key: 'rpg', e: leaders.rebounding },
-    { icon: '🎯', label: 'Assists',  key: 'apg', e: leaders.assists    },
-    { icon: '🧤', label: 'Steals',   key: 'spg', e: leaders.steals     },
-    { icon: '🛡️', label: 'Blocks',   key: 'bpg', e: leaders.blocks     },
+    { icon: '🎯', label: 'Goals',      key: 'goals',      e: leaders.scoring    },
+    { icon: '🪃', label: 'Marks',      key: 'marks',      e: leaders.marking    },
+    { icon: '🏉', label: 'Disposals',  key: 'disposals',  e: leaders.disposals  },
+    { icon: '🧤', label: 'Tackles',    key: 'tackles',    e: leaders.tackling   },
+    { icon: '🛡️', label: 'Clearances', key: 'clearances', e: leaders.clearances },
   ].filter(row => row.e) : [];
   const seasonLeadersCard = leaderRows.length ? `
     <div class="rounded-2xl border border-border bg-white p-4 card-shadow">
       <div class="flex items-center justify-between mb-3">
         <p class="text-xs font-bold uppercase tracking-widest text-muted-fg">Season Leaders</p>
-        <span class="text-[10px] font-bold text-muted-fg">82-game averages</span>
+        <span class="text-[10px] font-bold text-muted-fg">22-game averages</span>
       </div>
       <div class="flex flex-col gap-1.5">
         ${leaderRows.map(({ icon, label, key, e }) => `
@@ -1959,10 +1960,10 @@ function renderResults() {
     </span>`;
   })();
 
-  // Scaled to 5-starter sums (an elite roster reads ~85-95%): the theoretical
-  // ceilings in this DB are ~187 ppg / 117 rpg / 59 apg / 16 spg / 20 bpg for
-  // the five best per category — unreachable simultaneously.
-  const maxes = { ppg: 150, rpg: 65, apg: 40, spg: 10, bpg: 10 };
+  // Scaled to 6-starter sums (an elite roster reads ~85-95%) — first-pass
+  // estimates from the 41-player stub DB, not swept against a full dataset
+  // yet (docs/afl-port-plan.md §9).
+  const maxes = { goals: 16, marks: 35, disposals: 160, tackles: 28, clearances: 30 };
   const statBar = (key, lbl, val) => {
     const pct   = Math.min(100, (val / maxes[key]) * 100);
     const color = pct >= 70 ? (isDark() ? '#60a5fa' : '#2563eb') : pct >= 45 ? (isDark() ? '#fbbf24' : '#d97706') : (isDark() ? '#cbd5e1' : '#94a3b8');
@@ -2003,9 +2004,9 @@ function renderResults() {
         </div>
       </div>
       <div class="flex gap-3 text-xs text-muted-fg flex-shrink-0">
-        <span><span class="font-semibold text-foreground">${fmtPG(s.ppg)}</span> PPG</span>
-        <span><span class="font-semibold text-foreground">${fmtPG(s.rpg)}</span> RPG</span>
-        <span class="hidden sm:inline"><span class="font-semibold text-foreground">${fmtPG(s.apg)}</span> APG</span>
+        <span><span class="font-semibold text-foreground">${fmtPG(s.goals)}</span> GLS</span>
+        <span><span class="font-semibold text-foreground">${fmtPG(s.marks)}</span> MKS</span>
+        <span class="hidden sm:inline"><span class="font-semibold text-foreground">${fmtPG(s.disposals)}</span> DSP</span>
       </div>
     </div>`;
   };
@@ -2083,25 +2084,25 @@ function renderResults() {
 
         <!-- Advance to Playoffs + Autopsy side by side -->
         <div class="results-block--playoffs grid grid-cols-1 sm:grid-cols-2 gap-4">
-          ${r.wins >= 20 ? `
+          ${r.wins >= 8 ? `
           <div class="rounded-2xl border-2 border-primary bg-white p-5 card-shadow flex flex-col justify-between">
             <div class="text-center mb-4">
               <span class="text-4xl mb-2 block">🏆</span>
-              <p class="text-sm font-black text-foreground mb-1">Advance to Playoffs</p>
-              <p class="text-xs text-muted-fg">${r.wins / 82 < 0.35
-                ? `Sneak that ${r.wins}-win squad into the bracket anyway — every low seed dreams of a stolen series.`
-                : `Take your ${r.wins}-win roster into the postseason bracket.`}</p>
+              <p class="text-sm font-black text-foreground mb-1">Advance to the Finals</p>
+              <p class="text-xs text-muted-fg">${r.wins / 22 < 0.35
+                ? `Sneak that ${r.wins}-win squad into the eight anyway — every low seed dreams of a boilover.`
+                : `Take your ${r.wins}-win roster into the Final Eight.`}</p>
             </div>
             <button data-action="advance-to-playoffs"
               class="w-full py-3 rounded-xl font-bold text-sm bg-primary text-white hover:bg-blue-700 transition-all cursor-pointer card-shadow">
-              Enter Playoffs →
+              Enter the Finals →
             </button>
           </div>` : `
           <div class="rounded-2xl border border-border bg-white p-5 card-shadow flex flex-col justify-between opacity-90">
             <div class="text-center mb-2">
               <span class="text-4xl mb-2 block">📋</span>
-              <p class="text-sm font-black text-foreground mb-1">No Playoff Bid</p>
-              <p class="text-xs text-muted-fg">Need at least 20 wins to crack the bracket. Run it back and rebuild.</p>
+              <p class="text-sm font-black text-foreground mb-1">No Finals Bid</p>
+              <p class="text-xs text-muted-fg">Need at least 8 wins to crack the eight. Run it back and rebuild.</p>
             </div>
           </div>`}
           ${autopsy ? `
@@ -2123,14 +2124,14 @@ function renderResults() {
           </div>` : isPerfect ? `
           <div class="rounded-2xl p-4 card-shadow flex flex-col perfect-glow" style="border:1.5px solid #fcd34d;background:${isDark() ? 'rgba(251,191,36,0.08)' : '#fffbeb'}">
             <p class="text-xs font-bold uppercase tracking-widest mb-2.5" style="color:${isDark() ? '#fcd34d' : '#b45309'}">
-              Congratulations — 82-0
+              Congratulations — 22-0
             </p>
             <div class="flex items-start gap-3 flex-1">
               <span class="text-2xl flex-shrink-0">🏆</span>
               <div class="min-w-0 flex-1">
                 <p class="text-sm font-black mb-0.5" style="color:${isDark() ? '#fcd34d' : '#92400e'}">You went undefeated!</p>
-                <p class="text-xs leading-relaxed" style="color:${isDark() ? '#fde68a' : '#b45309'}">No losses to dissect — you drafted an all-time roster, nailed the chemistry, and ran the table. No NBA team has ever gone 82–0. Now take the #1 seed into the playoffs and finish the job.</p>
-                <p class="text-xs font-bold mt-2" style="color:${isDark() ? '#fbbf24' : '#d97706'}">🎉 Immortality is one playoff run away.</p>
+                <p class="text-xs leading-relaxed" style="color:${isDark() ? '#fde68a' : '#b45309'}">No losses to dissect — you drafted an all-time roster, nailed the chemistry, and ran the table. No AFL club has ever gone 22–0. Now take the #1 seed into the Finals and finish the job.</p>
+                <p class="text-xs font-bold mt-2" style="color:${isDark() ? '#fbbf24' : '#d97706'}">🎉 Immortality is one Finals run away.</p>
               </div>
             </div>
           </div>` : `<div></div>`}
@@ -2194,17 +2195,17 @@ function renderResults() {
           <p class="text-xs font-bold uppercase tracking-widest text-muted-fg mb-4">Team Statistics</p>
           <div class="flex flex-col gap-3">
             ${(() => { const t = r.simTotals || r.totals; return `
-            ${statBar('ppg', 'Points Per Game',   t.ppg)}
-            ${statBar('rpg', 'Rebounds Per Game', t.rpg)}
-            ${statBar('apg', 'Assists Per Game',  t.apg)}
-            ${statBar('spg', 'Steals Per Game',   t.spg)}
-            ${statBar('bpg', 'Blocks Per Game',   t.bpg)}`; })()}
+            ${statBar('goals', 'Goals Per Game',      t.goals)}
+            ${statBar('marks', 'Marks Per Game',      t.marks)}
+            ${statBar('disposals', 'Disposals Per Game', t.disposals)}
+            ${statBar('tackles', 'Tackles Per Game',  t.tackles)}
+            ${statBar('clearances', 'Clearances Per Game', t.clearances)}`; })()}
           </div>
         </div>
         <div class="rounded-2xl border border-border bg-white p-4 card-shadow">
           <div class="flex items-center justify-between mb-3">
             <p class="text-xs font-bold uppercase tracking-widest text-muted-fg">Optimized Lineup</p>
-            ${r.lineupAssignment?.length === 5 ? (() => {
+            ${r.lineupAssignment?.length === 6 ? (() => {
               const allPrimary = r.lineupAssignment.every(a => a.fit === 'primary');
               const hasOOP     = r.lineupAssignment.some(a => a.fit === 'oop');
               const bg    = allPrimary ? (isDark() ? 'rgba(34,197,94,0.12)' : '#f0fdf4') : (isDark() ? 'rgba(234,179,8,0.12)' : '#fefce8');
@@ -2359,54 +2360,54 @@ function renderBracketMatchup(top, bottom, opts = {}) {
   </div>`;
 }
 
+/**
+ * AFL Final Eight bracket display. The asymmetric shape (four matches in
+ * Week 1, two matches + two byes in Week 2, two matches in Week 3, one Grand
+ * Final in Week 4) doesn't fit a symmetric single-elimination tree, so this
+ * renders as a simple vertical stack of weeks rather than the horizontal
+ * connector-line tree a straight NBA-style bracket would use.
+ */
+function renderPlayoffWeekColumn(title, matchups, opts = {}) {
+  const { byes = [] } = opts;
+  const byeHtml = byes.length ? `
+    <div class="flex flex-col gap-1 mb-2">
+      ${byes.filter(Boolean).map(t => `
+        <div class="rounded-lg border border-dashed border-border px-2.5 py-1.5 text-xs text-muted-fg flex items-center gap-1.5">
+          <span class="font-bold">${t.isPlayer ? '⭐ ' : ''}${t.name}</span>
+          <span class="text-[10px] uppercase tracking-wide">— bye (double chance)</span>
+        </div>`).join('')}
+    </div>` : '';
+  return `
+  <div class="flex flex-col gap-2">
+    <p class="playoff-bracket__round-label">${title}</p>
+    ${byeHtml}
+    <div class="flex flex-col gap-2">
+      ${matchups.map(m => `
+        <div class="bracket-matchup-wrap">
+          ${m.label ? `<p class="text-[10px] font-bold text-muted-fg mb-0.5">${m.label}${m.sublabel ? ` <span class="font-normal">(${m.sublabel})</span>` : ''}</p>` : ''}
+          ${renderBracketMatchup(m.top, m.bottom, {
+            topSeed: m.topSeed, bottomSeed: m.bottomSeed,
+            topScore: m.topScore, bottomScore: m.bottomScore,
+            topWon: m.complete || m.live ? m.topWon : null,
+            live: m.live,
+          })}
+        </div>`).join('')}
+    </div>
+  </div>`;
+}
+
 function renderPlayoffBracketTree(po) {
-  const { qf, sf, finals, champion } = getBracketDisplayState(po);
-  const roundLabels = ['Quarterfinals', 'Semifinals', 'Finals'];
+  const { week1, week2, week3, week4, champion } = getBracketDisplayState(po);
 
   return `
   <div class="playoff-bracket-wrap">
-    <div class="playoff-bracket" role="img" aria-label="NBA Playoff bracket">
-      <div class="playoff-bracket__col playoff-bracket__col--qf">
-        <p class="playoff-bracket__round-label">${roundLabels[0]}</p>
-        <div class="playoff-bracket__stack">
-          ${qf.map((m, i) => `
-          <div class="bracket-matchup-wrap bracket-matchup-wrap--qf${i}">
-            ${renderBracketMatchup(m.top, m.bottom, {
-              topSeed: m.topSeed, bottomSeed: m.bottomSeed,
-              topScore: m.topScore, bottomScore: m.bottomScore,
-              topWon: m.complete || m.live ? m.topWon : null,
-              live: m.live,
-            })}
-          </div>`).join('')}
-        </div>
-      </div>
-      <div class="playoff-bracket__col playoff-bracket__col--sf">
-        <p class="playoff-bracket__round-label">${roundLabels[1]}</p>
-        <div class="playoff-bracket__stack playoff-bracket__stack--sf">
-          ${sf.map((m, i) => `
-          <div class="bracket-matchup-wrap bracket-matchup-wrap--sf${i}">
-            ${renderBracketMatchup(m.top, m.bottom, {
-              topScore: m.topScore, bottomScore: m.bottomScore,
-              topWon: m.complete || m.live ? m.topWon : null,
-              live: m.live,
-            })}
-          </div>`).join('')}
-        </div>
-      </div>
-      <div class="playoff-bracket__col playoff-bracket__col--f">
-        <p class="playoff-bracket__round-label">${roundLabels[2]}</p>
-        <div class="playoff-bracket__stack playoff-bracket__stack--f">
-          <div class="bracket-matchup-wrap bracket-matchup-wrap--f">
-            ${renderBracketMatchup(finals.top, finals.bottom, {
-              topScore: finals.topScore, bottomScore: finals.bottomScore,
-              topWon: finals.complete || finals.live ? finals.topWon : null,
-              live: finals.live,
-            })}
-          </div>
-        </div>
-      </div>
-      <div class="playoff-bracket__col playoff-bracket__col--champ">
-        <p class="playoff-bracket__round-label">Champion</p>
+    <div class="flex flex-col gap-5" role="img" aria-label="AFL Finals bracket">
+      ${renderPlayoffWeekColumn('Week 1 — Finals', week1)}
+      ${renderPlayoffWeekColumn('Week 2 — Semi Finals', week2.matchups, { byes: week2.byes })}
+      ${renderPlayoffWeekColumn('Week 3 — Preliminary Finals', week3.matchups)}
+      ${renderPlayoffWeekColumn('Week 4 — Grand Final', week4.matchups)}
+      <div class="flex flex-col items-center gap-1 pt-1">
+        <p class="playoff-bracket__round-label">Premiers</p>
         <div class="bracket-champion${champion ? ' bracket-champion--filled' : ''}">
           ${champion
             ? `<span class="bracket-champion__icon">🏆</span><span class="bracket-champion__name">${champion.isPlayer ? '⭐ ' : ''}${champion.name}</span>`
@@ -2420,29 +2421,29 @@ function renderPlayoffBracketTree(po) {
 function renderPlayoffs() {
   const po = S.playoffs;
   const r  = S.result;
-  if (po.currentRound >= 3 && !po.pendingReveal) {
+  if (po.currentRound >= 4 && !po.pendingReveal) {
     return po.champion ? renderChampionship() : renderEliminated();
   }
 
   const ts     = po.tickState;
-  // "Simulate Entire Playoffs" resolves the whole tournament at once — hold
+  // "Simulate Entire Finals" resolves the whole tournament at once — hold
   // on the fully-filled bracket so the result is visible before handing off
-  // to the champion/eliminated splash screen.
+  // to the premiership/eliminated splash screen.
   const reveal = po.pendingReveal;
   const roundName = po.roundNames[Math.min(po.currentRound, po.roundNames.length - 1)];
   const simLabel   = ts ? 'Simulating...' : `Simulate ${roundName}`;
   const headline   = reveal
     ? (po.champion
-        ? '🏆 World Champions!'
+        ? '🏆 Premiers!'
         : po.championTeam
-          ? `🏆 ${po.championTeam.name} Win the Title`
+          ? `🏆 ${po.championTeam.name} Win the Flag`
           : `💔 Eliminated — ${po.eliminatedIn}`)
-    : 'Playoff Bracket';
+    : 'Finals Bracket';
   const champBanner = reveal && po.championTeam && !po.champion ? `
         <div class="rounded-xl border-2 border-amber-300 bg-amber-50 p-4 text-center card-shadow">
-          <p class="text-xs font-bold uppercase tracking-widest text-amber-600 mb-1">NBA Champion</p>
+          <p class="text-xs font-bold uppercase tracking-widest text-amber-600 mb-1">Premiers</p>
           <p class="text-xl font-black text-amber-700">🏆 ${po.championTeam.name}</p>
-          <p class="text-xs text-muted-fg mt-1">Your run ended in the ${po.eliminatedIn || 'playoffs'}</p>
+          <p class="text-xs text-muted-fg mt-1">Your run ended in the ${po.eliminatedIn || 'Finals'}</p>
         </div>` : '';
 
   return `
@@ -2451,9 +2452,9 @@ function renderPlayoffs() {
     <main class="flex-1 flex flex-col items-center px-4 py-6">
       <div class="w-full max-w-3xl flex flex-col gap-4">
         <div class="text-center">
-          <p class="text-xs font-bold uppercase tracking-widest text-primary mb-1">NBA Playoffs</p>
+          <p class="text-xs font-bold uppercase tracking-widest text-primary mb-1">AFL Finals</p>
           <h1 class="text-2xl font-black text-foreground">${headline}</h1>
-          <p class="text-sm text-muted-fg mt-1">Regular Season: ${r.wins}–${r.losses} · Seed #${po.playerSeed}</p>
+          <p class="text-sm text-muted-fg mt-1">Home-and-Away: ${r.wins}–${r.losses} · Seed #${po.playerSeed}</p>
         </div>
         <div class="rounded-2xl border border-border bg-white p-3 sm:p-4 card-shadow overflow-hidden">
           ${renderPlayoffBracketTree(po)}
@@ -2463,15 +2464,15 @@ function renderPlayoffs() {
           ${reveal ? `
           <button data-action="playoffs-continue" type="button"
             class="py-3.5 rounded-xl font-black text-sm transition-all text-center card-shadow bg-primary text-white hover:bg-blue-700 cursor-pointer">
-            ${po.champion ? 'Continue to Championship 🏆' : 'Continue →'}
+            ${po.champion ? 'Continue to Premiership 🏆' : 'Continue →'}
           </button>` : `
-          <button data-action="sim-next-round" type="button" ${ts || po.currentRound >= 3 ? 'disabled' : ''}
-            class="py-3.5 rounded-xl font-black text-sm transition-all text-center card-shadow ${ts || po.currentRound >= 3 ? 'bg-card2 border border-border text-muted-fg cursor-not-allowed' : 'bg-primary text-white hover:bg-blue-700 cursor-pointer'}">
+          <button data-action="sim-next-round" type="button" ${ts || po.currentRound >= 4 ? 'disabled' : ''}
+            class="py-3.5 rounded-xl font-black text-sm transition-all text-center card-shadow ${ts || po.currentRound >= 4 ? 'bg-card2 border border-border text-muted-fg cursor-not-allowed' : 'bg-primary text-white hover:bg-blue-700 cursor-pointer'}">
             ${ts ? 'Simulating...' : `${simLabel} →`}
           </button>
-          <button data-action="sim-all-playoffs" type="button" ${ts || po.currentRound >= 3 ? 'disabled' : ''}
+          <button data-action="sim-all-playoffs" type="button" ${ts || po.currentRound >= 4 ? 'disabled' : ''}
             class="py-3.5 rounded-xl font-bold text-sm transition-all text-center card-shadow border-2 border-primary/30 bg-white text-primary hover:bg-blue-50 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed">
-            Simulate Entire Playoffs →
+            Simulate Entire Finals →
           </button>`}
           <button data-action="draft-new-roster" type="button"
             class="py-3 rounded-xl font-bold text-sm border border-border bg-white text-foreground hover:border-primary hover:bg-card2 transition-all cursor-pointer text-center card-shadow">
@@ -2505,16 +2506,16 @@ function renderChampionship() {
     <main class="flex-1 flex flex-col items-center justify-center px-4 py-8">
       <div class="w-full max-w-lg flex flex-col gap-5 items-center text-center animate-fade-up">
         <div class="text-6xl mb-2">🏆</div>
-        <h1 class="text-3xl font-black text-primary">WORLD CHAMPIONS!</h1>
-        <p class="text-base text-foreground">Your team conquered the NBA Playoffs!</p>
+        <h1 class="text-3xl font-black text-primary">PREMIERS!</h1>
+        <p class="text-base text-foreground">Your team conquered the AFL Finals!</p>
         <div class="rounded-2xl border-2 border-amber-300 bg-amber-50 p-5 w-full text-left card-shadow">
-          <p class="text-xs font-bold uppercase tracking-widest text-amber-600 mb-3">Championship Run</p>
+          <p class="text-xs font-bold uppercase tracking-widest text-amber-600 mb-3">Premiership Run</p>
           ${roundSummary}
-          <p class="text-sm text-muted-fg mt-2">Regular Season: ${r.wins}–${r.losses} · Seed #${po.playerSeed}</p>
+          <p class="text-sm text-muted-fg mt-2">Home-and-Away: ${r.wins}–${r.losses} · Seed #${po.playerSeed}</p>
         </div>
         ${renderGlobalSubmitCard(true)}
         <div class="flex flex-col gap-3 w-full">
-          <button data-action="share" class="py-3 rounded-xl font-bold text-sm bg-primary text-white hover:bg-blue-700 transition-all cursor-pointer card-shadow">Share Championship 🏆</button>
+          <button data-action="share" class="py-3 rounded-xl font-bold text-sm bg-primary text-white hover:bg-blue-700 transition-all cursor-pointer card-shadow">Share Premiership 🏆</button>
           <button data-action="draft-new-roster" class="py-3 rounded-xl font-bold text-sm border border-border bg-white text-foreground hover:border-primary hover:bg-card2 transition-all cursor-pointer card-shadow">Draft New Roster</button>
         </div>
       </div>
@@ -2545,13 +2546,13 @@ function renderEliminated() {
         <h1 class="text-2xl font-black text-foreground">Eliminated</h1>
         <p class="text-sm text-muted-fg">in the <span class="text-foreground font-semibold">${po.eliminatedIn}</span></p>
         <div class="rounded-2xl border border-border bg-white p-5 w-full text-left card-shadow">
-          <p class="text-xs font-bold uppercase tracking-widest text-muted-fg mb-3">Playoff Run</p>
+          <p class="text-xs font-bold uppercase tracking-widest text-muted-fg mb-3">Finals Run</p>
           ${roundSummary}
-          <p class="text-sm text-muted-fg mt-3">Regular Season: ${r.wins}–${r.losses} · Seed #${po.playerSeed}</p>
+          <p class="text-sm text-muted-fg mt-3">Home-and-Away: ${r.wins}–${r.losses} · Seed #${po.playerSeed}</p>
         </div>
         ${po.championTeam ? `
         <div class="rounded-2xl border-2 border-amber-300 bg-amber-50 p-5 w-full text-center card-shadow">
-          <p class="text-xs font-bold uppercase tracking-widest text-amber-600 mb-1">NBA Champion</p>
+          <p class="text-xs font-bold uppercase tracking-widest text-amber-600 mb-1">Premiers</p>
           <p class="text-xl font-black text-amber-700">🏆 ${po.championTeam.name}</p>
         </div>` : ''}
         ${renderGlobalSubmitCard(false)}
@@ -2568,7 +2569,7 @@ function renderEliminated() {
 // ── Trophy Room ───────────────────────────────────────────────────────────────
 function renderTrophyRoom() {
   let trophies = [];
-  try { trophies = JSON.parse(cgGetItem('nba820_trophies') || '[]'); } catch (e) {}
+  try { trophies = JSON.parse(cgGetItem('afl220_trophies') || '[]'); } catch (e) {}
 
   // Twelve pedestals — the empty ones are the hook.
   const PEDESTALS = 12;
@@ -2586,7 +2587,7 @@ function renderTrophyRoom() {
             <span class="text-xl" style="opacity:0.15;filter:grayscale(1)">🏆</span>
             <span class="text-[8px] font-bold uppercase" style="color:var(--muted)">Empty</span>
           </div>`;
-          const perfect = t.wins === 82;
+          const perfect = t.wins === 22;
           return `
           <div class="rounded-xl flex flex-col items-center justify-center py-3 gap-1 ${perfect ? 'perfect-glow' : 'card-shadow'}"
             style="background:${perfect ? '#fffbeb' : 'var(--card3)'};border:1.5px solid ${perfect ? '#fcd34d' : 'var(--border)'}">
@@ -2600,13 +2601,13 @@ function renderTrophyRoom() {
         : ''}
     </div>`;
   const trophyCards = trophies.map(t => {
-    const isPerfect = t.wins === 82 && t.losses === 0;
+    const isPerfect = t.wins === 22 && t.losses === 0;
     const cb  = isPerfect ? 'border-amber-300' : 'border-border';
     const cbg = isPerfect ? 'bg-amber-50' : 'bg-white';
     const cgl = isPerfect ? 'style="box-shadow:0 2px 16px rgba(217,119,6,0.15)"' : 'class="card-shadow"';
     return `
       <div class="rounded-2xl border p-4 flex flex-col gap-3 ${cb} ${cbg}" ${cgl}>
-        ${isPerfect ? `<p class="text-[10px] font-black uppercase tracking-widest text-amber-600">⭐ Perfect Season — 82-0</p>` : ''}
+        ${isPerfect ? `<p class="text-[10px] font-black uppercase tracking-widest text-amber-600">⭐ Perfect Season — 22-0</p>` : ''}
         <div class="flex items-start justify-between gap-2">
           <div class="min-w-0">
             <p class="font-black text-base ${isPerfect ? 'text-amber-700' : 'text-primary'} truncate">${t.coachName}</p>
@@ -2619,7 +2620,7 @@ function renderTrophyRoom() {
         </div>
         <div class="border-t ${isPerfect ? 'border-amber-200' : 'border-border'} pt-3 flex flex-col gap-2">
           <div>
-            <p class="text-[10px] font-bold uppercase tracking-widest text-muted-fg mb-1">Starting 5</p>
+            <p class="text-[10px] font-bold uppercase tracking-widest text-muted-fg mb-1">Starting Six</p>
             <p class="text-xs text-foreground leading-relaxed">${t.starters}</p>
           </div>
           ${t.bench ? `
@@ -2718,7 +2719,7 @@ function renderSeriesResult() {
       <span class="text-[10px] font-black text-muted-fg w-6 flex-shrink-0">${pos}</span>
       <span class="text-xs font-semibold text-foreground flex-1 truncate">${p.name}</span>
       <span class="text-[9px] font-bold px-1.5 py-0.5 rounded-full flex-shrink-0" style="background:${ovrColor(p.overall)}18;color:${ovrColor(p.overall)}">${Math.round(p.overall ?? 0)}</span>
-      <span class="text-[10px] text-muted-fg">${fmtPG(p.ppg)}pt</span>
+      <span class="text-[10px] text-muted-fg">${fmtPG(p.goals)}g</span>
     </div>`;
   }).join('');
 
@@ -2782,8 +2783,8 @@ function renderSeriesResult() {
               ${chemBadge(p1s.chemScore)}
             </div>
             ${p1Coach ? `<p class="text-[10px] text-muted-fg mb-2 font-medium">Coach: ${p1Coach.name}</p>` : ''}
-            <p class="text-[10px] font-bold uppercase tracking-wider text-muted-fg/60 mb-1">Starting 5</p>
-            ${rosterMini(S.p1Roster || S.p1?.roster || {}, ['PG','SG','SF','PF','C'])}
+            <p class="text-[10px] font-bold uppercase tracking-wider text-muted-fg/60 mb-1">Starting Six</p>
+            ${rosterMini(S.p1Roster || S.p1?.roster || {}, ['KD','HB','MID','RUC','KF','SF'])}
           </div>
           <div class="rounded-2xl border p-4 card-shadow" style="border-color:#fde68a;background:var(--surface-cream)">
             <div class="flex items-center justify-between mb-3">
@@ -2791,10 +2792,10 @@ function renderSeriesResult() {
               ${chemBadge(p2s.chemScore)}
             </div>
             ${p2Coach ? `<p class="text-[10px] text-muted-fg mb-2 font-medium">Coach: ${p2Coach.name}</p>` : ''}
-            <p class="text-[10px] font-bold uppercase tracking-wider text-muted-fg/60 mb-1">Starting 5</p>
+            <p class="text-[10px] font-bold uppercase tracking-wider text-muted-fg/60 mb-1">Starting Six</p>
             ${S.mode === 'dynasty-duel'
               ? `<p class="text-xs text-muted-fg py-2">Legendary ${labels.p2} — strength ${p2s.strength.toFixed(2)}</p>`
-              : rosterMini(S.p2Roster || S.roster, ['PG','SG','SF','PF','C'])}
+              : rosterMini(S.p2Roster || S.roster, ['KD','HB','MID','RUC','KF','SF'])}
           </div>
         </div>
 
@@ -2850,7 +2851,7 @@ function renderSeriesPreview() {
       <span class="text-[10px] font-black w-5 flex-shrink-0" style="color:${p ? color : '#cbd5e1'}">${pos}</span>
       <span class="text-xs font-semibold flex-1 truncate ${p ? 'text-foreground' : 'text-muted-fg/40'}">${p ? p.name : '—'}</span>
       ${p ? `<span class="text-[9px] font-bold px-1.5 py-0.5 rounded-full flex-shrink-0" style="background:${ovrColor(p.overall)}18;color:${ovrColor(p.overall)}">${Math.round(p.overall ?? 0)}</span>` : ''}
-      ${p ? `<span class="text-[10px] text-muted-fg">${fmtPG(p.ppg)}pt</span>` : ''}
+      ${p ? `<span class="text-[10px] text-muted-fg">${fmtPG(p.goals)}g</span>` : ''}
     </div>`;
   }).join('');
 

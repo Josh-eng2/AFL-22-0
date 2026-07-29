@@ -14,10 +14,10 @@
  *            allow read: if true;
  *            allow create: if request.resource.data.wins is number
  *                          && request.resource.data.wins >= 0
- *                          && request.resource.data.wins <= 82
+ *                          && request.resource.data.wins <= 22
  *                          && request.resource.data.losses is number
  *                          && request.resource.data.losses >= 0
- *                          && request.resource.data.losses <= 82
+ *                          && request.resource.data.losses <= 22
  *                          && request.resource.data.teamName is string
  *                          && request.resource.data.teamName.size() <= 30
  *                          && request.resource.data.coachId is string
@@ -70,10 +70,10 @@
  *                      && request.resource.data.date.size() == 10
  *                      && request.resource.data.wins is number
  *                      && request.resource.data.wins >= 0
- *                      && request.resource.data.wins <= 82
+ *                      && request.resource.data.wins <= 22
  *                      && request.resource.data.losses is number
  *                      && request.resource.data.losses >= 0
- *                      && request.resource.data.losses <= 82
+ *                      && request.resource.data.losses <= 22
  *                      && request.resource.data.teamName is string
  *                      && request.resource.data.teamName.size() <= 30
  *                      && request.resource.data.coachId is string
@@ -148,14 +148,21 @@ function loadSdk() {
 }
 
 // ── Firebase project config ────────────────────────────────────────────────────
+// Deliberately left as placeholders — this is a SEPARATE game from the NBA
+// original and must never write to its Firebase project (basketball-gm-sim-c33ed).
+// isFirebaseConfigured() below treats these sentinel values as "not
+// configured" and every call site in this file already degrades gracefully
+// (local leaderboard/trophy room via localStorage keep working). Fill these
+// in with a NEW, AFL-specific Firebase project's real values when one exists
+// — see docs/afl-port-plan.md §7.3.
 const FIREBASE_CONFIG = {
-  apiKey:            'AIzaSyBt1pbWJjeR7ELe0g1ZoRZsQpiiAGvbmNQ',
-  authDomain:        'basketball-gm-sim-c33ed.firebaseapp.com',
-  projectId:         'basketball-gm-sim-c33ed',
-  storageBucket:     'basketball-gm-sim-c33ed.firebasestorage.app',
-  messagingSenderId: '686961038101',
-  appId:             '1:686961038101:web:9287fec583fea933fc8f1c',
-  measurementId:     'G-NWPZD758GE',
+  apiKey:            'YOUR_API_KEY',
+  authDomain:        'YOUR_PROJECT_ID.firebaseapp.com',
+  projectId:         'YOUR_PROJECT_ID',
+  storageBucket:     'YOUR_PROJECT_ID.firebasestorage.app',
+  messagingSenderId: 'YOUR_SENDER_ID',
+  appId:             'YOUR_APP_ID',
+  measurementId:     'YOUR_MEASUREMENT_ID',
 };
 
 // ── Configuration check ───────────────────────────────────────────────────────
@@ -243,7 +250,7 @@ export function logAnalyticsEvent(eventName, params = {}) {
 export async function submitGlobalScore(entry) {
   if (!isFirebaseConfigured()) throw new Error('Firebase not configured — see js/utils/firebase.js setup instructions');
   const wins = entry.wins ?? 0;
-  if (wins < 0 || wins > 82) throw new Error('Invalid wins value');
+  if (wins < 0 || wins > 22) throw new Error('Invalid wins value');
   const db  = await getDb();
   if (!db) throw new Error('Firebase unavailable — leaderboard could not load');
   const col = collection(db, 'leaderboard');
@@ -331,7 +338,7 @@ export async function fetchLeaderboard(filter = 'alltime') {
 export async function submitDailyScore(entry) {
   if (!isFirebaseConfigured()) throw new Error('Firebase not configured — see js/utils/firebase.js setup instructions');
   const wins = entry.wins ?? 0;
-  if (wins < 0 || wins > 82) throw new Error('Invalid wins value');
+  if (wins < 0 || wins > 22) throw new Error('Invalid wins value');
   if (!/^\d{4}-\d{2}-\d{2}$/.test(entry.date || '')) throw new Error('Invalid date');
   const db  = await getDb();
   if (!db) throw new Error('Firebase unavailable — leaderboard could not load');
@@ -384,7 +391,7 @@ export async function fetchDailyLeaderboard(date) {
   // the challenge system (no challengeId) keep the plain wins*10 path.
   entries = entries.filter(e => {
     const wins = Number(e.wins);
-    if (!Number.isInteger(wins) || wins < 0 || wins > 82) return false;
+    if (!Number.isInteger(wins) || wins < 0 || wins > 22) return false;
     if (e.challengeId) {
       const expected = wins * 10 + (e.passed === true ? 200 : 0);
       if (Number(e.score) !== expected) return false;

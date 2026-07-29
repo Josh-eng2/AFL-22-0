@@ -1,4 +1,2 @@
 User-agent: *
 Allow: /
-
-Sitemap: https://canyougo820.com/sitemap.xml

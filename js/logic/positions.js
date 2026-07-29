@@ -7,25 +7,27 @@
  * Each rule collects into a Set (multiple secondaries per player are valid).
  * Output is sorted by positional distance so the closest slot appears first.
  *
- * Rule Categories
- * ───────────────
- * PG  Combo Guard       : high scorer / shooter / slasher       → SG
- * SG  Lead Guard        : high assist / Playmaker arch           → PG
- * SG  Versatile Wing    : strong rebounder / lockdown / two-way  → SF
- * SF  Point Forward     : high assist / Playmaker arch           → PG
- * SF  Swingman          : high scoring, low rebounding wing      → SG
- * SF  Power-Forward role: interior rebounder / shot-blocker      → PF
- * PF  Point Forward     : high assist / Playmaker arch           → PG
- * PF  Stretch Four      : perimeter-shooting big                 → SF
- * PF  Interior Anchor   : dominant rebounder / shot-blocker      → C
- * C   Mobile Center     : skilled / Floor Spacer / shooter       → PF
- * C   Dominant Center   : elite rim protector / rebounder        → PF
+ * Rule Categories (defence -> forward axis: KD, HB, MID, RUC, KF, SF)
+ * ─────────────────────────────────────────────────────────────────
+ * KD  Ball-Carrying Back  : high disposals, low scoring          → HB
+ * KD  Swingman            : non-trivial scoring                  → KF
+ * HB  Intercept Type      : high marks                           → KD
+ * HB  Wingman-Mid         : high disposals                       → MID
+ * MID Outside Runner      : high marks / low clearances          → HB
+ * MID Forward-Half Mid    : non-trivial scoring                  → SF
+ * MID Tall Pinch-Hitter   : non-trivial hitouts                  → RUC
+ * RUC Ruck-Forward        : high marks or scoring                → KF
+ * RUC Ruck-Rover          : high disposals + clearances          → MID
+ * KF  Pinch-Hitting Ruck  : non-trivial hitouts                  → RUC
+ * KF  Intercept Swingman  : elite marks, low scoring              → KD
+ * SF  Rotating Mid        : high disposals                        → MID
+ * SF  Power Small Forward : high scoring                          → KF
  */
 
 import { DB } from '../data/players.js';
 
 // Positional rank used for distance-sorting secondary positions
-const POS_RANK = { PG: 0, SG: 1, SF: 2, PF: 3, C: 4 };
+const POS_RANK = { KD: 0, HB: 1, MID: 2, RUC: 3, KF: 4, SF: 5 };
 
 /**
  * Appends a `secondaryPos` array to every player object in DB.
@@ -48,56 +50,59 @@ export function applySecondaryPositions() {
  * @returns {string[]}
  */
 function deriveSecondary(p) {
-  const arch   = p.archetype || '';
-  const traits = Array.isArray(p.traits) ? p.traits : [];
-  const sec    = new Set();
+  const arch = p.archetype || '';
+  const sec  = new Set();
 
   switch (p.pos) {
 
-    // ── Point Guard ───────────────────────────────────────────────────────
-    case 'PG':
-      // Combo Guard: scoring burst / shooting / slashing style → SG
-      if (p.ppg > 22.0 || arch === 'Sharpshooter' || arch === 'Slasher') sec.add('SG');
+    // ── Key Defender ──────────────────────────────────────────────────────
+    case 'KD':
+      // Ball-Carrying Back: intercepts and drives it out himself → HB
+      if (p.disposals > 18 && p.goals < 0.3) sec.add('HB');
+      // Swingman: enough scoring touch to play up the other end → KF
+      if (p.goals > 0.3) sec.add('KF');
       break;
 
-    // ── Shooting Guard ────────────────────────────────────────────────────
-    case 'SG':
-      // Lead Guard: runs offense, high assist floor → PG
-      if (p.apg > 5.0 || arch === 'Playmaker') sec.add('PG');
-      // Versatile Wing: rebounder, lockdown, or two-way impact player → SF
-      if (p.rpg > 6.0 || arch === 'Lockdown Defender' || arch === 'Two-Way Star') sec.add('SF');
+    // ── Half-Back ─────────────────────────────────────────────────────────
+    case 'HB':
+      // Intercept Type: wins it in the air more than most half-backs → KD
+      if (p.marks > 5.5 || arch === 'Intercept Marker') sec.add('KD');
+      // Wingman-Mid: racks up enough of the ball to roll into the middle → MID
+      if (p.disposals > 23) sec.add('MID');
+      break;
+
+    // ── Midfielder ────────────────────────────────────────────────────────
+    case 'MID':
+      // Outside Runner: more mark-and-run than clearance work → HB
+      if (p.marks > 4.0 && p.clearances < 2.0) sec.add('HB');
+      // Forward-Half Mid: enough scoring touch to push forward → SF
+      if (p.goals > 1.0) sec.add('SF');
+      // Tall Pinch-Hitter: can share ruck duties → RUC
+      if ((p.hitouts || 0) > 5) sec.add('RUC');
+      break;
+
+    // ── Ruck ──────────────────────────────────────────────────────────────
+    case 'RUC':
+      // Ruck-Forward: mobile enough to play as a marking target → KF
+      if (p.marks > 4.0 || p.goals > 1.0 || arch === 'Power Forward') sec.add('KF');
+      // Ruck-Rover: wins his own hitout and follows it up → MID
+      if (p.disposals > 16 && p.clearances > 2.0) sec.add('MID');
+      break;
+
+    // ── Key Forward ───────────────────────────────────────────────────────
+    case 'KF':
+      // Pinch-Hitting Ruck: can follow a teammate into the ruck → RUC
+      if ((p.hitouts || 0) > 5) sec.add('RUC');
+      // Intercept Swingman: elite overhead marking, low scoring load → KD
+      if (p.marks > 6.0 && p.goals < 0.5) sec.add('KD');
       break;
 
     // ── Small Forward ─────────────────────────────────────────────────────
     case 'SF':
-      // Point Forward: orchestrates offense with elite playmaking → PG
-      if (p.apg > 5.5 || arch === 'Playmaker') sec.add('PG');
-      // Swingman: perimeter scorer without interior dominance → SG
-      if (p.ppg > 20.0 && p.rpg < 6.0) sec.add('SG');
-      // Power Forward role: interior rebounder / shot-blocker / Paint Beast → PF
-      if (p.rpg > 7.5 || p.bpg > 1.2 || arch === 'Paint Beast') sec.add('PF');
-      break;
-
-    // ── Power Forward ─────────────────────────────────────────────────────
-    case 'PF':
-      // Point Forward: facilitating big with elite assist numbers → PG
-      if (p.apg > 5.5 || arch === 'Playmaker') sec.add('PG');
-      // Stretch Four: floor-spacing big who operates on the perimeter → SF
-      if (arch === 'Sharpshooter') sec.add('SF');
-      // Interior Anchor: dominant rebounder / shot-blocker / Paint Beast → C
-      if (p.rpg > 10.0 || p.bpg > 1.5 || arch === 'Paint Beast') sec.add('C');
-      break;
-
-    // ── Center ────────────────────────────────────────────────────────────
-    case 'C':
-      // Mobile / skilled center who can step out → PF
-      // Covers both the Floor Spacer / perimeter skill case AND
-      // the dominant rim-protecting / rebounding case
-      if (
-        p.rpg > 12.0 || p.bpg > 2.0 ||
-        arch === 'Paint Beast' || arch === 'Sharpshooter' ||
-        traits.includes('Floor Spacer')
-      ) sec.add('PF');
+      // Rotating Mid: enough of the ball to spend time on-ball → MID
+      if (p.disposals > 16) sec.add('MID');
+      // Power Small Forward: heavy enough scorer to play up as a KF → KF
+      if (p.goals > 2.5 || arch === 'Power Forward') sec.add('KF');
       break;
   }
 

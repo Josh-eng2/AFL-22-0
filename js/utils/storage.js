@@ -2,8 +2,8 @@
  * js/utils/storage.js — localStorage Leaderboard & Trophy Room + Global Leaderboard Modal
  *
  * Keys:
- *   nba820_lb       — leaderboard, up to 20 entries, sorted desc by wins
- *   nba820_trophies — trophy room,  up to 12 entries (championships only)
+ *   afl220_lb       — leaderboard, up to 20 entries, sorted desc by wins
+ *   afl220_trophies — trophy room,  up to 12 entries (championships only)
  *
  * Exports:
  *   saveLeaderboard()             — persists current result to leaderboard
@@ -62,7 +62,7 @@ function leadersLineHtml(leaders) {
 // reaches the menus. A first-timer who bounces mid-draft gets the full cold
 // open again on their next visit.
 
-const RETURNING_KEY = 'nba820_returning';
+const RETURNING_KEY = 'afl220_returning';
 
 export function isReturningPlayer() {
   // Storage blocked → treat as returning so the app falls back to the
@@ -79,7 +79,7 @@ export function markReturning() {
 // HoopIQ, and both 1v1 rosters). Survives runs — the "number goes up"
 // meta-progression hook.
 
-const LEGENDS_KEY = 'nba820_legends';
+const LEGENDS_KEY = 'afl220_legends';
 
 /** @returns {Set<string>} the set of collected player ids. */
 export function getCollectedLegends() {
@@ -136,7 +136,7 @@ export function saveLeaderboard() {
     leaders:       packLeaders(r),
   };
   let lb = [];
-  try { lb = JSON.parse(cgGetItem('nba820_lb') || '[]'); } catch (e) {}
+  try { lb = JSON.parse(cgGetItem('afl220_lb') || '[]'); } catch (e) {}
   lb.push(entry);
   // Tie-breakers: 1° wins  2° Team Popularity
   lb.sort((a, b) => {
@@ -145,17 +145,17 @@ export function saveLeaderboard() {
   });
   if (lb.length > 20) lb = lb.slice(0, 20);
   try {
-    cgSetItem('nba820_lb', JSON.stringify(lb));
+    cgSetItem('afl220_lb', JSON.stringify(lb));
   } catch (e) {
     console.warn('[storage] leaderboard not saved', e);
   }
 }
 
 const MODE_LB_KEYS = {
-  defense: 'nba820_lb_defense',
-  fans: 'nba820_lb_fans',
-  'gm-ai': 'nba820_lb_gmai',
-  'dynasty-duel': 'nba820_lb_dynasty',
+  defense: 'afl220_lb_defense',
+  fans: 'afl220_lb_fans',
+  'gm-ai': 'afl220_lb_gmai',
+  'dynasty-duel': 'afl220_lb_dynasty',
 };
 
 /**
@@ -176,7 +176,7 @@ export function saveModeLeaderboard(mode, entry) {
   } else if (mode === 'gm-ai') {
     lb.sort((a, b) => (b.won === a.won ? 0 : b.won ? 1 : -1) || (b.margin ?? 0) - (a.margin ?? 0) || (b.strength ?? 0) - (a.strength ?? 0));
   } else {
-    lb.sort((a, b) => (b.wins ?? 0) - (a.wins ?? 0) || (b.teamStocks ?? 0) - (a.teamStocks ?? 0));
+    lb.sort((a, b) => (b.wins ?? 0) - (a.wins ?? 0) || (b.teamPressure ?? 0) - (a.teamPressure ?? 0));
   }
   if (lb.length > 20) lb = lb.slice(0, 20);
   try { cgSetItem(key, JSON.stringify(lb)); } catch (e) {
@@ -184,8 +184,8 @@ export function saveModeLeaderboard(mode, entry) {
   }
 }
 
-const DYNASTY_DUEL_KEY = 'nba820_dynasty_duel_last';
-const DYNASTY_DUEL_STREAK_KEY = 'nba820_dynasty_duel_streak';
+const DYNASTY_DUEL_KEY = 'afl220_dynasty_duel_last';
+const DYNASTY_DUEL_STREAK_KEY = 'afl220_dynasty_duel_streak';
 
 /**
  * @returns {{ weekKey: string, result: object|null, lastOpponentName: string|null, streak: number }}
@@ -201,7 +201,7 @@ export function getDynastyDuelStatus() {
   // Migrate legacy boss-week key once if present
   if (!result) {
     try {
-      result = JSON.parse(cgGetItem('nba820_boss_week_last') || 'null');
+      result = JSON.parse(cgGetItem('afl220_boss_week_last') || 'null');
       if (result) {
         result.opponentName = result.opponentName || result.bossName || null;
       }
@@ -210,7 +210,7 @@ export function getDynastyDuelStatus() {
 
   let streak = 0;
   try {
-    const s = JSON.parse(cgGetItem(DYNASTY_DUEL_STREAK_KEY) || cgGetItem('nba820_boss_week_streak') || '{}');
+    const s = JSON.parse(cgGetItem(DYNASTY_DUEL_STREAK_KEY) || cgGetItem('afl220_boss_week_streak') || '{}');
     streak = Number(s.streak) || 0;
   } catch (e) {}
 
@@ -267,11 +267,11 @@ export function saveToTrophyRoom() {
     starters:    POSITIONS.map(p => S.roster[p]?.name || '—').join(', '),
   };
   let trophies = [];
-  try { trophies = JSON.parse(cgGetItem('nba820_trophies') || '[]'); } catch (e) {}
+  try { trophies = JSON.parse(cgGetItem('afl220_trophies') || '[]'); } catch (e) {}
   trophies.unshift(entry);
   if (trophies.length > 12) trophies = trophies.slice(0, 12);
   try {
-    cgSetItem('nba820_trophies', JSON.stringify(trophies));
+    cgSetItem('afl220_trophies', JSON.stringify(trophies));
   } catch (e) {
     console.warn('[storage] trophy room not saved', e);
   }
@@ -281,13 +281,13 @@ export function saveToTrophyRoom() {
 
 function renderLeaderboardModal() {
   let lb = [];
-  try { lb = JSON.parse(cgGetItem('nba820_lb') || '[]'); } catch (e) {}
+  try { lb = JSON.parse(cgGetItem('afl220_lb') || '[]'); } catch (e) {}
   const top5 = lb.slice(0, 5);
 
   const rows = top5.length === 0
     ? `<p style="font-size:14px;color:var(--muted-fg);text-align:center;padding:24px 0">No runs yet — simulate a season to get on the board!</p>`
     : top5.map((e, i) => {
-        const isPerfect = e.wins === 82;
+        const isPerfect = e.wins === 22;
         const rowBg     = isPerfect
           ? 'background:var(--surface-amber);border-color:var(--amber-border)'
           : 'background:var(--card3);border-color:var(--border)';
@@ -571,7 +571,7 @@ function _globalLbRowsHtml(entries) {
     const wins       = Number(e.wins)      || 0;
     const losses     = Number(e.losses)    || 0;
     const chemScore  = Number(e.chemScore) || 0;
-    const isPerfect  = wins === 82;
+    const isPerfect  = wins === 22;
     const rowBg      = isPerfect ? 'background:var(--surface-amber);border-color:var(--amber-border)' : 'background:var(--card3);border-color:var(--border)';
     const medal      = i < 3
       ? `<span style="font-size:18px">${medals[i]}</span>`
@@ -582,7 +582,7 @@ function _globalLbRowsHtml(entries) {
       ? `<span style="font-size:10px;font-weight:900;padding:2px 7px;border-radius:999px;background:var(--amber-badge-bg);color:var(--amber-text);border:1px solid var(--amber-border);white-space:nowrap">🏆 CHAMP</span>`
       : '';
     const perfectBadge = isPerfect && !e.champion
-      ? `<span style="font-size:10px;font-weight:900;padding:2px 7px;border-radius:999px;background:var(--amber-badge-bg);color:var(--amber-text);border:1px solid var(--amber-border);white-space:nowrap">82–0</span>`
+      ? `<span style="font-size:10px;font-weight:900;padding:2px 7px;border-radius:999px;background:var(--amber-badge-bg);color:var(--amber-text);border:1px solid var(--amber-border);white-space:nowrap">22–0</span>`
       : '';
     return `
     <div role="button" tabindex="0" data-global-lb-index="${i}"
@@ -723,7 +723,7 @@ export function closeGlobalLeaderboardModal() {
 
 // ── Daily Challenge — local lock/recap + leaderboard modal ────────────────────
 
-const DAILY_KEY = 'nba820_daily_last';
+const DAILY_KEY = 'afl220_daily_last';
 
 /** @returns {{ today: string, playedToday: boolean, result: object|null }} */
 export function getDailyStatus() {
@@ -734,17 +734,17 @@ export function getDailyStatus() {
   return { today, playedToday, result: playedToday ? last : null };
 }
 
-const DAILY_STREAK_KEY = 'nba820_dailyStreak';
-const DAILY_STATS_KEY  = 'nba820_dailyStats';
+const DAILY_STREAK_KEY = 'afl220_dailyStreak';
+const DAILY_STATS_KEY  = 'afl220_dailyStats';
 
 /** Season-win bins for the Wordle-style distribution chart (6 rows). */
 export const DAILY_WIN_BINS = [
-  { key: '0-39',  label: '0–39',  min: 0,  max: 39 },
-  { key: '40-49', label: '40–49', min: 40, max: 49 },
-  { key: '50-59', label: '50–59', min: 50, max: 59 },
-  { key: '60-69', label: '60–69', min: 60, max: 69 },
-  { key: '70-79', label: '70–79', min: 70, max: 79 },
-  { key: '80-82', label: '80–82', min: 80, max: 82 },
+  { key: '0-3',   label: '0–3',   min: 0,  max: 3 },
+  { key: '4-7',   label: '4–7',   min: 4,  max: 7 },
+  { key: '8-11',  label: '8–11',  min: 8,  max: 11 },
+  { key: '12-15', label: '12–15', min: 12, max: 15 },
+  { key: '16-19', label: '16–19', min: 16, max: 19 },
+  { key: '20-22', label: '20–22', min: 20, max: 22 },
 ];
 
 function _emptyDailyDist() {
@@ -754,11 +754,11 @@ function _emptyDailyDist() {
 }
 
 function _binKeyForWins(wins) {
-  const w = Math.max(0, Math.min(82, Number(wins) || 0));
+  const w = Math.max(0, Math.min(22, Number(wins) || 0));
   for (const b of DAILY_WIN_BINS) {
     if (w >= b.min && w <= b.max) return b.key;
   }
-  return '0-39';
+  return '0-3';
 }
 
 /** @returns {{ streak: number, lastPassDate: string|null }} consecutive-day challenge passes */
@@ -923,7 +923,7 @@ function _dailyLbRowsHtml(entries) {
     const wins       = Number(e.wins)      || 0;
     const losses     = Number(e.losses)    || 0;
     const chemScore  = Number(e.chemScore) || 0;
-    const isPerfect  = wins === 82;
+    const isPerfect  = wins === 22;
     const rowBg      = isPerfect ? 'background:var(--surface-amber);border-color:var(--amber-border)' : 'background:var(--card3);border-color:var(--border)';
     const medal      = i < 3
       ? `<span style="font-size:18px">${medals[i]}</span>`
@@ -934,7 +934,7 @@ function _dailyLbRowsHtml(entries) {
       ? `<span style="font-size:10px;font-weight:900;padding:2px 7px;border-radius:999px;background:var(--amber-badge-bg);color:var(--amber-text);border:1px solid var(--amber-border);white-space:nowrap">🏆 CHAMP</span>`
       : '';
     const perfectBadge = isPerfect && !e.champion
-      ? `<span style="font-size:10px;font-weight:900;padding:2px 7px;border-radius:999px;background:var(--amber-badge-bg);color:var(--amber-text);border:1px solid var(--amber-border);white-space:nowrap">82–0</span>`
+      ? `<span style="font-size:10px;font-weight:900;padding:2px 7px;border-radius:999px;background:var(--amber-badge-bg);color:var(--amber-text);border:1px solid var(--amber-border);white-space:nowrap">22–0</span>`
       : '';
     // Challenge verdict — entries written before the challenge system lack
     // the field entirely and show no badge.

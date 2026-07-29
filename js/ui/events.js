@@ -20,7 +20,7 @@ import {
   playerTier, rosterFull, getSkips, useSkip,
 } from '../logic/draft.js';
 import { simulateSeason, simulateSeries, simulateHeadToHeadSeries, simulateDynastySeries } from '../logic/simulation.js';
-import { applyPlayoffRound } from '../logic/playoffs.js';
+import { applyPlayoffRound, ROUND_NAMES } from '../logic/playoffs.js';
 import {
   saveLeaderboard, saveToTrophyRoom, markReturning, recordLegends,
   showLeaderboardModal, closeLeaderboardModal,
@@ -345,7 +345,7 @@ function toggleTheme() {
   } else {
     html.removeAttribute('data-theme');
   }
-  try { localStorage.setItem('nba820_theme', next); } catch (e) {}
+  try { localStorage.setItem('afl220_theme', next); } catch (e) {}
   render();
 }
 
@@ -377,7 +377,7 @@ function doStartGame(era = 'all') {
   if (S.mode === 'gm-ai') {
     if (!S.coach) {
       let remembered = null;
-      try { remembered = localStorage.getItem('nba820_coach'); } catch (e) {}
+      try { remembered = localStorage.getItem('afl220_coach'); } catch (e) {}
       S.coach = COACHES.some(c => c.id === remembered) ? remembered : 'jackson';
     }
     S.p1Coach = S.coach;
@@ -392,7 +392,7 @@ function doStartGame(era = 'all') {
   // Changeable from the drafting screen until the first spin locks it.
   if (!S.coach) {
     let remembered = null;
-    try { remembered = localStorage.getItem('nba820_coach'); } catch (e) {}
+    try { remembered = localStorage.getItem('afl220_coach'); } catch (e) {}
     S.coach = COACHES.some(c => c.id === remembered) ? remembered : 'jackson';
   }
   startGame(era);
@@ -450,7 +450,7 @@ export function doSpin() {
     S.coachLocked     = true;
     S.coachPickerOpen = false;
     if (S.mode === 'gm-ai') S.p1Coach = S.coach;
-    try { if (S.coach) localStorage.setItem('nba820_coach', S.coach); } catch (e) {}
+    try { if (S.coach) localStorage.setItem('afl220_coach', S.coach); } catch (e) {}
   }
 
   if (!S.eraLocked) {
@@ -796,7 +796,7 @@ function doSimulate() {
   if (S.phase !== 'drafting' || isDualDraft()) return;
   const starters = POSITIONS.map(p => S.roster[p]).filter(Boolean);
 
-  // Dynasty Duel — skip the 82-game ticker; go straight to a best-of-7.
+  // Dynasty Duel — skip the 22-game ticker; go straight to a best-of-7.
   if (S.mode === 'dynasty-duel') {
     const opponent = S.dynastyOpponent || pickDynastyForPlay();
     S.result = simulateSeason(starters, S.coach);
@@ -872,7 +872,9 @@ function doSimulate() {
 
   // Rivalry Night — one mid-season marquee game against an all-time great.
   // W/L stays exactly as drawn; only the opponent and score dress up.
-  const rg = S.seasonGames[28 + Math.floor(Math.random() * 31)]; // games 29–59
+  // Games 8–16 of 22 — same ~35–72%-through-the-season window the NBA
+  // original used for its 82-game (games 29–59) schedule.
+  const rg = S.seasonGames[7 + Math.floor(Math.random() * 9)];
   rg.rival  = true;
   // Cosmetic draw — the daily seed governs draft OFFERS only (state.js), so
   // season dressing must not consume from the deterministic stream.
@@ -886,7 +888,7 @@ function doSimulate() {
   // Longest streak + first-loss marker — computed on the final presented
   // order (post cold-open reorder, post rival insert). The first loss of
   // the season always gets the dramatic beat, whenever it lands — that
-  // moment is the biggest emotional swing an 82-0 chase can produce.
+  // moment is the biggest emotional swing a 22-0 chase can produce.
   let curStreak = 0, longestStreak = 0;
   for (const g of S.seasonGames) {
     curStreak = g.won ? curStreak + 1 : 0;
@@ -919,22 +921,22 @@ function doSimulate() {
   // Capture personal bests BEFORE overwriting saved progress so the live
   // reveal can fire "tied your streak" and "new personal best" moments.
   let _prevBestSnap = null;
-  try { _prevBestSnap = JSON.parse(cgGetItem('nba820_best') || 'null'); } catch (e) {}
+  try { _prevBestSnap = JSON.parse(cgGetItem('afl220_best') || 'null'); } catch (e) {}
   S._prevBestWins   = _prevBestSnap ? _prevBestSnap.wins : 0;
   let _prevBestStreakRaw = '0';
-  try { _prevBestStreakRaw = cgGetItem('nba820_bestStreak') || '0'; } catch (e) {}
+  try { _prevBestStreakRaw = cgGetItem('afl220_bestStreak') || '0'; } catch (e) {}
   S._prevBestStreak = parseInt(_prevBestStreakRaw, 10);
 
   // Auto-persist personal best, best streak, and last-run tip — feeds the
   // mode-select greeting without requiring a manual "Save Run".
   try {
-    const prevBest = JSON.parse(cgGetItem('nba820_best') || 'null');
+    const prevBest = JSON.parse(cgGetItem('afl220_best') || 'null');
     if (!prevBest || S.result.wins > prevBest.wins) {
-      cgSetItem('nba820_best', JSON.stringify({ wins: S.result.wins, losses: S.result.losses }));
+      cgSetItem('afl220_best', JSON.stringify({ wins: S.result.wins, losses: S.result.losses }));
     }
-    const prevStreak = parseInt(cgGetItem('nba820_bestStreak') || '0', 10);
-    if (longestStreak > prevStreak) cgSetItem('nba820_bestStreak', String(longestStreak));
-    cgSetItem('nba820_lastRun', JSON.stringify({
+    const prevStreak = parseInt(cgGetItem('afl220_bestStreak') || '0', 10);
+    if (longestStreak > prevStreak) cgSetItem('afl220_bestStreak', String(longestStreak));
+    cgSetItem('afl220_lastRun', JSON.stringify({
       wins: S.result.wins, losses: S.result.losses,
       tip: computeAutopsy()?.fix || null,
     }));
@@ -1112,9 +1114,9 @@ function updateSeasonSimDOM() {
   const w = played.filter(g => g.won).length;
   recEl.textContent = `${w}–${played.length - w}`;
   const gpEl = document.getElementById('sim-gp');
-  if (gpEl) gpEl.textContent = `Game ${played.length} of 82`;
+  if (gpEl) gpEl.textContent = `Game ${played.length} of 22`;
   const barEl = document.getElementById('sim-progress');
-  if (barEl) barEl.style.width = `${(played.length / 82) * 100}%`;
+  if (barEl) barEl.style.width = `${(played.length / 22) * 100}%`;
   tickEl.innerHTML = renderSeasonTickerRows();
 
   const streakEl = document.getElementById('sim-streak');
@@ -1134,7 +1136,7 @@ function updateSeasonSimDOM() {
     const prevBestWins = S._prevBestWins || 0;
     let bsText = '', bsColor = '#94a3b8';
     if (prevBestWins > 0 && played.length >= 5) {
-      const pace = Math.round(prevBestWins * played.length / 82);
+      const pace = Math.round(prevBestWins * played.length / 22);
       const diff = w - pace;
       if (diff > 0) {
         bsText  = `↑ ${diff} ahead of ${prevBestWins}-win pace`;
@@ -1386,12 +1388,12 @@ async function shareResultCard(data) {
   try { blob = await buildShareCardBlob(data); } catch (e) { /* canvas unsupported — degrade to text-only share below */ }
 
   if (blob) {
-    const file = new File([blob], 'can-you-go-82-0.png', { type: 'image/png' });
+    const file = new File([blob], 'can-you-go-22-0.png', { type: 'image/png' });
     if (navigator.canShare?.({ files: [file] })) {
-      try { await navigator.share({ title: '82-0', text: caption, files: [file] }); return; }
+      try { await navigator.share({ title: '22-0', text: caption, files: [file] }); return; }
       catch (e) { if (e?.name === 'AbortError') return; /* user cancelled — otherwise fall through to download */ }
     }
-    downloadBlob(blob, 'can-you-go-82-0.png');
+    downloadBlob(blob, 'can-you-go-22-0.png');
     if (navigator.clipboard) {
       navigator.clipboard.writeText(caption)
         .then(()  => showToast('🖼️ Card downloaded + caption copied!'))
@@ -1403,10 +1405,10 @@ async function shareResultCard(data) {
   }
 
   if (navigator.share) {
-    navigator.share({ title: '82-0', text: caption }).catch(() => {});
+    navigator.share({ title: '22-0', text: caption }).catch(() => {});
   } else if (navigator.clipboard) {
     navigator.clipboard.writeText(caption)
-      .then(()  => showToast('Copied to clipboard! 🏀'))
+      .then(()  => showToast('Copied to clipboard! 🏉'))
       .catch(() => showToast('Failed to copy to clipboard'));
   } else {
     showToast('Failed to copy to clipboard');
@@ -1457,8 +1459,8 @@ function fireChampionConfetti() {
 }
 
 function doAdvanceToPlayoffs() {
-  if (!S.result || S.result.wins < 20) {
-    showToast('Need at least 20 wins to enter the playoffs');
+  if (!S.result || S.result.wins < 8) {
+    showToast('Need at least 8 wins to make the Finals');
     return;
   }
   const playerStrength = S.result.strength;
@@ -1476,8 +1478,8 @@ function doAdvanceToPlayoffs() {
     champion:      false,
     championTeam:  null,
     tickState:     null,
-    pendingReveal: false, // true right after "Simulate Entire Playoffs" — holds on the filled bracket before the champion/eliminated splash
-    roundNames:   ['Conference Quarterfinals', 'Conference Semifinals', 'NBA Finals'],
+    pendingReveal: false, // true right after "Simulate Entire Finals" — holds on the filled bracket before the champion/eliminated splash
+    roundNames:   ROUND_NAMES,
   };
   S.phase = 'playoffs';
   render();
@@ -1520,9 +1522,9 @@ function doSimNextRound() {
 
 function doSimAllPlayoffs() {
   const po = S.playoffs;
-  if (po.tickState || po.currentRound >= 3) return;
+  if (po.tickState || po.currentRound >= 4) return;
 
-  while (po.currentRound < 3) {
+  while (po.currentRound < 4) {
     const results = computeRoundResults(po.bracket);
     applyPlayoffRound(po, results);
   }

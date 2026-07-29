@@ -134,11 +134,11 @@ function drawCard(ctx, data) {
   ctx.lineWidth = 4; ctx.strokeStyle = '#f97316'; ctx.stroke();
   ctx.font = '32px Arial, sans-serif';
   ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-  ctx.fillText('🏀', 116, brandMidY + 2);
+  ctx.fillText('🏉', 116, brandMidY + 2);
 
   ctx.font = "900 28px 'Arial Black', Arial, sans-serif";
   ctx.fillStyle = '#f97316';
-  fillTextTracked(ctx, 'CAN YOU GO 82-0?', 172, brandMidY, 3, 'left');
+  fillTextTracked(ctx, 'CAN YOU GO 22-0?', 172, brandMidY, 3, 'left');
 
   if (dailyLabel) {
     // Fixed short badge regardless of the full caption text — dailyLabel can be
@@ -150,13 +150,13 @@ function drawCard(ctx, data) {
   } else if (isChampion) {
     ctx.font = "900 19px 'Arial Black', Arial, sans-serif";
     ctx.fillStyle = '#fcd34d';
-    fillTextTracked(ctx, '🏆 CHAMPION', W - 80, brandMidY, 2, 'right');
+    fillTextTracked(ctx, '🏆 PREMIERS', W - 80, brandMidY, 2, 'right');
   }
   cy += BRAND;
 
   // ── Tier pill ──
   ctx.font = "900 32px 'Arial Black', Arial, sans-serif";
-  const pillText = `${tierEmoji}  ${(isChampion ? 'NBA CHAMPIONS' : tierLabel).toUpperCase()}`;
+  const pillText = `${tierEmoji}  ${(isChampion ? 'PREMIERS' : tierLabel).toUpperCase()}`;
   const pillW = trackedWidth(ctx, pillText, 2) + 80;
   roundRect(ctx, W / 2 - pillW / 2, cy, pillW, 76, 38);
   ctx.fillStyle = tc.bg; ctx.fill();
@@ -266,7 +266,7 @@ export function buildShareCardBlob(data) {
 export function buildShareCaption(data) {
   const { wins, losses, tierLabel, tierEmoji, chemScore, isChampion, starters, dailyLabel } = data;
   const headline = isChampion
-    ? `🏆 ${wins}-${losses} — NBA CHAMPIONS`
+    ? `🏆 ${wins}-${losses} — PREMIERS`
     : `${tierEmoji} ${wins}-${losses} — ${tierLabel}`;
   const starterLines = starters
     .map(s => `🌟 ${s.name}${s.team ? ` (${[s.team, s.decade].filter(Boolean).join(' ')})` : ''}`)
@@ -278,10 +278,10 @@ export function buildShareCaption(data) {
     dailyLabel || null,
     headline,
     '',
-    'Starting 5:',
+    'Starting Six:',
     starterLines,
     chemLine,
     '',
-    'Can you beat it? → canyougo820.com',
+    'Can you beat it? Play Can You Go 22-0?',
   ].filter(l => l !== null).join('\n').replace(/\n{3,}/g, '\n\n').trim();
 }

@@ -29,11 +29,11 @@ export function isDualDraft(mode = S?.mode) {
 /** Modes reached from the Challenges screen (not primary tiles). */
 export const MORE_MODES = [
   { id: 'gm-ai',          action: 'mode-gm-ai',          label: 'GM vs AI',      emoji: '🤖',
-    desc: 'Draft against a CPU general manager, then face its lineup in a best-of-7.' },
+    desc: 'Draft against a CPU general manager, then face its lineup in a best-of-3 Challenge Series.' },
   { id: 'dynasty-duel',   action: 'mode-dynasty-duel',   label: 'Dynasty Duel',  emoji: '👑',
-    desc: 'Beat a random legendary team in a best-of-7 — play as often as you want.' },
-  { id: 'defense',        action: 'mode-defense',        label: 'Defense Only',  emoji: '🛡️',
-    desc: 'Stocks & boards win it — scoring volume matters less this sim.' },
+    desc: 'Beat a random legendary team in a best-of-3 Challenge Series — play as often as you want.' },
+  { id: 'defense',        action: 'mode-defense',        label: 'Stoppers Only', emoji: '🛡️',
+    desc: 'Tackles & clearances win it — scoring volume matters less this sim.' },
   { id: 'fans',           action: 'mode-fans',           label: 'Fans First',    emoji: '📣',
     desc: 'Optimize star power — score by popularity, fans, and wins.' },
 ];
@@ -56,5 +56,5 @@ export function fansFirstScore(avgPopularity, fansM, wins) {
 }
 
 export function fansFirstPassed(avgPopularity, wins) {
-  return (avgPopularity ?? 0) >= 70 && (wins ?? 0) >= 35;
+  return (avgPopularity ?? 0) >= 70 && (wins ?? 0) >= 9;
 }

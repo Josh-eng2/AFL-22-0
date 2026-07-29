@@ -6,18 +6,18 @@ import { CPU_TEAMS } from './state.js';
 
 /** Curated rotation — references CPU_TEAMS by name. */
 const DYNASTY_ROTATION = [
-  '96 Bulls',
-  '17 Warriors',
-  '86 Celtics',
-  '87 Lakers',
-  '01 Lakers',
-  '13 Heat',
-  '14 Spurs',
-  '04 Pistons',
-  '16 Cavaliers',
-  '08 Celtics',
-  '94 Rockets',
-  '89 Pistons',
+  "'89 Hawthorn",
+  "'15 Hawthorn",
+  "'03 Brisbane Lions",
+  "'86 Hawthorn",
+  "'99 North Melbourne",
+  "'01 Brisbane Lions",
+  "'11 Geelong",
+  "'80 Richmond",
+  "'20 Richmond",
+  "'96 North Melbourne",
+  "'21 Melbourne",
+  "'19 Richmond",
 ];
 
 function findCpu(name) {

@@ -52,62 +52,70 @@ function minPopularity() {
 // restricts which decades count as available (multi-decade windows).
 // Locked `playerId`s must exist in players.json — getDailyChallenge skips
 // entries whose id has drifted after a data regeneration.
-// `maxRating` caps (none currently in the catalog) are on the `overall` scale
-// (era-adjusted 2K rating, mean ≈87), NOT the stats-derived `rating` scale.
+// `maxRating` caps (none currently in the catalog) are on the `overall` scale.
+//
+// AFL port note: win thresholds are rescaled from the NBA original's 82-game
+// bands (50/55/60/65/70) to a 22-game season at roughly the same win rate
+// (13/14/15/16/19). 'no-victorians' is a genuine AFL challenge concept for
+// the eventual full 18-club dataset, but the current 41-player stub only
+// covers three Victorian clubs (Carlton/Essendon/North Melbourne) — until
+// interstate clubs have real data, that combo has zero eligible players and
+// the daily spin will fail gracefully (soft toast) rather than deal a board.
+// See docs/afl-port-plan.md §7.2/§9.
 export const CHALLENGES = [
   // ── Draft constraints ──
-  { id: 'nineties-only',  type: 'constraint', emoji: '📼', title: "'90s Night",
-    desc: 'Only 1990s players — win 55+ games.',
-    params: { era: '1990s', minWins: 55 } },
-  { id: 'y2k-ball',       type: 'constraint', emoji: '💿', title: 'Y2K Ball',
-    desc: 'Only 2000s players — win 55+ games.',
-    params: { era: '2000s', minWins: 55 } },
+  { id: 'nineties-only',  type: 'constraint', emoji: '📼', title: "'90s Only",
+    desc: 'Only 1990s players — win 14+ games.',
+    params: { era: '1990s', minWins: 14 } },
+  { id: 'turn-of-century', type: 'constraint', emoji: '💿', title: 'Turn of the Century',
+    desc: 'Only 2000s players — win 14+ games.',
+    params: { era: '2000s', minWins: 14 } },
   { id: 'old-school',     type: 'constraint', emoji: '🎩', title: 'Old School',
-    desc: 'Pre-1990 players only (60s–80s) — win 50+ games.',
-    params: { allowedDecades: ['1960s', '1970s', '1980s'], minWins: 50 } },
+    desc: 'Pre-1990 players only (70s–80s) — win 13+ games.',
+    params: { allowedDecades: ['1970s', '1980s'], minWins: 13 } },
   { id: 'modern-era',     type: 'constraint', emoji: '🚀', title: 'Modern Era',
-    desc: 'Only 2010s and 2020s players — win 55+ games.',
-    params: { allowedDecades: ['2010s', '2020s'], minWins: 55 } },
-  { id: 'budget-ball',    type: 'constraint', emoji: '👎', title: 'Boos Only',
-    desc: 'Total roster fans under 300 — win 50+ games.',
-    params: { maxPopTotal: 300, minWins: 50 } },
-  { id: 'no-la-boston',   type: 'constraint', emoji: '🙅', title: 'Flyover Hoops',
-    desc: 'No Lakers, no Celtics — win 60+ games.',
-    params: { excludeTeams: ['Lakers', 'Celtics'], minWins: 60 } },
+    desc: 'Only 2010s and 2020s players — win 14+ games.',
+    params: { allowedDecades: ['2010s', '2020s'], minWins: 14 } },
+  { id: 'cheap-seats',    type: 'constraint', emoji: '👎', title: 'Cheap Seats',
+    desc: 'Total roster fans under 350 — win 13+ games.',
+    params: { maxPopTotal: 350, minWins: 13 } },
+  { id: 'no-victorians',  type: 'constraint', emoji: '🙅', title: 'No Victorians',
+    desc: 'No Victorian clubs — win 15+ games.',
+    params: { excludeTeams: ['Carlton', 'Collingwood', 'Essendon', 'Geelong', 'Hawthorn', 'Melbourne', 'NorthMelbourne', 'Richmond', 'StKilda', 'WesternBulldogs'], minWins: 15 } },
 
   // ── Result objectives ──
-  { id: 'win-65',         type: 'objective', emoji: '🎯', title: '65-Win Season',
-    desc: 'Any roster — win at least 65 games.',
-    params: { minWins: 65 } },
-  { id: 'win-70',         type: 'objective', emoji: '🏔️', title: 'Air Rare',
-    desc: 'Any roster — win at least 70 games.',
-    params: { minWins: 70 } },
-  { id: 'volume-scorer',  type: 'objective', emoji: '🔥', title: 'Bucket Getter',
-    desc: 'A starter must average 30+ PPG this season — and win 50+ games.',
-    params: { minWins: 50, starterPpg: 30 } },
-  { id: 'swat-team',      type: 'objective', emoji: '🖐️', title: 'Swat Team',
-    desc: 'Your five must combine for 8+ blocks per game — and win 50+ games.',
-    params: { minWins: 50, teamBpg: 8 } },
+  { id: 'win-16',         type: 'objective', emoji: '🎯', title: '16-Win Season',
+    desc: 'Any roster — win at least 16 games.',
+    params: { minWins: 16 } },
+  { id: 'flag-favourite', type: 'objective', emoji: '🏔️', title: 'Flag Favourite',
+    desc: 'Any roster — win at least 19 games.',
+    params: { minWins: 19 } },
+  { id: 'the-bag',        type: 'objective', emoji: '🔥', title: 'The Bag',
+    desc: 'A starter must average 3+ goals this season — and win 13+ games.',
+    params: { minWins: 13, starterGoals: 3 } },
+  { id: 'tackle-machine', type: 'objective', emoji: '🖐️', title: 'Tackle Machine',
+    desc: 'Your six must combine for 20+ tackles per game — and win 13+ games.',
+    params: { minWins: 13, teamTackles: 20 } },
   { id: 'chemistry-class', type: 'objective', emoji: '🧪', title: 'Chemistry Class',
-    desc: 'Reach Perfect Team Chemistry and win 55+ games.',
-    params: { minWins: 55, minChem: 95 } },
+    desc: 'Reach Perfect Team Chemistry and win 14+ games.',
+    params: { minWins: 14, minChem: 95 } },
   { id: 'wire-to-wire',   type: 'objective', emoji: '⚡', title: 'Wire to Wire',
-    desc: 'Put together a 20-game win streak at some point in the season.',
-    params: { minWins: 50, minStreak: 20 } },
+    desc: 'Put together a 6-game win streak at some point in the season.',
+    params: { minWins: 13, minStreak: 6 } },
 
   // ── Locked-player builds ──
-  { id: 'build-around-shaq',    type: 'locked', emoji: '🪓', title: 'Shaq Attack',
-    desc: "Shaquille O'Neal ('94 Magic) is locked at center. Build around him — win 60+ games.",
-    params: { playerId: 'shaq_94', pos: 'C', minWins: 60 } },
-  { id: 'build-around-lebron',  type: 'locked', emoji: '👑', title: 'The King\'s Court',
-    desc: "LeBron James ('18 Lakers) is locked at small forward. Win 60+ games.",
-    params: { playerId: 'lebron_18', pos: 'SF', minWins: 60 } },
-  { id: 'build-around-magic',   type: 'locked', emoji: '🎩', title: 'Showtime',
-    desc: "Magic Johnson ('87 Lakers) is locked at point guard. Win 60+ games.",
-    params: { playerId: 'magic_87', pos: 'PG', minWins: 60 } },
-  { id: 'build-around-giannis', type: 'locked', emoji: '🦌', title: 'Greek Freak',
-    desc: 'Giannis (\'19 Bucks) is locked at power forward. Win 60+ games.',
-    params: { playerId: 'giannis_19', pos: 'PF', minWins: 60 } },
+  { id: 'build-around-carey',      type: 'locked', emoji: '👑', title: "The King's Court",
+    desc: "Wayne Carey ('96 North Melbourne) is locked at key forward. Build around him — win 15+ games.",
+    params: { playerId: 'carey_96', pos: 'KF', minWins: 15 } },
+  { id: 'build-around-cripps',     type: 'locked', emoji: '🏉', title: 'Captain Courageous',
+    desc: "Patrick Cripps ('18 Carlton) is locked at midfield. Win 15+ games.",
+    params: { playerId: 'cripps_18', pos: 'MID', minWins: 15 } },
+  { id: 'build-around-betts',      type: 'locked', emoji: '🎩', title: 'Eddie Special',
+    desc: "Eddie Betts ('12 Carlton) is locked at small forward. Win 15+ games.",
+    params: { playerId: 'betts_12', pos: 'SF', minWins: 15 } },
+  { id: 'build-around-goldstein',  type: 'locked', emoji: '🦌', title: 'Ruck Domination',
+    desc: "Todd Goldstein ('17 North Melbourne) is locked in the ruck. Win 15+ games.",
+    params: { playerId: 'goldstein_17', pos: 'RUC', minWins: 15 } },
 ];
 
 // ── Date & seeded selection ───────────────────────────────────────────────────
@@ -251,7 +259,7 @@ export function checkPickLegal(challenge, player, filled = []) {
     // Block picks that make the budget mathematically impossible: current sum
     // + this player + a floor-priced player in every remaining slot.
     const sum       = filled.reduce((s, p) => s + (p.popularity ?? 50), 0);
-    const remaining = Math.max(0, 5 - filled.length - 1);
+    const remaining = Math.max(0, 6 - filled.length - 1);
     if (sum + (player.popularity ?? 50) + remaining * minPopularity() >= P.maxPopTotal) {
       return { legal: false, reason: `Too many fans — busts the ${P.maxPopTotal} budget` };
     }
@@ -299,7 +307,7 @@ export function checkRosterConstraint(challenge, starters) {
 
 /**
  * Pass/fail for the day, decided at the end of the regular season (the
- * daily board deliberately captures the shared 82-game run only — playoffs
+ * daily board deliberately captures the shared 22-game run only — finals
  * stay out of it, matching markDailyPlayed's lock-at-sim-time rule).
  *
  * Reads S.result (wins, playerStats, simTotals, chemScore, longestStreak)
@@ -317,12 +325,12 @@ export function evaluateObjective(challenge, S) {
 
   if (r.wins < (P.minWins ?? 0)) failures.push(`Won ${r.wins} — needed ${P.minWins}`);
 
-  if (P.starterPpg != null) {
-    const best = (r.playerStats || []).reduce((m, l) => Math.max(m, l.ppg), 0);
-    if (best < P.starterPpg) failures.push(`Top scorer averaged ${best.toFixed(1)} — needed ${P.starterPpg}+`);
+  if (P.starterGoals != null) {
+    const best = (r.playerStats || []).reduce((m, l) => Math.max(m, l.goals), 0);
+    if (best < P.starterGoals) failures.push(`Top scorer averaged ${best.toFixed(1)} — needed ${P.starterGoals}+`);
   }
-  if (P.teamBpg != null && (r.simTotals?.bpg ?? 0) < P.teamBpg) {
-    failures.push(`Team blocked ${(r.simTotals?.bpg ?? 0).toFixed(1)}/game — needed ${P.teamBpg}+`);
+  if (P.teamTackles != null && (r.simTotals?.tackles ?? 0) < P.teamTackles) {
+    failures.push(`Team tackled ${(r.simTotals?.tackles ?? 0).toFixed(1)}/game — needed ${P.teamTackles}+`);
   }
   if (P.minChem != null && (r.chemScore ?? 0) < P.minChem) {
     failures.push('Team Chemistry too low — stack more synergies');

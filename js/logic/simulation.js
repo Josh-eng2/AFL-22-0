@@ -1,14 +1,14 @@
 /**
- * js/logic/simulation.js — Season & Playoff Simulation Engine
+ * js/logic/simulation.js — Season & Finals Simulation Engine
  *
- * Starters-only format: team strength comes entirely from the starting 5.
+ * Starters-only format: team strength comes entirely from the starting six.
  * A sigmoid maps adjustedStrength → per-game win probability.
  * Chemistry bonuses/penalties (from chemistry.js) are baked into
  * adjustedStrength before the sigmoid is applied.
  *
  * Exports:
  *   simulateSeason(starters, coach, profile?)  → full result object
- *   simulateSeries(playerStr, oppStr) → series result object
+ *   simulateSeries(playerStr, oppStr) → single-game finals result object
  *   simulateDynastySeries(playerSeason, opponent) → head-to-head shaped series result
  */
 
@@ -20,50 +20,56 @@ import { getModeConfig }       from '../logic/modes.js';
 
 // ── Sigmoid tuning knobs ──────────────────────────────────────────────────────
 // SIM_K:      steepness — lower = more gradual spread between good/bad teams
-// SIM_CENTER: adjustedStrength that maps to exactly 50 % win rate
-//             (raise to make 82-0 rarer, lower to make it easier)
-// WIN_CAP:    per-game win probability ceiling — 0.99 means even a maxed
-//             roster can lose any given night, so 82-0 is never guaranteed
+// SIM_CENTER: adjustedStrength that maps to exactly 50% win rate
+//             (raise to make 22-0 rarer, lower to make it easier)
+// WIN_CAP:    per-game win probability ceiling — 0.90 means even a maxed
+//             roster can lose any given week, so 22-0 is never guaranteed
 //
-// Retuned (K 5→3.5, CENTER 1.62→1.8, CAP 1.0→0.99) after the previous curve
-// made perfection routine: a star-chasing roster hit 80-win medians and went
-// 82-0 in roughly a quarter of runs. Empirical anchors from 400-sample sweeps
-// against the live DB under THESE constants (strengths are post-multiplier):
-//   star-chasing builds — median 2.36 → ~72 wins; p90 2.75 → ~79 wins;
-//   P(82-0) ≈ 1.5 % across those builds (the chase stays real but rare)
-//   random builds       — median 1.41 → ~17 wins; p90 1.78 → ~40 wins
-// Daily-challenge win gates under this curve (star-chasing builds):
-//   55+ ≈ 83 % · 60+ ≈ 76 % · 65+ ≈ 66 % · 70+ ≈ 54 % pass rates pre-constraint.
-const SIM_K      = 3.5;
-const SIM_CENTER = 1.8;
-const WIN_CAP    = 0.99;
+// AFL port note: the NBA original's constants (K 3.5, CENTER 1.8, CAP 0.99)
+// were fitted to an 82-game season via 400-sample sweeps against its live
+// DB, targeting P(82-0) ≈ 1.5% for star-chasing builds. A 22-game season
+// needs a much lower per-game ceiling to hit the same target — p^82 = 0.015
+// only needs p ≈ 0.95, but p^22 = 0.015 needs p ≈ 0.83. The values below are
+// an ANALYTICAL re-derivation from the NBA original's own documented strength
+// anchors (star-chasing median strength ≈ 2.36, p90 ≈ 2.75; random median
+// ≈ 1.41, p90 ≈ 1.78) rather than a fresh empirical sweep — the ratio-based
+// strength formula is scale-invariant to the underlying stat units, so the
+// NBA original's strength distribution is a reasonable stand-in until a real
+// sweep can run against a full AFL dataset (docs/afl-port-plan.md §9). With
+// these constants: star-chasing median strength 2.36 → winPct ≈ 0.70 →
+// ~15/22 wins; p90 2.75 → winPct ≈ 0.82 → P(22-0) ≈ 1.3%. Random median
+// strength 1.41 → winPct ≈ 0.29 → ~6/22 wins; p90 1.78 → winPct ≈ 0.45 →
+// ~10/22 wins.
+const SIM_K      = 1.8;
+const SIM_CENTER = 1.9;
+const WIN_CAP    = 0.90;
 
 let _baselinesCache = null;
 
 /**
  * Derives the dynamic STARTER_BASE from the live DB.
- * Treats the top ~71.4 % of players (by composite score) as the starter tier.
- * Stats are pace-adjusted to modern tempo (see era.js) before ranking and
- * averaging, so the tier isn't just "whoever played in the fastest decade" —
- * a 1960s big's raw 23 rpg and a 2000s big's raw 13 rpg are compared on the
- * same footing.
+ * Treats the top ~71.4% of players (by composite score) as the starter tier.
+ * Stats are era-adjusted (see era.js) before ranking and averaging, so the
+ * tier isn't just "whoever played in the highest-possession decade" — a
+ * 1970s midfielder's raw disposal count and a 2010s midfielder's raw
+ * disposal count are compared on the same footing.
  * Memoized — DB never changes after startup so the sort runs at most once.
  */
 function computeSimBaselines() {
   if (_baselinesCache) return _baselinesCache;
-  const STATS = ['ppg', 'rpg', 'apg', 'spg', 'bpg'];
+  const STATS = ['goals', 'marks', 'disposals', 'tackles', 'clearances'];
   const all   = [];
   for (const [bucketKey, players] of Object.entries(DB)) {
     const decade = decadeFromBucketKey(bucketKey);
     for (const p of players) all.push({ ...eraAdjustedLine({ ...p, decade }) });
   }
-  const score  = p => p.ppg * 0.35 + p.rpg * 0.20 + p.apg * 0.20 + p.spg * 0.15 + p.bpg * 0.10;
+  const score  = p => p.goals * 0.35 + p.marks * 0.20 + p.disposals * 0.20 + p.tackles * 0.15 + p.clearances * 0.10;
   const sorted = [...all].sort((a, b) => score(b) - score(a));
-  const cut    = Math.round(sorted.length * 5 / 7); // tier cut unchanged — keeps STARTER_BASE identical
+  const cut    = Math.round(sorted.length * 5 / 7); // tier cut unchanged — keeps STARTER_BASE proportion identical
   const sTier  = sorted.slice(0, cut);
   const avg    = (arr, stat) => arr.reduce((s, p) => s + p[stat], 0) / arr.length;
   _baselinesCache = {
-    STARTER_BASE: Object.fromEntries(STATS.map(k => [k, avg(sTier, k) * 5])),
+    STARTER_BASE: Object.fromEntries(STATS.map(k => [k, avg(sTier, k) * 6])), // 6-player starting lineup
   };
   return _baselinesCache;
 }
@@ -94,7 +100,7 @@ function statRatioProgress(players, stats, base, slotCount) {
 
 /**
  * @param {string} coach     coach id
- * @param {object[]} starters filled starter players (0–5 during draft)
+ * @param {object[]} starters filled starter players (0–6 during draft)
  * @returns {{ progress: number, metric: string }}
  */
 export function coachSystemProgress(coach, starters) {
@@ -102,24 +108,24 @@ export function coachSystemProgress(coach, starters) {
 
   if (coach === 'jackson') {
     const stars = starters.filter(p => (p.popularity ?? 50) >= 85).length;
-    return { progress: clamp01(stars / 4), metric: `${stars}/4 stars` };
+    return { progress: clamp01(stars / 5), metric: `${stars}/5 stars` };
   }
   if (coach === 'kerr') {
-    const shooters = starters.filter(p => p.archetype === 'Sharpshooter').length;
-    return { progress: clamp01(shooters / 3), metric: `${shooters}/3 sharpshooters` };
+    const sharpshooters = starters.filter(p => p.archetype === 'Goal Sneak').length;
+    return { progress: clamp01(sharpshooters / 3), metric: `${sharpshooters}/3 sharpshooters` };
   }
   if (coach === 'popovich') {
-    // The Beautiful Game — efficient team offense (re-homed from bench depth)
-    const p = statRatioProgress(starters, ['ppg'], STARTER_BASE, 5);
+    // Contested Footy — efficient team scoring off clearance work.
+    const p = statRatioProgress(starters, ['goals'], STARTER_BASE, 6);
     return { progress: p, metric: `Offense ${Math.round(p * 100)}%` };
   }
   if (coach === 'rivers') {
     // Cohesion — no weak links: keyed to the worst starter stat ratio,
     // the same signal the sim's balance penalty punishes.
     if (!starters.length) return { progress: 0, metric: 'Balance 0%' };
-    const frac = starters.length / 5;
+    const frac = starters.length / 6;
     let minRatio = Infinity;
-    for (const k of ['ppg', 'rpg', 'apg', 'spg', 'bpg']) {
+    for (const k of ['goals', 'marks', 'disposals', 'tackles', 'clearances']) {
       const tot = starters.reduce((s, p) => s + eraAdjustedStat(p, k), 0);
       minRatio = Math.min(minRatio, tot / (STARTER_BASE[k] * frac));
     }
@@ -127,13 +133,13 @@ export function coachSystemProgress(coach, starters) {
     return { progress: p, metric: `Balance ${Math.round(p * 100)}%` };
   }
   const starterSystems = {
-    auerbach: { stats: ['rpg', 'bpg'], label: 'Interior D' },
-    riley:    { stats: ['spg'],        label: 'Perimeter D' },
-    holzman:  { stats: ['apg'],        label: 'Ball movement' },
+    auerbach: { stats: ['marks', 'clearances'], label: 'Tall-line D' },
+    riley:    { stats: ['tackles'],              label: 'Pressure D' },
+    holzman:  { stats: ['disposals'],            label: 'Ball movement' },
   };
   const sys = starterSystems[coach];
   if (sys) {
-    const p = statRatioProgress(starters, sys.stats, STARTER_BASE, 5);
+    const p = statRatioProgress(starters, sys.stats, STARTER_BASE, 6);
     return { progress: p, metric: `${sys.label} ${Math.round(p * 100)}%` };
   }
   return { progress: 0, metric: '' };
@@ -142,48 +148,48 @@ export function coachSystemProgress(coach, starters) {
 // ── Loss diagnosis ────────────────────────────────────────────────────────────
 // Human-readable labels for each tracked stat.
 const STAT_LABEL = {
-  ppg: 'scoring',
-  rpg: 'rebounding',
-  apg: 'playmaking',
-  spg: 'perimeter defense',
-  bpg: 'rim protection',
+  goals:      'scoring',
+  marks:      'marking',
+  disposals:  'ball use',
+  tackles:    'defensive pressure',
+  clearances: 'clearance work',
 };
 
 // Which position slot is most accountable for generating each stat.
 // The first position in each array is "most responsible" and so on down.
-// This ensures a C with low APG is never indicted for a playmaking gap —
-// the PG owns that slot.
+// This ensures a RUC with low disposals is never indicted for a ball-use
+// gap — the MID owns that slot.
 const STAT_ROLE_PRIORITY = {
-  ppg: ['SG', 'SF', 'PG', 'PF', 'C'],
-  rpg: ['C',  'PF', 'SF', 'SG', 'PG'],
-  apg: ['PG', 'SG', 'SF', 'PF', 'C'],
-  spg: ['PG', 'SG', 'SF', 'PF', 'C'],
-  bpg: ['C',  'PF', 'SF', 'SG', 'PG'],
+  goals:      ['KF', 'SF', 'MID', 'RUC', 'HB', 'KD'],
+  marks:      ['RUC', 'KF', 'KD', 'HB', 'MID', 'SF'],
+  disposals:  ['MID', 'HB', 'SF', 'KD', 'RUC', 'KF'],
+  tackles:    ['MID', 'SF', 'HB', 'KD', 'RUC', 'KF'],
+  clearances: ['MID', 'RUC', 'HB', 'KD', 'KF', 'SF'],
 };
 
 // Plain-English draft advice for each stat gap.
 const STAT_DRAFT_FIX = {
-  ppg: 'a higher-scoring starter — look for strong PPG at SG or SF',
-  rpg: 'a dominant rebounder — target a C or PF with elite RPG',
-  apg: 'a playmaking guard — look for strong APG at PG',
-  spg: 'a perimeter stopper — target a PG or SG with high SPG',
-  bpg: 'a rim protector — look for a C or PF with strong BPG',
+  goals:      'a more potent forward — look for strong scoring at KF or SF',
+  marks:      'a dominant overhead mark — target a RUC or KF with elite marking',
+  disposals:  'a ball-winning midfielder — look for strong disposals at MID',
+  tackles:    'a pressure defender — target a MID or HB with high tackle numbers',
+  clearances: 'a clearance winner — look for a MID or RUC with strong clearance numbers',
 };
 
 /**
  * Packages the engine's balance-penalty diagnosis into a structured object
  * the UI can display verbatim — no re-derivation on the UI side needed.
  *
- * Culprit selection uses position-role priority so a center is never blamed
- * for a playmaking gap, a guard is never blamed for a rim-protection gap, etc.
+ * Culprit selection uses position-role priority so a ruck is never blamed
+ * for a ball-use gap, a defender is never blamed for a scoring gap, etc.
  * Tie-breaking follows: (1) role priority, (2) worst contributor relative to
  * per-player baseline, (3) lowest raw stat value, (4) draft-slot order.
  *
  * @param {object[]} starters
- * @param {string}   weakestStat   — 'ppg'|'rpg'|'apg'|'spg'|'bpg'
+ * @param {string}   weakestStat   — 'goals'|'marks'|'disposals'|'tackles'|'clearances'
  * @param {number}   balancePenalty
  * @param {object}   sRatio        — team stat / STARTER_BASE per stat
- * @param {object}   STARTER_BASE  — 5-player aggregate baselines
+ * @param {object}   STARTER_BASE  — 6-player aggregate baselines
  * @returns {object|null}
  */
 function buildLossDiagnosis(starters, weakestStat, balancePenalty, sRatio, STARTER_BASE) {
@@ -191,12 +197,12 @@ function buildLossDiagnosis(starters, weakestStat, balancePenalty, sRatio, START
 
   const statLabel      = STAT_LABEL[weakestStat] || weakestStat;
   const teamRatio      = sRatio[weakestStat];
-  const perPlayerBase  = STARTER_BASE[weakestStat] / 5; // expected per-starter contribution
-  const rolePriority   = STAT_ROLE_PRIORITY[weakestStat] || ['PG', 'SG', 'SF', 'PF', 'C'];
+  const perPlayerBase  = STARTER_BASE[weakestStat] / 6; // expected per-starter contribution
+  const rolePriority   = STAT_ROLE_PRIORITY[weakestStat] || ['KD', 'HB', 'MID', 'RUC', 'KF', 'SF'];
 
-  // All comparisons below use pace-adjusted stats (STARTER_BASE is itself
-  // pace-adjusted) so a 1960s starter isn't cleared — or a 2000s starter
-  // isn't indicted — purely because of the possessions their era played with.
+  // All comparisons below use era-adjusted stats (STARTER_BASE is itself
+  // era-adjusted) so a 1970s starter isn't cleared — or a 2010s starter
+  // isn't indicted — purely because of the possession volume their era played.
   const adj = p => eraAdjustedStat(p, weakestStat);
 
   // Build a position → player map for fast lookup. Two starters can share a
@@ -208,7 +214,6 @@ function buildLossDiagnosis(starters, weakestStat, balancePenalty, sRatio, START
   }
 
   // ── Step 1: find the role-priority player whose stat is below per-player baseline.
-  // This is the most actionable upgrade: the "responsible" slot is underperforming.
   let culprit    = null;
   let culpritPos = null;
 
@@ -222,9 +227,7 @@ function buildLossDiagnosis(starters, weakestStat, balancePenalty, sRatio, START
   }
 
   // ── Step 2: every role-priority player is at or above baseline, but the team
-  // ratio is still low (secondary positions are dragging). Indict the starter
-  // in the role-priority order who has the lowest raw stat — the clearest
-  // upgrade point.
+  // ratio is still low (secondary positions are dragging).
   if (!culprit) {
     for (const rolePos of rolePriority) {
       const p = byPos[rolePos];
@@ -245,11 +248,8 @@ function buildLossDiagnosis(starters, weakestStat, balancePenalty, sRatio, START
 
   // If the culprit is actually at or above the per-player baseline the weakness
   // is genuinely team-wide, not a single-player failure — flag it that way.
-  // A strict "< perPlayerBase" here named a specific starter over a trivial
-  // 0.1–0.6 stat gap (e.g. "Dirk was the weak link on rim protection" for a
-  // 0.1 BPG miss) — reads like scapegoating a star for noise. Require a
-  // meaningfully-sized gap (15%+ below baseline) before singling anyone out;
-  // a marginal shortfall falls back to the team-wide framing instead.
+  // Require a meaningfully-sized gap (15%+ below baseline) before singling
+  // anyone out; a marginal shortfall falls back to the team-wide framing.
   const CULPRIT_MARGIN   = 0.85;
   const culpritBelowBase = culprit ? adj(culprit) < perPlayerBase * CULPRIT_MARGIN : false;
 
@@ -278,9 +278,9 @@ function buildLossDiagnosis(starters, weakestStat, balancePenalty, sRatio, START
 // Generated ONCE inside simulateSeason() and frozen into the result — never in
 // the renderer — so the numbers shown on the end screen are identical to the
 // ones saved to the leaderboard.
-const PLAYER_STAT_KEYS = ['ppg', 'rpg', 'apg', 'spg', 'bpg'];
+const PLAYER_STAT_KEYS = ['goals', 'marks', 'disposals', 'tackles', 'clearances'];
 // per-game key → season-total key
-const SEASON_TOTAL_KEY = { ppg: 'pts', rpg: 'reb', apg: 'ast', spg: 'stl', bpg: 'blk' };
+const SEASON_TOTAL_KEY = { goals: 'gls', marks: 'mks', disposals: 'dsp', tackles: 'tck', clearances: 'clr' };
 
 /** Standard-normal sample via Box–Muller. */
 function gaussian() {
@@ -303,11 +303,11 @@ function simulatePlayerStats(starters, winPct) {
   // Team-success coupling: a juggernaut lifts everyone slightly, a cellar team
   // drags them down — deliberately gentle so it never distorts who the player is.
   const teamFactor = 1 + (clampNum(winPct, 0, 1) - 0.5) * 0.04; // 0.98 … 1.02
-  const gp = 82;
+  const gp = 22;
 
   const playerStats = starters.map(p => {
-    // One hot/cold roll per season. Season averages over 82 games are stable in
-    // reality, so the swing is tight — a 30-PPG scorer lands ~28–32, not 24–37.
+    // One hot/cold roll per season. Season averages over 22 games are stable in
+    // reality, so the swing is tight — a 3.5-goal/game forward lands ~3.2–3.8, not 2.5–4.5.
     const form = clampNum(1 + gaussian() * 0.035, 0.91, 1.09);
     const line = { id: p.id, name: p.name, pos: p.pos, gp };
     for (const k of PLAYER_STAT_KEYS) {
@@ -326,11 +326,11 @@ function simulatePlayerStats(starters, winPct) {
     return best ? { id: best.id, name: best.name, val: best[k] } : null;
   };
   const statLeaders = {
-    scoring:    leaderFor('ppg'),
-    rebounding: leaderFor('rpg'),
-    assists:    leaderFor('apg'),
-    steals:     leaderFor('spg'),
-    blocks:     leaderFor('bpg'),
+    scoring:    leaderFor('goals'),
+    marking:    leaderFor('marks'),
+    disposals:  leaderFor('disposals'),
+    tackling:   leaderFor('tackles'),
+    clearances: leaderFor('clearances'),
   };
 
   const simTotals = PLAYER_STAT_KEYS.reduce((acc, k) => {
@@ -342,9 +342,22 @@ function simulatePlayerStats(starters, winPct) {
 }
 
 /**
- * Simulates a full 82-game regular season.
+ * Splits a total-points value into goals (worth 6) + behinds (worth 1) at a
+ * plausible AFL conversion rate, guaranteeing goals*6+behinds === points
+ * exactly (the remainder always absorbs into behinds, so it stays exact even
+ * though the split point is randomized).
+ */
+function splitScore(points) {
+  const behindsGuess = Math.min(points, 4 + Math.floor(Math.random() * 12)); // 4-15, clamped
+  const goals        = Math.floor((points - behindsGuess) / 6);
+  const behinds       = points - goals * 6;
+  return { goals, behinds, points };
+}
+
+/**
+ * Simulates a full 22-game home-and-away season.
  *
- * @param {object[]} starters  5 starting player objects
+ * @param {object[]} starters  6 starting player objects
  * @param {string|null} coach
  * @param {string} [profile]   'classic' | 'defense' | 'fans' — defaults from S.mode
  * @returns {object}
@@ -352,21 +365,21 @@ function simulatePlayerStats(starters, winPct) {
 export function simulateSeason(starters, coach = null, profile = null) {
   const simProfile = profile || getModeConfig(S?.mode).simProfile || 'classic';
 
-  // Pace-adjusted (era-neutral) totals drive the win-probability engine, so a
-  // roster stacked with fast-paced-era players doesn't out-strength an
-  // equally good roster from a slower era just because of possession counts.
+  // Era-adjusted totals drive the win-probability engine, so a roster stacked
+  // with high-possession-era players doesn't out-strength an equally good
+  // roster from a lower-possession era just because of the ball flowing more.
   const sumStats = arr => arr.reduce(
     (acc, p) => {
       const adj = eraAdjustedLine(p);
       return {
-        ppg: acc.ppg + adj.ppg,
-        rpg: acc.rpg + adj.rpg,
-        apg: acc.apg + adj.apg,
-        spg: acc.spg + adj.spg,
-        bpg: acc.bpg + adj.bpg,
+        goals:      acc.goals      + adj.goals,
+        marks:      acc.marks      + adj.marks,
+        disposals:  acc.disposals  + adj.disposals,
+        tackles:    acc.tackles    + adj.tackles,
+        clearances: acc.clearances + adj.clearances,
       };
     },
-    { ppg: 0, rpg: 0, apg: 0, spg: 0, bpg: 0 }
+    { goals: 0, marks: 0, disposals: 0, tackles: 0, clearances: 0 }
   );
 
   const sTotals = sumStats(starters);
@@ -374,30 +387,30 @@ export function simulateSeason(starters, coach = null, profile = null) {
   const { STARTER_BASE } = computeSimBaselines();
 
   const sRatio = {
-    ppg: sTotals.ppg / STARTER_BASE.ppg,
-    rpg: sTotals.rpg / STARTER_BASE.rpg,
-    apg: sTotals.apg / STARTER_BASE.apg,
-    spg: sTotals.spg / STARTER_BASE.spg,
-    bpg: sTotals.bpg / STARTER_BASE.bpg,
+    goals:      sTotals.goals      / STARTER_BASE.goals,
+    marks:      sTotals.marks      / STARTER_BASE.marks,
+    disposals:  sTotals.disposals  / STARTER_BASE.disposals,
+    tackles:    sTotals.tackles    / STARTER_BASE.tackles,
+    clearances: sTotals.clearances / STARTER_BASE.clearances,
   };
 
-  // Starters-only: the starting 5 IS the team.
+  // Starters-only: the starting six IS the team.
   const ratio = sRatio;
 
   const weights = simProfile === 'defense'
-    ? { ppg: 0.10, rpg: 0.30, apg: 0.10, spg: 0.25, bpg: 0.25 }
-    : { ppg: 0.35, rpg: 0.20, apg: 0.20, spg: 0.15, bpg: 0.10 };
+    ? { goals: 0.10, marks: 0.30, disposals: 0.10, tackles: 0.25, clearances: 0.25 }
+    : { goals: 0.35, marks: 0.20, disposals: 0.20, tackles: 0.15, clearances: 0.10 };
 
   const strength =
-    ratio.ppg * weights.ppg +
-    ratio.rpg * weights.rpg +
-    ratio.apg * weights.apg +
-    ratio.spg * weights.spg +
-    ratio.bpg * weights.bpg;
+    ratio.goals      * weights.goals +
+    ratio.marks      * weights.marks +
+    ratio.disposals  * weights.disposals +
+    ratio.tackles    * weights.tackles +
+    ratio.clearances * weights.clearances;
 
-  // Defense mode: prefer diagnosing RPG/SPG/BPG shortfalls first.
+  // Defense mode: prefer diagnosing marks/tackles/clearances shortfalls first.
   const diagEntries = simProfile === 'defense'
-    ? Object.entries(sRatio).filter(([k]) => k === 'rpg' || k === 'spg' || k === 'bpg')
+    ? Object.entries(sRatio).filter(([k]) => k === 'marks' || k === 'tackles' || k === 'clearances')
     : Object.entries(sRatio);
   const weakestStatEntry = (diagEntries.length ? diagEntries : Object.entries(sRatio))
     .reduce((min, e) => e[1] < min[1] ? e : min);
@@ -410,9 +423,8 @@ export function simulateSeason(starters, coach = null, profile = null) {
   let { chemBonus, chemScore, chemReport, chemEntries, lineupAssignment } = calculateChemistry(starters, coach);
 
   if (simProfile === 'defense') {
-    // Structured families replace the old label-regex sniffing, which silently
-    // broke whenever a synergy was renamed and misclassified edge cases
-    // (e.g. Two-Way Pillars never matched the defense pattern).
+    // Structured families replace label-regex sniffing, which silently breaks
+    // whenever a synergy is renamed and misclassifies edge cases.
     const hasDef = chemEntries.some(e => e.kind === 'synergy' && e.family === 'defense');
     const hasOff = chemEntries.some(e => e.kind === 'synergy' && e.family === 'offense');
     if (hasDef) chemBonus *= 1.35;
@@ -441,16 +453,17 @@ export function simulateSeason(starters, coach = null, profile = null) {
   const popMul      = MUL_MIN + popNorm * (MUL_MAX - MUL_MIN);
 
   // ── Player-Rating modifier ────────────────────────────────────────────────
-  // Keyed to `overall` (era-adjusted 2K rating, mean ≈87 sd ≈6.1), not the
-  // stats-derived `rating` (mean ≈77 sd ≈8.3). MID/SPAN are the same
-  // percentile anchors as the old 76/14 re-expressed on the new scale, so the
-  // multiplier's distribution across rosters is unchanged.
-  const RATING_MID  = 87;
+  // Keyed to `overall`. The AFL stub DB's overall distribution currently
+  // averages ~77 (vs the NBA original's ~87) — a real 2K-style composite
+  // rating pipeline doesn't exist yet for AFL (see docs/afl-port-plan.md
+  // §4.4), so `overall` just mirrors the stats-derived `rating` for now.
+  // RATING_MID tracks that ~77 mean; revisit once the real dataset lands.
+  const RATING_MID  = 77;
   const RATING_SPAN = 10;
   const RATING_AMP  = 0.04;
   const avgRating   = allPlayers.length
-    ? allPlayers.reduce((s, p) => s + (p.overall ?? 82), 0) / allPlayers.length
-    : 82;
+    ? allPlayers.reduce((s, p) => s + (p.overall ?? 77), 0) / allPlayers.length
+    : 77;
   const ratingNorm  = Math.max(-1, Math.min(1, (avgRating - RATING_MID) / RATING_SPAN));
   const ratingMul   = 1 + ratingNorm * RATING_AMP;
 
@@ -464,23 +477,23 @@ export function simulateSeason(starters, coach = null, profile = null) {
 
   let wins = 0;
   const games = [];
-  for (let i = 0; i < 82; i++) {
+  for (let i = 0; i < 22; i++) {
     const won = Math.random() < winPct;
     if (won) wins++;
     games.push({ won });
   }
-  wins = Math.max(0, Math.min(82, wins));
+  wins = Math.max(0, Math.min(22, wins));
   decorateSeasonGames(games, winPct);
 
   const totals = { ...sTotals };
 
   const { playerStats, statLeaders, simTotals } = simulatePlayerStats(starters, winPct);
 
-  const teamStocks = +(sTotals.spg + sTotals.bpg).toFixed(1);
+  const teamPressure = +(sTotals.tackles + sTotals.clearances).toFixed(1);
 
   return {
     wins,
-    losses:     82 - wins,
+    losses:     22 - wins,
     winPct:     +(winPct * 100).toFixed(1),
     strength:   +adjustedStrength.toFixed(3),
     baseStrength: +baseStrength.toFixed(3),
@@ -497,14 +510,15 @@ export function simulateSeason(starters, coach = null, profile = null) {
     coachBoost: +coachBoost.toFixed(3),
     games,
     simProfile,
-    teamStocks,
+    teamPressure,
   };
 }
 
 /**
- * Decorates a season's win/loss sequence with opponents, scores, and margins.
- * Stronger teams (higher winPct) win bigger; losses skew close so they read
- * as heartbreakers rather than blowouts.
+ * Decorates a season's win/loss sequence with opponents, scores (goals and
+ * behinds, plus total points), and margins. Stronger teams (higher winPct)
+ * win bigger; losses skew close so they read as heartbreakers rather than
+ * blowouts.
  */
 function decorateSeasonGames(games, winPct) {
   let lastOpp = null;
@@ -520,49 +534,64 @@ function decorateSeasonGames(games, winPct) {
 
     const r      = Math.random();
     const exp    = g.won ? Math.max(0.55, 1.6 - winPct) : 2.2;
-    const margin = 2 + Math.floor(Math.pow(r, exp) * 26);   // 2–28
-    const base   = 95 + Math.floor(Math.random() * 28);      // 95–122
+    const margin = 2 + Math.floor(Math.pow(r, exp) * 44);    // 2–46, AFL margins run wider than a basketball game
+    const base   = 60 + Math.floor(Math.random() * 46);       // 60–105 typical AFL team score
 
     g.opp    = opp;
     g.ps     = g.won ? base + Math.ceil(margin / 2) : base - Math.floor(margin / 2);
     g.os     = g.won ? base - Math.floor(margin / 2) : base + Math.ceil(margin / 2);
     g.margin = margin;
-    g.type   = margin >= 15 ? 'blowout' : margin >= 8 ? 'solid' : 'close';
+    g.type   = margin >= 25 ? 'blowout' : margin >= 12 ? 'solid' : 'close';
+
+    const psSplit = splitScore(Math.max(0, g.ps));
+    const osSplit = splitScore(Math.max(0, g.os));
+    g.psGoals   = psSplit.goals;
+    g.psBehinds = psSplit.behinds;
+    g.osGoals   = osSplit.goals;
+    g.osBehinds = osSplit.behinds;
   }
 }
 
 /**
- * Simulates a head-to-head best-of-7 series between two drafted rosters.
+ * Generates a realistic AFL scoreline for one head-to-head game (goals and
+ * behinds on each side, decomposed from a points total in the 60-135 range).
+ */
+function generateGameScore(p1Strength, p2Strength) {
+  const p1WinProb = 1 / (1 + Math.exp(-6 * (p1Strength - p2Strength)));
+  const p1Wins    = Math.random() < p1WinProb;
+
+  const base   = 60 + Math.floor(Math.random() * 46);   // 60–105
+  // Margin: skewed toward close games (square the random to weight lower values)
+  const r      = Math.random();
+  const margin = 2 + Math.floor(r * r * 44);             // 2–45, skewed low
+
+  const winnerScore = base + Math.floor(margin / 2);
+  const loserScore  = base - Math.ceil(margin / 2);
+
+  const p1Score = p1Wins ? winnerScore : loserScore;
+  const p2Score = p1Wins ? loserScore  : winnerScore;
+  const p1Split = splitScore(Math.max(0, p1Score));
+  const p2Split = splitScore(Math.max(0, p2Score));
+
+  return {
+    p1Score, p2Score,
+    p1Goals: p1Split.goals, p1Behinds: p1Split.behinds,
+    p2Goals: p2Split.goals, p2Behinds: p2Split.behinds,
+    p1Won:   p1Wins,
+  };
+}
+
+/**
+ * Simulates a head-to-head best-of-3 Challenge Series between two drafted
+ * rosters (1v1 / GM vs AI). AFL has no real best-of-N series format — this
+ * is a fantasy exhibition format, not a claim about how AFL is played (see
+ * docs/afl-port-plan.md D6).
  * Returns season stats for both teams + the series outcome.
  *
  * @param {object[]} p1Starters  @param {string|null} p1Coach
  * @param {object[]} p2Starters  @param {string|null} p2Coach
  * @returns {{ p1Season, p2Season, series, winner: 'p1'|'p2' }}
  */
-/**
- * Generates a realistic NBA-style score for one head-to-head game.
- * Scores fall in the 88–128 range; margin typically 2–22 pts.
- */
-function generateGameScore(p1Strength, p2Strength) {
-  const p1WinProb = 1 / (1 + Math.exp(-6 * (p1Strength - p2Strength)));
-  const p1Wins    = Math.random() < p1WinProb;
-
-  // Tempo: faster teams score more
-  const base   = 95 + Math.floor(Math.random() * 28);   // 95–122
-  // Margin: skewed toward close games (square the random to weight lower values)
-  const r      = Math.random();
-  const margin = 2 + Math.floor(r * r * 26);             // 2–27, skewed low
-
-  const winnerScore = base + Math.floor(margin / 2);
-  const loserScore  = base - Math.ceil(margin / 2);
-
-  return {
-    p1Score: p1Wins ? winnerScore : loserScore,
-    p2Score: p1Wins ? loserScore  : winnerScore,
-    p1Won:   p1Wins,
-  };
-}
-
 export function simulateHeadToHeadSeries(p1Starters, p1Coach, p2Starters, p2Coach) {
   const p1Season = simulateSeason(p1Starters, p1Coach);
   const p2Season = simulateSeason(p2Starters, p2Coach);
@@ -570,16 +599,16 @@ export function simulateHeadToHeadSeries(p1Starters, p1Coach, p2Starters, p2Coac
   const p1Str = p1Season.strength;
   const p2Str = p2Season.strength;
 
-  // Pre-compute all games with realistic scores
+  // Pre-compute all games with realistic scores. Best-of-3: first to 2.
   const games = [];
   let p1Wins = 0, p2Wins = 0;
-  while (p1Wins < 4 && p2Wins < 4) {
+  while (p1Wins < 2 && p2Wins < 2) {
     const g = generateGameScore(p1Str, p2Str);
     if (g.p1Won) p1Wins++; else p2Wins++;
     games.push({ gameNum: games.length + 1, ...g, p1WinsAfter: p1Wins, p2WinsAfter: p2Wins });
   }
 
-  const winner = p1Wins === 4 ? 'p1' : 'p2';
+  const winner = p1Wins === 2 ? 'p1' : 'p2';
   // backwards-compat shape used by renderSeriesResult
   const series = {
     playerWins: p1Wins,
@@ -592,8 +621,9 @@ export function simulateHeadToHeadSeries(p1Starters, p1Coach, p2Starters, p2Coac
 }
 
 /**
- * Best-of-7 vs a Dynasty Duel CPU team (no opposing roster cards).
- * Returns the same shape as simulateHeadToHeadSeries for shared series UI.
+ * Best-of-3 Challenge Series vs a Dynasty Duel CPU team (no opposing roster
+ * cards). Returns the same shape as simulateHeadToHeadSeries for shared
+ * series UI.
  */
 export function simulateDynastySeries(playerSeason, opponent) {
   const p1Str = playerSeason.strength;
@@ -602,22 +632,22 @@ export function simulateDynastySeries(playerSeason, opponent) {
     strength: p2Str,
     chemScore: 88,
     chemReport: [`🟢 Legendary dynasty: ${opponent.name}`],
-    wins: 70,
-    losses: 12,
+    wins: 19,
+    losses: 3,
     avgPopularity: 92,
     fansM: 38,
-    teamStocks: 0,
+    teamPressure: 0,
   };
 
   const games = [];
   let p1Wins = 0, p2Wins = 0;
-  while (p1Wins < 4 && p2Wins < 4) {
+  while (p1Wins < 2 && p2Wins < 2) {
     const g = generateGameScore(p1Str, p2Str);
     if (g.p1Won) p1Wins++; else p2Wins++;
     games.push({ gameNum: games.length + 1, ...g, p1WinsAfter: p1Wins, p2WinsAfter: p2Wins });
   }
 
-  const winner = p1Wins === 4 ? 'p1' : 'p2';
+  const winner = p1Wins === 2 ? 'p1' : 'p2';
   const series = {
     playerWins: p1Wins,
     oppWins:    p2Wins,
@@ -629,7 +659,11 @@ export function simulateDynastySeries(playerSeason, opponent) {
 }
 
 /**
- * Simulates a best-of-7 playoff series.
+ * Simulates a single AFL final (every round of the Final Eight is single
+ * elimination — no best-of-N in real AFL finals). Kept as a "series" shape
+ * ({ playerWins, oppWins, games, won }) so playoffs.js's bracket-scoring
+ * helpers (matchupScores etc.) don't need to know the round is one game —
+ * playerWins/oppWins just land at 1/0 or 0/1.
  *
  * @param {number} playerStrength
  * @param {number} opponentStrength
@@ -637,13 +671,11 @@ export function simulateDynastySeries(playerSeason, opponent) {
  */
 export function simulateSeries(playerStrength, opponentStrength) {
   const pWin = 1 / (1 + Math.exp(-6 * (playerStrength - opponentStrength)));
-  let playerWins = 0, oppWins = 0;
-  const games = [];
-  while (playerWins < 4 && oppWins < 4) {
-    const won = Math.random() < pWin;
-    if (won) playerWins++; else oppWins++;
-    games.push(won ? 'W' : 'L');
-  }
-  return { playerWins, oppWins, games, won: playerWins === 4 };
+  const won  = Math.random() < pWin;
+  return {
+    playerWins: won ? 1 : 0,
+    oppWins:    won ? 0 : 1,
+    games:      [won ? 'W' : 'L'],
+    won,
+  };
 }
-
