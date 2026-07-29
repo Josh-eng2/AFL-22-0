@@ -1,26 +1,46 @@
 'use strict';
 /**
  * scripts/add_rating.js
- * Adds two fields to every player in players.json:
- *   ratingRaw — the raw weighted value of the stat line (native scale ~7–40)
- *   rating    — that value mapped onto a 0–100 (2K-style) overall
+ * Adds fields to every player in players.json:
+ *   ratingRaw — the raw weighted value of the stat line (native scale)
+ *   rating    — that value mapped onto a 0–100 overall
+ *   overall   — the field gameplay logic actually reads (simulation
+ *               strength, AI draft scoring, star/GOAT tiers, badge colors)
  * Run:  node scripts/add_rating.js
  *
- * Raw formula (linear weighted value of a stat line):
- *   ratingRaw = 1.76
- *             + ppg * 0.308
- *             + apg * 0.563
- *             + rpg * 0.712
- *             + spg * 1.139
- *             + bpg * 1.480
+ * Raw formula (linear weighted value of a season-average stat line):
+ *   ratingRaw = BASE
+ *             + disposals  * 0.35
+ *             + goals      * 2.20
+ *             + marks      * 0.55
+ *             + tackles    * 0.65
+ *             + clearances * 0.85
  *
- * Equivalently, relative to one point (÷0.308): an assist is worth ~1.8 pts,
- * a rebound ~2.3, a steal ~3.7, and a block ~4.8.
+ * Weights are a first pass loosely anchored to AFL Fantasy's public scoring
+ * conventions (goal ≈ 6, kick ≈ 3, handball ≈ 2, mark ≈ 3, tackle ≈ 4) —
+ * disposals here is a blended kick+handball rate so it sits below either
+ * individually; clearances carry a premium over a plain disposal because a
+ * clearance is a higher-difficulty, higher-value possession. These are
+ * NOT final — re-derive once the real ~800-1000 player dataset lands (see
+ * docs/afl-port-plan.md §9), same as the NBA original's own weights were
+ * fitted against its live DB. hitouts is intentionally excluded — it's a
+ * display/synergy-only stat (see docs/afl-port-plan.md §D4), not part of
+ * the balance-scored five, so it doesn't belong in the value formula either.
  *
  * 0–100 mapping: linear from the 2nd-percentile raw value (→ OVR_LO) to the
  * 99th-percentile raw value (→ OVR_HI), clamped to [OVR_MIN, OVR_MAX]. Anchors
  * are derived from the live data so the scale self-adjusts if stats change.
- * With the current DB this lands: median ≈ 74, stars ≈ 85, GOAT seasons ≈ 99.
+ * With only ~40 stub players the percentile anchors are noisy — revisit once
+ * the real dataset lands.
+ *
+ * `overall` currently just mirrors `rating`. The NBA original's `overall`
+ * was a composite of a real 2K rating (era-normalized) with a stats-derived
+ * fallback — there is no AFL equivalent yet. Phase 3/§4.4 of the port plan
+ * calls for building one from Brownlow votes, All-Australian selections,
+ * Champion Data AFL Player Ratings, and club best-and-fairests, then
+ * era-normalizing it the same way normalize_2k_overalls_by_era.py did. Until
+ * that pipeline exists, `overall = rating` is the placeholder every other
+ * module (simulation.js, aiDraft.js, draft.js, challenge.js, render.js) reads.
  */
 const fs   = require('fs');
 const path = require('path');
@@ -28,8 +48,8 @@ const path = require('path');
 const SRC = path.join(__dirname, '..', 'players.json');
 const db  = JSON.parse(fs.readFileSync(SRC, 'utf8'));
 
-const BASE = 1.76;
-const W = { ppg: 0.308, apg: 0.563, rpg: 0.712, spg: 1.139, bpg: 1.480 };
+const BASE = 2.0;
+const W = { disposals: 0.35, goals: 2.20, marks: 0.55, tackles: 0.65, clearances: 0.85 };
 
 // 0–100 mapping knobs
 const OVR_LO = 60;   // overall assigned to the low anchor (p2 raw)
@@ -41,11 +61,11 @@ const clamp = (v, lo, hi) => Math.max(lo, Math.min(hi, v));
 
 function rawRating(p) {
   const raw = BASE
-    + (p.ppg || 0) * W.ppg
-    + (p.apg || 0) * W.apg
-    + (p.rpg || 0) * W.rpg
-    + (p.spg || 0) * W.spg
-    + (p.bpg || 0) * W.bpg;
+    + (p.disposals  || 0) * W.disposals
+    + (p.goals      || 0) * W.goals
+    + (p.marks      || 0) * W.marks
+    + (p.tackles    || 0) * W.tackles
+    + (p.clearances || 0) * W.clearances;
   return Math.round(raw * 10) / 10; // 1 decimal place
 }
 
@@ -68,7 +88,8 @@ const hi = pct(0.99);
 let min = Infinity, max = -Infinity, sum = 0;
 for (const p of players) {
   const scaled = OVR_LO + ((p.ratingRaw - lo) / (hi - lo)) * (OVR_HI - OVR_LO);
-  p.rating = clamp(Math.round(scaled), OVR_MIN, OVR_MAX);
+  p.rating  = clamp(Math.round(scaled), OVR_MIN, OVR_MAX);
+  p.overall = p.rating; // placeholder — see file header
   sum += p.rating;
   if (p.rating < min) min = p.rating;
   if (p.rating > max) max = p.rating;

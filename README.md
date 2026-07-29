@@ -1,48 +1,37 @@
-# Can You Go 82-0? — Free 82-0 NBA Team Generator & All-Time Roster Builder
+# Can You Go 22-0? — AFL All-Time Team Builder *(work in progress)*
 
-**▶ Play now: [canyougo820.com](https://canyougo820.com/)**
+This is an in-progress AFL adaptation of [**Can You Go 82-0?**](https://canyougo820.com/),
+an NBA all-time roster builder and season simulator. The goal, once finished, is the
+same dare translated to Australian football: spin the draft wheel for a club + era,
+draft an all-time six across KD / HB / MID / RUC / KF / SF, build chemistry, pick a
+coach, and simulate a 22-game home-and-away season chasing a perfect **22-0**.
 
-**Can You Go 82-0?** is a free **82-0 NBA team generator** and **all-time roster builder**
-that runs entirely in your browser. Spin the draft wheel — a random **NBA team generator**
-that deals you a franchise and an era on every spin — draft legends from every decade,
-build team chemistry, pick your coach, then run the **82-game season simulator** with one
-question on the line: **can you go 82-0?**
+**Full build plan:** [`docs/afl-port-plan.md`](docs/afl-port-plan.md) — every decision,
+the club/position/archetype translation table, the data project, and the phase-by-phase
+sequencing lives there. Read it before touching this repo.
 
-No sign-up, no download, no build step.
+## Current status
 
-## How to play
+**The app does not run correctly yet.** What's done so far is the data layer only:
 
-1. **Spin the wheel** — the generator lands on a team + era combo (say, '90s Bulls or 2010s Warriors) and shows you that squad's players.
-2. **Draft your starting five** — pick one player per round across all five positions (PG, SG, SF, PF, C). Skips are limited, so spend them wisely.
-3. **Build chemistry** — balance eras, positions, and playstyles; the roster's chemistry affects your results.
-4. **Pick your coach** — each coach brings a different system and strategic bonus.
-5. **Simulate 82 games** — run the season simulator and chase a perfect **82-0** record.
-6. **Make a run** — advance to the playoffs, win the title, and collect legends in your trophy room.
-
-## Features
-
-- 🎲 **82-0 NBA team generator** — a randomized draft wheel; no two runs deal the same board
-- 🏀 **All-time roster builder** — hundreds of legends from every decade
-- 📊 **Season simulator** — full 82-game simulation with playoffs
-- 🧪 **Team chemistry engine** — era, position, and playstyle fit all matter
-- 📅 **Daily Challenge** — one shared draft board and special rule per day, with streaks and a global leaderboard
-- 🏆 **Trophy room & leaderboard** — track your best runs (local, plus an optional global leaderboard)
-- 🌗 **Light / dark themes**, fully responsive on desktop, tablet, and mobile
-- ⚡ **100% client-side** — vanilla JS ES modules, no backend
-
-## FAQ
-
-**What is Can You Go 82-0?**
-A free NBA team generator, roster builder, and season simulator. You draft an all-time team
-of legends from every era using a randomized draft wheel, then simulate an 82-game season.
-The goal — and the name — is finishing a perfect 82-0.
-
-**How does the 82-0 NBA team generator work?**
-Every spin randomly generates a franchise and a decade (like '80s Celtics or 2000s Spurs),
-and you draft one player from that combination. Repeat until all five starting spots are filled.
-
-**Is it free?**
-Yes — completely free, no download, no sign-up. It runs in your browser on any device.
+- ✅ NBA-specific data, the NBA 2K rating pipeline, and NBA daily-challenge content
+  have been stripped out.
+- ✅ A small **stub** `players.json` exists — 3 clubs (Carlton, Essendon, North
+  Melbourne) × 2 decades (1990s, 2010s), 41 real AFL players across the six AFL
+  position slots — enough to unblock engine and UI development. It is **not**
+  researched/audited data; it exists to build against, and gets replaced by the real
+  ~800-1000 player dataset in Phase 3 of the plan.
+- ✅ The AFL stat/position/archetype/trait schema (disposals, goals, marks, tackles,
+  clearances, hitouts; KD/HB/MID/RUC/KF/SF; six new archetypes) is defined and the
+  data pipeline scripts (`add_rating.js`, `add_popularity.js`, `validate_players.js`)
+  are adapted to it.
+- ❌ **The game engine is still the NBA version.** `js/logic/state.js` (club list,
+  decades, positions, coaches), `js/logic/positions.js`, `js/logic/chemistry.js`,
+  `js/logic/simulation.js`, `js/logic/era.js`, the finals bracket, and all UI copy
+  still expect NBA teams/positions/archetypes. Because the club and decade names in
+  the new `players.json` don't match `state.js`'s NBA team/decade lists, **every
+  draft spin currently comes back empty** — the app will not play a game yet. This
+  is Phase 4/5 of the plan and hasn't started.
 
 ## Run it locally
 
@@ -53,26 +42,27 @@ python3 -m http.server 8000
 # open http://localhost:8000
 ```
 
-Any static file server works.
+It will load, but the draft wheel will not find any players until the engine port
+(Phase 4 in the plan) is done.
 
 ## Tech
 
 Vanilla JavaScript (ES modules), HTML, and CSS — no backend and no build step to play.
 Tailwind is compiled ahead of time into the committed `css/tailwind.css`; re-run
-`scripts/build_tailwind.sh` after changing Tailwind classes. Firebase powers an optional
-global leaderboard/analytics and degrades gracefully if unavailable.
+`scripts/build_tailwind.sh` after changing Tailwind classes.
 
-Generated assets have regeneration scripts: `scripts/build_favicon.sh` (favicon.ico from
-`favicon.svg`) and `scripts/build_og_image.sh` (og-image.png from `og-image.svg`).
+## Data pipeline
 
-## Keywords
+The player database is committed pre-generated at `js/data/players.js` (inlined from
+`players.json`). To regenerate after editing `players.json`:
 
-82-0 · can you go 82-0 · canyougo820 · 82-0 team generator · 82-0 NBA team generator ·
-NBA team generator · NBA simulator · NBA season simulator · NBA all-time roster builder ·
-all-time NBA team · basketball simulator · fantasy NBA draft game
+```bash
+scripts/update_players.sh   # add_popularity.js -> add_rating.js -> inline_players.js
+node scripts/validate_players.js
+```
 
 ---
 
-*Disclaimer: This is an unofficial fan-made game and is **not affiliated with, endorsed by,
-or sponsored by the NBA** or the National Basketball Association. All team and player names
-are the property of their respective owners and are used for identification purposes only.*
+*Disclaimer: This is an unofficial fan-made game and is **not affiliated with, endorsed
+by, or sponsored by the AFL** or any AFL club. All club and player names are the
+property of their respective owners and are used for identification purposes only.*

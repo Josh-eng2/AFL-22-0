@@ -2,11 +2,13 @@
 /**
  * scripts/validate_players.js
  * Structural sanity checks for players.json — run after every player
- * data audit batch (see docs/player-data-audit/rubric.md).
+ * data batch (see docs/player-data-audit/rubric.md once it's rewritten
+ * for AFL — see docs/afl-port-plan.md in the meantime).
  *
  * This is NOT a realism check — it only catches mechanical mistakes
- * (typos, duplicate ids, out-of-range values, wrong trait counts) that
- * would otherwise sit undetected across many batches.
+ * (typos, duplicate ids, out-of-range values, wrong trait counts, a
+ * player placed at a club before that club existed) that would
+ * otherwise sit undetected across many batches.
  *
  * Run:  node scripts/validate_players.js
  * Exits non-zero and prints every violation if any are found.
@@ -16,21 +18,50 @@ const path = require('path');
 
 const SRC = path.join(__dirname, '..', 'players.json');
 
-const ARCHETYPES = new Set([
-  'Playmaker', 'Sharpshooter', 'Lockdown Defender',
-  'Slasher', 'Paint Beast', 'Two-Way Star',
-]);
-const POSITIONS = new Set(['PG', 'SG', 'SF', 'PF', 'C']);
+// Six-slot AFL position model (defence → forward axis). See
+// docs/afl-port-plan.md §3.2.
+const POSITIONS = new Set(['KD', 'HB', 'MID', 'RUC', 'KF', 'SF']);
 
+// AFL archetypes replacing the NBA six. See docs/afl-port-plan.md §3.3.
+const ARCHETYPES = new Set([
+  'Ball Magnet', 'Goal Sneak', 'Power Forward',
+  'Intercept Marker', 'Lockdown Defender', 'Ruck Bull',
+]);
+
+// Season-average bounds (NOT single-game bounds) — generous on purpose,
+// this is a typo/fabrication net, not a realism check. hitouts is a
+// display/synergy-only stat (see docs/afl-port-plan.md §D4/§3.6) — it's
+// still bounds-checked here so a stray typo doesn't slip through, but it
+// is deliberately excluded from add_rating.js's weighted formula.
 const STAT_BOUNDS = {
-  ppg: [0, 50],
-  rpg: [0, 30],
-  apg: [0, 20],
-  spg: [0, 6],
-  bpg: [0, 8],
+  disposals:  [0, 42],
+  goals:      [0, 8],
+  marks:      [0, 12],
+  tackles:    [0, 10],
+  clearances: [0, 12],
+  hitouts:    [0, 55],
 };
 
-const BUCKET_KEY_RE = /^[A-Za-z]+_(19[6-9]0s|20[0-2]0s)$/;
+const BUCKET_KEY_RE = /^[A-Za-z]+_(19[7-9]0s|20[0-2]0s)$/;
+
+// Clubs that didn't exist (in their current form) for the full 1970s-2020s
+// range this game covers. Any club not listed here is treated as having
+// existed the whole time (true for every "continuous VFL/AFL presence" club
+// in docs/afl-port-plan.md §3.1). Value = first year the club fielded a team
+// under this bucket identity; a decade bucket is legal if the decade's last
+// year (decadeStart + 9) is >= that first year.
+//
+// Brisbane Lions bucket key covers the Brisbane Bears era (1987-1996) and
+// the post-1997 merged Lions — see the plan's note on folding Fitzroy in.
+const CLUB_FIRST_YEAR = {
+  WestCoast:     1987,
+  BrisbaneLions: 1987,
+  Adelaide:      1991,
+  Fremantle:     1995,
+  PortAdelaide:  1997,
+  GoldCoast:     2011,
+  GWS:           2012,
+};
 
 function main() {
   let raw;
@@ -48,11 +79,24 @@ function main() {
   }
 
   const errors = [];
-  const idsSeen = new Map(); // id -> [ "Team_decade / Name", ... ]
+  const idsSeen = new Map(); // id -> [ "Club_decade / Name", ... ]
 
   for (const bucketKey of Object.keys(db)) {
     if (!BUCKET_KEY_RE.test(bucketKey)) {
-      errors.push(`Bucket key "${bucketKey}" doesn't match TEAM_decade pattern`);
+      errors.push(`Bucket key "${bucketKey}" doesn't match Club_decade pattern`);
+    } else {
+      const [club, decade] = bucketKey.split('_');
+      const firstYear = CLUB_FIRST_YEAR[club];
+      if (firstYear != null) {
+        const decadeStart = parseInt(decade, 10);
+        const decadeEnd    = decadeStart + 9;
+        if (decadeEnd < firstYear) {
+          errors.push(
+            `Bucket "${bucketKey}": ${club} didn't exist until ${firstYear} — ` +
+            `this bucket predates the club entirely`
+          );
+        }
+      }
     }
 
     const players = db[bucketKey];
