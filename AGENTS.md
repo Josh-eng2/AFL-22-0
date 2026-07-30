@@ -34,8 +34,13 @@ python3 -m http.server 8000
 # open http://localhost:8000
 ```
 
-Any static file server works (`npx serve`, etc.). As noted above, the draft wheel
-will not currently find players — that's expected until the engine port lands.
+Any static file server works (`npx serve`, etc.). Verified in Cursor Cloud: the app
+loads and the draft is playable — `state.js` now carries the AFL clubs/decades/coaches,
+so spins return real AFL players (e.g. Carlton 1990s, Essendon 2010s), picks fill
+roster slots, and the chemistry panel updates. (The "Status" note at the top of this
+file predates that engine work; the empty-draft warning there is stale.) Full
+end-to-end season simulation to a results screen was not exercised during setup, so
+verify that flow yourself before relying on it.
 
 ### Lint / test / build
 There is **no lint tooling, no automated test suite, and no build step required to
