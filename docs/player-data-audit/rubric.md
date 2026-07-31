@@ -41,6 +41,21 @@ the player's best qualifying season (>= 8 games) by stat composite.
 `add_rating.js`'s weighted formula (port plan §D4) because it is ~zero for
 five of the six positions and would distort the balance model.
 
+### `rating` vs `overall` — don't audit them the same way
+
+`rating` is a pure stat-line value. `overall` is the award/career composite
+built by `add_overall.js`, and it is what the game actually plays on. They are
+**meant to disagree**, often sharply: a key defender with a modest stat line
+and a decorated career should sit far higher on `overall` than on `rating`.
+That divergence is the point, not a defect — `validate_players.js` fails the
+build if the two agree for more than 90% of entries, which is what a silent
+regression to the old placeholder would look like.
+
+Neither is hand-editable. To interrogate a rating, run
+`node scripts/add_overall.js --explain="<player name>"`, which prints every
+input, its weight, and whether it was available for that player. Full method:
+`data/README.md`.
+
 **Era plausibility.** Disposal volume did *not* simply rise over time. The
 1970s was kick-dominated and its best ball-winners posted enormous numbers —
 Wayne Richardson averaged 32.8 disposals in 1971 off 27 kicks a game. Do not

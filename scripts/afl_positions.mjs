@@ -140,14 +140,14 @@ export const POSITION_OVERRIDES = {
   'Stefan Martin': 'RUC', 'Paul Hasleby': 'MID',
 
   // ── Key forwards ──────────────────────────────────────────────────────────
-  'Tony Lockett': 'KF', 'Jason Dunstall': 'KF', 'Gary Ablett': 'KF',
+  'Tony Lockett': 'KF', 'Jason Dunstall': 'KF', 'Gary Ablett Sr': 'KF',
   'Wayne Carey': 'KF', 'Matthew Richardson': 'KF', 'Matthew Lloyd': 'KF',
   'Barry Hall': 'KF', 'Nick Riewoldt': 'KF', 'Matthew Pavlich': 'KF',
   'Lance Franklin': 'KF', 'Jonathan Brown': 'KF', 'Brendan Fevola': 'KF',
-  'Josh Kennedy': 'KF', 'Jack Riewoldt': 'KF', 'Travis Cloke': 'KF',
+  'Josh J. Kennedy': 'KF', 'Jack Riewoldt': 'KF', 'Travis Cloke': 'KF',
   'Tom Hawkins': 'KF', 'Joe Daniher': 'KF', 'Ben Brown': 'KF',
   'Charlie Curnow': 'KF', 'Jeremy Cameron': 'KF', 'Taylor Walker': 'KF',
-  'Charlie Dixon': 'KF', 'Tom Lynch': 'KF', 'Harry McKay': 'KF',
+  'Charlie Dixon': 'KF', 'Tom J. Lynch': 'KF', 'Harry McKay': 'KF',
   'Stephen Kernahan': 'KF', 'Doug Hawkins': 'HB', 'Peter Hudson': 'KF',
   'Bernie Quinlan': 'KF', 'Michael Roach': 'KF', 'Simon Beasley': 'KF',
   'Warwick Capper': 'KF', 'Dermott Brereton': 'KF', 'Gary Buckenara': 'KF',
@@ -184,7 +184,10 @@ export const POSITION_OVERRIDES = {
   'Danny Frawley': 'KD', 'Chris Langford': 'KD', 'Gary Pert': 'KD',
   'David Dench': 'KD', 'Geoff Southby': 'KD', 'Kelvin Moore': 'KD',
   'Bruce Doull': 'KD', 'Rod Austin': 'KD', 'Ross Glendinning': 'KD',
-  'Mark Lee': 'RUC', 'Scott Thompson': 'KD', 'Ben Rutten': 'KD',
+  // 'Scott D. Thompson' is the North Melbourne key defender. The bare name
+  // 'Scott Thompson' belongs to Adelaide's midfielder (see the MID table) —
+  // keying this override on it sent the KD call to the wrong player.
+  'Mark Lee': 'RUC', 'Scott D. Thompson': 'KD', 'Ben Rutten': 'KD',
   'Heath Scotland': 'HB', 'Darren Gaspar': 'KD', 'Matthew Broadbent': 'HB',
   'Nathan Bock': 'KD', 'Tom Lonergan': 'KD', 'Eric Mackenzie': 'KD',
   'Phil Davis': 'KD', 'Michael Talia': 'KD', 'Dougal Howard': 'KD',
@@ -225,8 +228,8 @@ export const POSITION_OVERRIDES = {
   'Tom Mitchell': 'MID', 'Lachie Neale': 'MID', 'Clayton Oliver': 'MID',
   'Christian Petracca': 'MID', 'Jack Macrae': 'MID', 'Josh Kelly': 'MID',
   'Stephen Coniglio': 'MID', 'Nat Fyfe': 'MID', 'Matt Priddis': 'MID',
-  'Luke Parker': 'MID', 'Josh Kennedy Jr': 'MID', 'Rory Sloane': 'MID',
-  'Ollie Wines': 'MID', 'Travis Boak': 'MID', 'Scott Thompson Adelaide': 'MID',
+  'Luke Parker': 'MID', 'Josh P. Kennedy': 'MID', 'Rory Sloane': 'MID',
+  'Ollie Wines': 'MID', 'Travis Boak': 'MID', 'Scott Thompson': 'MID',
   'Anthony Koutoufides': 'MID', 'Ben Cunnington': 'MID', 'Jack Ziebell': 'MID',
   'Shaun Hart': 'MID', 'Kane Cornes': 'MID', 'Brett Ratten': 'MID',
   'Jude Bolton': 'MID', 'Brad Johnson': 'SF', 'Scott West': 'MID',

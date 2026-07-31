@@ -453,11 +453,16 @@ export function simulateSeason(starters, coach = null, profile = null) {
   const popMul      = MUL_MIN + popNorm * (MUL_MAX - MUL_MIN);
 
   // ── Player-Rating modifier ────────────────────────────────────────────────
-  // Keyed to `overall`. The AFL stub DB's overall distribution currently
-  // averages ~77 (vs the NBA original's ~87) — a real 2K-style composite
-  // rating pipeline doesn't exist yet for AFL (see docs/afl-port-plan.md
-  // §4.4), so `overall` just mirrors the stats-derived `rating` for now.
-  // RATING_MID tracks that ~77 mean; revisit once the real dataset lands.
+  // Keyed to `overall`, which is now the real award/career composite built by
+  // scripts/add_overall.js (Brownlow rate, All-Australian, club B&F, goalkicking
+  // honours, longevity and production — defender-bias corrected and normalised
+  // per era). RATING_MID is the MEDIAN of that shipped distribution, so a
+  // median-rated squad sits at a neutral multiplier and the modifier reads as
+  // "better or worse than a typical all-time side".
+  //
+  // Median is 77 against the current database — unchanged from the stat-line
+  // placeholder this replaced, which happened to share it. Re-read it from the
+  // distribution add_overall.js prints if the rating model changes.
   const RATING_MID  = 77;
   const RATING_SPAN = 10;
   const RATING_AMP  = 0.04;

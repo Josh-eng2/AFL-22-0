@@ -251,6 +251,55 @@ function main() {
     }
   }
 
+  // ── `overall` — the field the game actually plays on ─────────────────────
+  // Phase B replaced the placeholder `overall = rating` with a real award
+  // composite (scripts/add_overall.js). The failure mode worth guarding is
+  // silent regression: if add_overall.js is dropped from the pipeline, or
+  // add_rating.js starts writing `overall` again, the game reverts to
+  // stat-only ratings — which rank key defenders with fringe players — and
+  // nothing else would notice, because every value stays structurally valid.
+  //
+  // So assert the composite actually ran, by checking `overall` diverges from
+  // `rating`. The two agree for a handful of entries by coincidence; agreeing
+  // for nearly ALL of them means the placeholder is back.
+  {
+    const all = Object.values(db).flat().filter(p => p && typeof p === 'object');
+    const missing = all.filter(p => !Number.isInteger(p.overall));
+    if (missing.length) {
+      errors.push(`${missing.length} entries have no integer "overall" (e.g. ${missing[0].name}) — did scripts/add_overall.js run? See scripts/update_players.sh`);
+    }
+    const outOfRange = all.filter(p => Number.isInteger(p.overall) && (p.overall < 40 || p.overall > 99));
+    for (const p of outOfRange.slice(0, 5)) {
+      errors.push(`${p.name}: "overall" = ${p.overall} is outside [40, 99]`);
+    }
+    const withBoth = all.filter(p => Number.isInteger(p.overall) && Number.isInteger(p.rating));
+    if (withBoth.length) {
+      const same = withBoth.filter(p => p.overall === p.rating).length;
+      if (same / withBoth.length > 0.9) {
+        errors.push(
+          `"overall" equals "rating" for ${same}/${withBoth.length} entries — the Phase B ` +
+          `composite has been bypassed and the game is back on stat-only ratings. ` +
+          `Check that scripts/add_overall.js runs after add_rating.js.`);
+      }
+    }
+    // Each decade's best player is anchored to 99 by the era normalisation.
+    // If a decade tops out below that, the normalisation didn't run over it.
+    const byDecade = new Map();
+    for (const [bucketKey, players] of Object.entries(db)) {
+      if (!Array.isArray(players)) continue;
+      const decade = bucketKey.split('_')[1];
+      for (const p of players) {
+        if (!Number.isInteger(p.overall)) continue;
+        byDecade.set(decade, Math.max(byDecade.get(decade) ?? 0, p.overall));
+      }
+    }
+    for (const [decade, peak] of [...byDecade].sort()) {
+      if (peak !== 99) {
+        errors.push(`Decade ${decade} peaks at overall ${peak}, expected 99 — per-era normalisation did not anchor it (scripts/add_overall.js B.3)`);
+      }
+    }
+  }
+
   // A name is the engine's cross-era clone key (draftedPlayerNames), so two
   // DIFFERENT players sharing a name would wrongly block each other in the
   // draft. Distinct birth-era players must be disambiguated upstream

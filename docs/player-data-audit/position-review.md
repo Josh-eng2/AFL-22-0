@@ -18,7 +18,6 @@ and re-running.
 | Adelaide_1990s | HB | Nigel Smart | 17.8 | 0.5 | 3.7 | 0.8 | pre2000 gls 0.5, disp 17.8 |
 | Adelaide_1990s | HB | Mark Bickley | 18.7 | 0.4 | 3.5 | 0 | pre2000 gls 0.4, disp 18.7 |
 | Adelaide_1990s | SF | Rod Jameson | 12.8 | 2.6 | 4.6 | 0.1 | pre2000 gls 2.6, disp 12.8 |
-| Adelaide_2000s | MID | Brett Burton | 20.5 | 1.4 | 5.7 | 0.7 | i50 3.4, disp 20.5 |
 | BrisbaneLions_1980s | SF | Doug Barwick | 12.1 | 2.9 | 4.9 | 0 | pre2000 gls 2.9, disp 12.1 |
 | Carlton_1970s | HB | Vin Waite | 16 | 0.1 | 4.5 | 0.9 | pre2000 gls 0.1, disp 16 |
 | Carlton_1970s | MID | Trevor Keogh | 19.6 | 1.4 | 4 | 0 | pre2000 disp 19.6 |
@@ -144,12 +143,12 @@ and re-running.
 
 | pos | player | season | disp | gls | mks | tck | clr | hit | source | why |
 |---|---|---|---|---|---|---|---|---|---|---|
-| KD | Scott Thompson | 2007 | 25.2 | 0.7 | 6 | 4.6 | 4.3 | 0.4 | override/high | hand-reviewed |
+| KD | Nathan Bassett | 2006 | 18 | 0.1 | 7.8 | 2.1 | 1 | 0.1 | heuristic/high | gls 0.1, mks 7.8, disp 18 |
 | HB | Andrew McLeod | 2001 | 24.7 | 1.3 | 3.4 | 3 | 5.6 | 0.4 | override/high | hand-reviewed |
 | MID | Simon Goodwin | 2006 | 26.6 | 0.5 | 4.6 | 3.5 | 5.4 | 0.3 | heuristic/high | disp 26.6 (volume guard) |
 | MID | Tyson Edwards | 2006 | 24.6 | 0.7 | 5.3 | 3.6 | 3.6 | 0.1 | heuristic/high | disp 24.6 (volume guard) |
 | MID | Mark Ricciuto | 2000 | 26.4 | 0.9 | 4.7 | 2.2 | 6.8 | 0 | override/high | hand-reviewed |
-| MID | Brett Burton | 2003 | 20.5 | 1.4 | 5.7 | 2.4 | 3.2 | 0.7 | heuristic/low | i50 3.4, disp 20.5 |
+| MID | Scott Thompson | 2007 | 25.2 | 0.7 | 6 | 4.6 | 4.3 | 0.4 | override/high | hand-reviewed |
 | RUC | Rhett Biglands | 2006 | 8.4 | 0.9 | 2.8 | 2.5 | 1.8 | 14.4 | heuristic/high | hitouts 14.4 |
 | KF | Scott Welsh | 2004 | 9.9 | 2.3 | 4.1 | 2.9 | 1.8 | 0.1 | heuristic/medium | gls 2.3, mi50 2.9 |
 | SF | Darren Jarman | 2000 | 12.8 | 2.6 | 3.8 | 2 | 2.1 | 0 | heuristic/medium | gls 2.6, disp 12.8, mks 3.8 |
@@ -158,12 +157,12 @@ and re-running.
 
 | pos | player | season | disp | gls | mks | tck | clr | hit | source | why |
 |---|---|---|---|---|---|---|---|---|---|---|
-| KD | Scott Thompson | 2011 | 30.6 | 0.4 | 4.3 | 5.4 | 6.2 | 0.1 | override/high | hand-reviewed |
+| KD | Daniel Talia | 2016 | 15.6 | 0 | 6 | 2.3 | 1 | 0 | heuristic/high | gls 0, mks 6, disp 15.6 |
 | HB | Rory Laird | 2018 | 32.2 | 0.2 | 6.2 | 2.7 | 1.8 | 0 | override/high | hand-reviewed |
 | MID | Rory Sloane | 2017 | 24.2 | 0.8 | 3.8 | 7.8 | 6.6 | 0 | override/high | hand-reviewed |
+| MID | Scott Thompson | 2011 | 30.6 | 0.4 | 4.3 | 5.4 | 6.2 | 0.1 | override/high | hand-reviewed |
 | MID | Patrick Dangerfield | 2015 | 26.8 | 0.9 | 3.7 | 5.5 | 7.2 | 1.4 | heuristic/high | disp 26.8 (volume guard) |
 | MID | Matt Crouch | 2017 | 33 | 0.3 | 3.2 | 4.8 | 5.8 | 0 | heuristic/high | disp 33 (volume guard) |
-| MID | Brad Crouch | 2017 | 28.1 | 0.4 | 3.3 | 6.9 | 6 | 0 | heuristic/high | disp 28.1 (volume guard) |
 | RUC | Sam Jacobs | 2017 | 14.4 | 0.4 | 3.7 | 3 | 3.1 | 39.8 | override/high | hand-reviewed |
 | KF | Taylor Walker | 2012 | 14.4 | 3.3 | 6.7 | 2.2 | 1 | 0.1 | override/high | hand-reviewed |
 | SF | Eddie Betts | 2016 | 13.3 | 3.1 | 3.3 | 3.5 | 1.8 | 0 | override/high | hand-reviewed |
@@ -627,7 +626,7 @@ and re-running.
 | MID | Paul Couch _(imputed: clearances)_ | 1991 | 26.5 | 0.9 | 3.2 | 2.1 | 4.1 | 0.3 | heuristic/high | disp 26.5 (volume guard) |
 | MID | Mark Bairstow _(imputed: clearances)_ | 1991 | 26.8 | 1.8 | 2.6 | 1.8 | 4.1 | 0.1 | heuristic/high | disp 26.8 (volume guard) |
 | RUC | John Barnes | 1999 | 13.8 | 0.6 | 5.5 | 1.3 | 2.9 | 14.4 | override/high | hand-reviewed |
-| KF | Gary Ablett Sr _(imputed: clearances)_ | 1993 | 14.5 | 7.3 | 6.5 | 1.4 | 1.8 | 0.4 | heuristic/medium | pre2000 gls 7.3, mks 6.5 |
+| KF | Gary Ablett Sr _(imputed: clearances)_ | 1993 | 14.5 | 7.3 | 6.5 | 1.4 | 1.8 | 0.4 | override/high | hand-reviewed |
 | SF | Ken Hinkley _(imputed: clearances)_ | 1990 | 14.2 | 1.8 | 4.3 | 1.4 | 1.8 | 0.1 | heuristic/low | pre2000 gls 1.8, disp 14.2 |
 
 ## Geelong_2000s
@@ -682,7 +681,7 @@ and re-running.
 | MID | Aaron Hall | 2016 | 27.8 | 0.5 | 4.9 | 3.7 | 3.1 | 0.4 | heuristic/high | disp 27.8 (volume guard) |
 | MID | Dion Prestia | 2015 | 27.1 | 0.5 | 2.3 | 4.9 | 8.5 | 0 | override/high | hand-reviewed |
 | RUC | Jarrod Witts | 2019 | 14.5 | 0.1 | 3 | 3.2 | 5 | 45.8 | override/high | hand-reviewed |
-| KF | Tom J. Lynch | 2016 | 15.4 | 3 | 7 | 2.2 | 1 | 0.5 | heuristic/high | gls 3, mks 7 |
+| KF | Tom J. Lynch | 2016 | 15.4 | 3 | 7 | 2.2 | 1 | 0.5 | override/high | hand-reviewed |
 | KF | Harley Bennell | 2014 | 21.4 | 1.5 | 4.5 | 2.2 | 3.4 | 0.5 | heuristic/medium | gls 1.5, mi50 3.1 |
 | SF | Alex Sexton | 2018 | 13.6 | 1.3 | 3.6 | 2.8 | 1.5 | 0 | heuristic/medium | gls 1.3, disp 13.6, mks 3.6 |
 
@@ -928,7 +927,7 @@ and re-running.
 
 | pos | player | season | disp | gls | mks | tck | clr | hit | source | why |
 |---|---|---|---|---|---|---|---|---|---|---|
-| KD | Scott D. Thompson | 2013 | 19.6 | 0.1 | 6.5 | 2.6 | 1.2 | 0.1 | heuristic/high | gls 0.1, mks 6.5, disp 19.6 |
+| KD | Scott D. Thompson | 2013 | 19.6 | 0.1 | 6.5 | 2.6 | 1.2 | 0.1 | override/high | hand-reviewed |
 | HB | Leigh Adams | 2011 | 19.9 | 0.8 | 4.5 | 4.1 | 2.7 | 0 | heuristic/high | gls 0.8, reb 1.6, disp 19.9 |
 | MID | Ben Cunnington | 2018 | 25.6 | 0.5 | 3.7 | 5.1 | 6.6 | 0 | override/high | hand-reviewed |
 | MID | Andrew Swallow | 2012 | 25.8 | 0.4 | 3.5 | 7.1 | 6.8 | 0.1 | heuristic/high | disp 25.8 (volume guard) |
@@ -1089,7 +1088,7 @@ and re-running.
 | MID | Dion Prestia | 2022 | 24.8 | 0.3 | 3.7 | 3.1 | 6.2 | 0 | override/high | hand-reviewed |
 | MID | Tim Taranto | 2023 | 28.8 | 0.8 | 3.6 | 6.7 | 6.2 | 0 | heuristic/high | disp 28.8 (volume guard) |
 | RUC | Toby Nankervis | 2023 | 16.7 | 0.2 | 2.8 | 5.9 | 4.3 | 32.5 | override/high | hand-reviewed |
-| KF | Tom J. Lynch | 2022 | 12.4 | 3.3 | 6.1 | 1.9 | 1 | 0 | heuristic/medium | pre2000 gls 3.3, mks 6.1 |
+| KF | Tom J. Lynch | 2022 | 12.4 | 3.3 | 6.1 | 1.9 | 1 | 0 | override/high | hand-reviewed |
 | SF | Shane Edwards | 2020 | 17.2 | 0.5 | 1.7 | 3 | 4.8 | 0 | override/high | hand-reviewed |
 
 ## StKilda_1970s
@@ -1238,7 +1237,7 @@ and re-running.
 |---|---|---|---|---|---|---|---|---|---|---|
 | KD | Ted Richards | 2010 | 14.1 | 0.1 | 5.5 | 2.2 | 1 | 0 | override/high | hand-reviewed |
 | HB | Jake Lloyd | 2019 | 30.8 | 0.1 | 6.5 | 1.9 | 1.3 | 0 | override/high | hand-reviewed |
-| MID | Josh P. Kennedy | 2016 | 31.5 | 0.8 | 3.4 | 5.6 | 7.6 | 0 | heuristic/high | disp 31.5 (volume guard) |
+| MID | Josh P. Kennedy | 2016 | 31.5 | 0.8 | 3.4 | 5.6 | 7.6 | 0 | override/high | hand-reviewed |
 | MID | Luke Parker | 2016 | 26.9 | 1 | 3.5 | 6.5 | 6 | 1.4 | override/high | hand-reviewed |
 | MID | Dan Hannebery | 2015 | 30 | 0.6 | 4.3 | 5.1 | 4.5 | 0 | heuristic/high | disp 30 (volume guard) |
 | MID | Kieren Jack | 2013 | 25.2 | 1 | 2.4 | 6.4 | 5.2 | 0 | heuristic/high | disp 25.2 (volume guard) |
@@ -1313,7 +1312,7 @@ and re-running.
 | MID | Andrew Gaff | 2019 | 31.9 | 0.1 | 6.4 | 2.5 | 4.4 | 0 | heuristic/high | disp 31.9 (volume guard) |
 | MID | Elliot Yeo | 2019 | 23.7 | 0.5 | 3.7 | 7.3 | 6.3 | 0 | override/high | hand-reviewed |
 | RUC | Dean Cox | 2011 | 17.8 | 0.8 | 5.7 | 2.5 | 3.9 | 28.6 | override/high | hand-reviewed |
-| KF | Josh J. Kennedy | 2016 | 13 | 3.6 | 6.4 | 3.3 | 1 | 0 | heuristic/high | gls 3.6, mks 6.4 |
+| KF | Josh J. Kennedy | 2016 | 13 | 3.6 | 6.4 | 3.3 | 1 | 0 | override/high | hand-reviewed |
 | SF | Josh Hill | 2015 | 12.5 | 1.8 | 4 | 2.8 | 1.7 | 0 | heuristic/medium | gls 1.8, disp 12.5, mks 4 |
 
 ## WestCoast_2020s
@@ -1327,7 +1326,7 @@ and re-running.
 | MID | Elliot Yeo | 2024 | 22.5 | 0.6 | 2.3 | 6.5 | 6.6 | 0 | override/high | hand-reviewed |
 | MID | Andrew Gaff | 2021 | 27.5 | 0.1 | 6.7 | 2.1 | 3.1 | 0 | heuristic/high | disp 27.5 (volume guard) |
 | RUC | Nic Naitanui | 2021 | 15.2 | 0.1 | 1.8 | 3.1 | 7.2 | 31.2 | override/high | hand-reviewed |
-| KF | Josh J. Kennedy | 2021 | 9.9 | 2.3 | 4.9 | 1.6 | 1 | 0.1 | heuristic/medium | gls 2.3, mks 4.9, disp 9.9 (tall fwd profile) |
+| KF | Josh J. Kennedy | 2021 | 9.9 | 2.3 | 4.9 | 1.6 | 1 | 0.1 | override/high | hand-reviewed |
 | SF | Willie Rioli | 2022 | 12 | 1.1 | 3.2 | 3.2 | 3.6 | 0 | heuristic/medium | gls 1.1, disp 12, mks 3.2 |
 
 ## WesternBulldogs_1970s

@@ -3,9 +3,12 @@
  * scripts/add_rating.js
  * Adds fields to every player in players.json:
  *   ratingRaw — the raw weighted value of the stat line (native scale)
- *   rating    — that value mapped onto a 0–100 overall
- *   overall   — the field gameplay logic actually reads (simulation
- *               strength, AI draft scoring, star/GOAT tiers, badge colors)
+ *   rating    — that value mapped onto a 0–100 scale
+ *
+ * This script does NOT set `overall`. `overall` is the field gameplay logic
+ * reads (simulation strength, AI draft scoring, star/GOAT tiers, badge
+ * colours) and it is built by scripts/add_overall.js, which runs after this
+ * one and consumes `ratingRaw` as one of its six inputs.
  * Run:  node scripts/add_rating.js
  *
  * Raw formula (linear weighted value of a season-average stat line):
@@ -33,14 +36,22 @@
  * With only ~40 stub players the percentile anchors are noisy — revisit once
  * the real dataset lands.
  *
- * `overall` currently just mirrors `rating`. The NBA original's `overall`
- * was a composite of a real 2K rating (era-normalized) with a stats-derived
- * fallback — there is no AFL equivalent yet. Phase 3/§4.4 of the port plan
- * calls for building one from Brownlow votes, All-Australian selections,
- * Champion Data AFL Player Ratings, and club best-and-fairests, then
- * era-normalizing it the same way normalize_2k_overalls_by_era.py did. Until
- * that pipeline exists, `overall = rating` is the placeholder every other
- * module (simulation.js, aiDraft.js, draft.js, challenge.js, render.js) reads.
+ * ── Relationship to `overall` ───────────────────────────────────────────────
+ * `rating` is a pure stat-line value and is NOT what the game plays on. It
+ * cannot be: AFL stat volume tracks position far more than quality, so rating
+ * a key defender this way ranks him with the fringe players (the Glenn Archer
+ * problem — see scripts/add_overall.js).
+ *
+ * `overall` is built separately by scripts/add_overall.js from Brownlow rate,
+ * All-Australian and club best-and-fairest selections, goalkicking honours,
+ * longevity and this stat line — defender-bias corrected and era-normalised.
+ * `ratingRaw` feeds that composite as its production term; `rating` itself is
+ * kept for display and for the audit scripts.
+ *
+ * An earlier version of this file set `overall = rating` as a placeholder.
+ * It no longer does, and nothing here should reintroduce it — overwriting
+ * `overall` after add_overall.js has run would silently revert the game to
+ * stat-only ratings.
  */
 const fs   = require('fs');
 const path = require('path');
@@ -89,7 +100,8 @@ let min = Infinity, max = -Infinity, sum = 0;
 for (const p of players) {
   const scaled = OVR_LO + ((p.ratingRaw - lo) / (hi - lo)) * (OVR_HI - OVR_LO);
   p.rating  = clamp(Math.round(scaled), OVR_MIN, OVR_MAX);
-  p.overall = p.rating; // placeholder — see file header
+  // Deliberately does NOT touch p.overall — see the header. That is
+  // add_overall.js's output and this script runs before it.
   sum += p.rating;
   if (p.rating < min) min = p.rating;
   if (p.rating > max) max = p.rating;

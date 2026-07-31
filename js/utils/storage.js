@@ -385,7 +385,7 @@ function _fansBarCol(avg) {
  *  (render.js already imports from storage.js). */
 function _ovrColor(rating) {
   const r = rating ?? 0;
-  if (r >= 97) return '#d97706';
+  if (r >= 95) return '#d97706';
   if (r >= 92) return '#2563eb';
   if (r >= 85) return '#0f766e';
   return '#64748b';

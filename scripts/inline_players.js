@@ -18,12 +18,26 @@ const keys = Object.keys(db);
 let playerCount = 0;
 keys.forEach(k => { playerCount += db[k].length; });
 
-// Strip fields that exist only for the data pipeline, not the game.
-// `ratingRaw` is the intermediate weighted-stat value behind `rating`
-// (see scripts/add_rating.js) — nothing at runtime reads it, so shipping
-// it would cost ~19 KB per page load. It stays in players.json.
+// Strip fields that exist only for the data pipeline, not the game. Nothing at
+// runtime reads any of these, and together they are a large share of the
+// payload — the career signals alone are six numbers on every one of 828
+// entries. They stay in players.json, which is the source of truth and what
+// the pipeline re-reads.
+//
+//   ratingRaw            intermediate weighted-stat value behind `rating`
+//   overallParts         per-input breakdown behind `overall`
+//   decade* / career*    career signals joined from the source corpus. Kept in
+//   coleman* / oneClub   players.json specifically so add_overall.js can
+//                        rebuild the composite with the gitignored ~137 MB
+//                        corpus absent.
+const PIPELINE_ONLY = [
+  'ratingRaw', 'overallParts',
+  'decadeBrownlow', 'decadeBrownlowGames', 'decadeGames', 'decadeFinals',
+  'seasonBrownlow', 'careerGames', 'oneClub',
+  'colemanWins', 'colemanTop3', 'colemanTop10',
+];
 for (const k of keys) {
-  for (const p of db[k]) delete p.ratingRaw;
+  for (const p of db[k]) for (const f of PIPELINE_ONLY) delete p[f];
 }
 
 // Emit compact JSON wrapped in JSON.parse(...): roughly half the bytes of

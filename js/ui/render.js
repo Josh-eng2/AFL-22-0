@@ -180,12 +180,18 @@ export function fmtPlayerLine(p) {
 }
 
 // ── Team rating (0–100 overall) display helper ────────────────────────────────
-/** 2K-style tier color for a 0–100 overall. Cutoffs 97/92/85 are the old
- * rating-scale 90/82/74 tiers' percentile equivalents on the `overall`
- * (era-adjusted 2K) scale the sim now averages. */
+/**
+ * Tier colour for a 0–100 `overall`. Bands are percentile-derived against the
+ * shipped database so each colour keeps meaning the same thing as the rating
+ * model changes — see playerTier() in js/logic/draft.js, which these mirror.
+ * Against the Phase B composite: 95 = top 2.1%, 92 = top 5.7%, 85 = top 20%.
+ *
+ * Keep in sync with _ovrColor() in js/utils/storage.js, which duplicates this
+ * deliberately to avoid an import cycle.
+ */
 export function ovrColor(rating) {
   const r = rating ?? 0;
-  if (r >= 97) return '#d97706'; // gold — GOAT tier
+  if (r >= 95) return '#d97706'; // gold — GOAT tier
   if (r >= 92) return '#2563eb'; // blue — star
   if (r >= 85) return '#0f766e'; // teal — solid starter
   return '#64748b';              // slate — role player

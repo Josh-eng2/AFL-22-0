@@ -19,7 +19,8 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { resolvePosition, POSITIONS, fixName, NAME_BY_KEY, NAME_PREFIX_FIX } from './afl_positions.mjs';
+import { resolvePosition, POSITIONS, fixName, NAME_BY_KEY, NAME_PREFIX_FIX,
+         POSITION_OVERRIDES } from './afl_positions.mjs';
 
 const ROOT = path.join(path.dirname(fileURLToPath(import.meta.url)), '..');
 const IN   = path.join(ROOT, 'vendor', 'afl-seasons.json');
@@ -65,6 +66,30 @@ function qualityScore(cd) {
   const gamesPart = Math.min(cd.decadeGames, 200) * 0.055;
   const finalsPart = Math.min(cd.decadeFinals, 25) * 0.35;
   return statPart + brownlowPart + gamesPart + finalsPart;
+}
+
+/**
+ * Stamps each season row with its league-wide home-and-away goalkicking rank
+ * for that year (1 = led the league, i.e. won the Coleman). Seasons with no
+ * goals get null rather than a rank, so "didn't kick a goal" never reads as
+ * "finished last but ranked".
+ */
+function computeGoalkickingRanks(seasons) {
+  const byYear = new Map();
+  for (const s of seasons) {
+    if (!byYear.has(s.year)) byYear.set(s.year, []);
+    byYear.get(s.year).push(s);
+  }
+  for (const rows of byYear.values()) {
+    rows.sort((a, b) => (b.goalsHA || 0) - (a.goalsHA || 0));
+    // Standard competition ranking: equal totals share a rank.
+    let rank = 0, prevTotal = null;
+    rows.forEach((r, i) => {
+      const total = r.goalsHA || 0;
+      if (total !== prevTotal) { rank = i + 1; prevTotal = total; }
+      r.gkRank = total > 0 ? rank : null;
+    });
+  }
 }
 
 /** Slug for stable player ids. */
@@ -241,9 +266,27 @@ function main() {
   //  2. fixName restores apostrophes the source strips (OBrien -> O'Brien).
   //  3. NAME_PREFIX_FIX restores Dutch surname particles the source drops
   //     outright (Goey -> De Goey), which no rule can recover.
+  const sourceNameByKey = new Map();
   for (const s of seasons) {
+    sourceNameByKey.set(s.playerKey, fixName(s.name));
     s.name = NAME_BY_KEY[s.playerKey] ?? NAME_PREFIX_FIX[s.playerKey] ?? fixName(s.name);
   }
+  assertNoOrphanedOverrides(sourceNameByKey);
+
+  // ── Coleman Medal / leading-goalkicker rank, derived not sourced ──────────
+  // The Coleman goes to the season's highest home-and-away goal aggregate,
+  // which is a mechanical criterion we can apply directly to the corpus — so
+  // this needs no external award table and carries no extra licensing risk.
+  // Spot-checked against known winners: 1970/71 Hudson, 1983 Quinlan, 1991 &
+  // 1998 Lockett, 2003 Lloyd, 2012 Riewoldt, 2017 Franklin, 2022 Curnow all
+  // reproduce exactly.
+  //
+  // Two honest limits: the award was the "leading goalkicker" award before it
+  // was named for Coleman in 1981, and a rank here reflects goals recorded in
+  // this corpus for clubs we ship, so a tie or a missing club-season could in
+  // principle shift a rank. It is used as a bounded bonus, never as a primary
+  // term, so a rare off-by-one cannot move a rating far.
+  computeGoalkickingRanks(seasons);
 
   // ── Career context per player (for one-club / longevity traits) ───────────
   const careerClubs = new Map(), careerGames = new Map();
@@ -266,13 +309,25 @@ function main() {
         playerKey: s.playerKey, name: s.name, club: s.club, decade: s.decade,
         eraClubName: s.eraClubName, seasons: [],
         decadeGames: 0, decadeBrownlow: 0, decadeFinals: 0,
+        decadeBrownlowGames: 0,
+        colemanWins: 0, colemanTop3: 0, colemanTop10: 0,
       };
       cds.set(key, cd);
+    }
+    if (s.gkRank != null) {
+      if (s.gkRank === 1) cd.colemanWins++;
+      if (s.gkRank <= 3)  cd.colemanTop3++;
+      if (s.gkRank <= 10) cd.colemanTop10++;
     }
     cd.seasons.push(s);
     cd.decadeGames    += s.games;
     cd.decadeBrownlow += s.brownlow || 0;
     cd.decadeFinals   += s.finals   || 0;
+    // Games played inside the window where the source actually records votes.
+    // This is the denominator that makes the Brownlow signal comparable, and
+    // a 0 here means "no signal available", NOT "polled nothing" — the whole
+    // 1970s and the 1980-83 seasons land in that case.
+    if (s.brownlowRecorded) cd.decadeBrownlowGames += s.games;
     // Era name: prefer the identity the player actually played under most.
     if (s.eraClubName && !cd.eraClubName) cd.eraClubName = s.eraClubName;
   }
@@ -376,6 +431,32 @@ function main() {
           popularity: provisionalPopularity(c),
           season: s.year,
           games: s.games,
+          // ── Career signals, persisted for Phase B ──────────────────────────
+          // These come from the ~137 MB source corpus, which is gitignored.
+          // Persisting them here is what lets scripts/add_overall.js rebuild
+          // the award composite from the committed players.json alone, with no
+          // vendored corpus present. Do not strip them.
+          //   decadeBrownlow      — votes polled at this club this decade
+          //   decadeBrownlowGames — games inside the vote-recording window
+          //                         (0 => no Brownlow signal exists for this
+          //                         entry; see BROWNLOW_FIRST_YEAR)
+          //   decadeGames         — games played at this club this decade
+          //   decadeFinals        — finals played at this club this decade
+          //   seasonBrownlow      — votes polled in the single shipped season
+          decadeBrownlow: c.decadeBrownlow,
+          decadeBrownlowGames: c.decadeBrownlowGames,
+          decadeGames: c.decadeGames,
+          decadeFinals: c.decadeFinals,
+          seasonBrownlow: s.brownlow || 0,
+          careerGames: c.careerGames,
+          oneClub: !!c.oneClub,
+          //   coleman* — seasons finishing 1st / top-3 / top-10 in league
+          //   home-and-away goalkicking while at this club this decade.
+          //   Unlike the Brownlow this is available for every era we ship,
+          //   which is what makes it the 1970s' main award signal.
+          colemanWins: c.colemanWins,
+          colemanTop3: c.colemanTop3,
+          colemanTop10: c.colemanTop10,
         };
         if (c.eraClubName) entry.eraClubName = c.eraClubName;
         if (imputed.length) entry.imputed = imputed;
@@ -393,6 +474,8 @@ function main() {
       e.id = `${e.id}_${bucket.split('_')[0].toLowerCase().slice(0, 3)}${n}`;
     }
   }
+
+  assertMarqueeSignals(db);
 
   fs.writeFileSync(OUT, JSON.stringify(db, null, 2));
 
@@ -438,6 +521,110 @@ function main() {
 
   if (wantReview) writeReview(db, candidates, shipped);
   console.log(`\nWrote ${OUT}`);
+}
+
+// ── Rename/override collision tripwire ──────────────────────────────────────
+/**
+ * POSITION_OVERRIDES is keyed by FINAL player name, but NAME_BY_KEY rewrites
+ * names to split players who share one. When a name is split, any override
+ * still keyed on the old shared name is silently either dead or — much worse —
+ * re-pointed at whichever player kept the bare name.
+ *
+ * That is not hypothetical. 'Scott Thompson' was overridden to KD for North
+ * Melbourne's key defender; once the collision repair renamed him to
+ * 'Scott D. Thompson', the override landed on Adelaide's 30-disposal
+ * midfielder instead, shipping him as a key defender. It stayed invisible
+ * until Phase B's positional calibration multiplied the error and pushed him
+ * to the top of the board.
+ *
+ * So: any override keyed on a name that the rename layer has since split is
+ * an error by construction. Fail rather than let it re-point silently.
+ */
+function assertNoOrphanedOverrides(sourceNameByKey) {
+  const splitFrom = new Map();   // original shared name -> Set of final names
+  for (const [key, finalName] of Object.entries(NAME_BY_KEY)) {
+    const original = sourceNameByKey.get(key);
+    if (!original) continue;
+    if (!splitFrom.has(original)) splitFrom.set(original, new Set());
+    splitFrom.get(original).add(finalName);
+  }
+  const orphans = Object.keys(POSITION_OVERRIDES).filter(
+    name => splitFrom.has(name) && !splitFrom.get(name).has(name));
+
+  if (orphans.length) {
+    console.error('\nOrphaned position overrides (keyed on a name that has since been split):');
+    for (const name of orphans) {
+      console.error(`  - "${name}" -> ${POSITION_OVERRIDES[name]}   now split into: ` +
+                    `${[...splitFrom.get(name)].join(' / ')}`);
+    }
+    console.error('\nRe-key each override onto the specific player it was meant for.');
+    process.exit(1);
+  }
+}
+
+// ── Marquee tripwire ────────────────────────────────────────────────────────
+// The Brownlow/games signals are joined from the source corpus by playerKey,
+// and a name repair, a club remap or a decade boundary change can silently
+// sever that join — leaving a champion in the database with a zero career
+// signal, which Phase B's composite would then read as "ordinary player".
+// A zero here is indistinguishable from a genuine non-polling season, so it
+// fails silently unless something asserts it doesn't.
+//
+// These are players whose Brownlow record is not in dispute. If any of them
+// stops matching, the join is broken — fail the build rather than shipping a
+// quietly wrong rating. Expected values are floors, not exact counts, so the
+// tripwire survives a legitimate source refresh.
+//
+// Every entry here sits in the vote-recording era on purpose. A pre-1984
+// champion (Leigh Matthews at Hawthorn in the 1970s is the canonical case)
+// legitimately carries decadeBrownlow=0 because the source has no votes at
+// all for those years — asserting a floor there would fail forever on data
+// that is behaving correctly. `noBrownlowEra` covers that side instead: it
+// asserts the entry exists and is uncovered, so the gap stays visible.
+const MARQUEE = [
+  { name: 'Wayne Carey',      bucket: 'NorthMelbourne_1990s', minBrownlow: 90 },
+  { name: 'Robert Harvey',    bucket: 'StKilda_1990s',        minBrownlow: 120 },
+  { name: 'Dustin Martin',    bucket: 'Richmond_2010s',       minBrownlow: 150 },
+  { name: 'Gary Ablett Jr',   bucket: 'GoldCoast_2010s',      minBrownlow: 100 },
+  { name: 'Gary Ablett Sr',   bucket: 'Geelong_1980s',        minBrownlow: 40 },
+  { name: 'Scott Pendlebury', bucket: 'Collingwood_2010s',    minBrownlow: 150 },
+  { name: 'Chris Judd',       bucket: 'WestCoast_2000s',      minBrownlow: 80 },
+  // Pre-1984: assert the ABSENCE is the known coverage gap, not a lost join.
+  { name: 'Leigh Matthews',   bucket: 'Hawthorn_1970s',       noBrownlowEra: true },
+  { name: 'Kevin Bartlett',   bucket: 'Richmond_1970s',       noBrownlowEra: true },
+];
+
+function assertMarqueeSignals(db) {
+  const problems = [];
+  for (const m of MARQUEE) {
+    const e = (db[m.bucket] || []).find(x => x.name === m.name);
+    if (!e) { problems.push(`${m.name} is missing from ${m.bucket}`); continue; }
+    if (!(e.decadeGames > 0)) {
+      problems.push(`${m.name} (${m.bucket}) has decadeGames=${e.decadeGames} — the career-signal join is broken`);
+    }
+    if (m.noBrownlowEra) {
+      // The point of these rows is that no vote signal should exist. If one
+      // appears, the source has been backfilled and the composite's coverage
+      // branch needs revisiting.
+      if (e.decadeBrownlowGames > 0) {
+        problems.push(`${m.name} (${m.bucket}) now has ${e.decadeBrownlowGames} vote-recorded games — the pre-1984 gap has closed; revisit BROWNLOW_FIRST_YEAR and add_overall.js`);
+      }
+      continue;
+    }
+    if (!(e.decadeBrownlow >= m.minBrownlow)) {
+      problems.push(`${m.name} (${m.bucket}) has decadeBrownlow=${e.decadeBrownlow}, expected >= ${m.minBrownlow} — the career-signal join is broken`);
+    }
+    if (!(e.decadeBrownlowGames > 0)) {
+      problems.push(`${m.name} (${m.bucket}) has decadeBrownlowGames=0 despite polling votes`);
+    }
+  }
+  if (problems.length) {
+    console.error('\nMarquee career-signal check FAILED:');
+    for (const p of problems) console.error(`  - ${p}`);
+    console.error('\nRefusing to write players.json with a severed career-signal join.');
+    process.exit(1);
+  }
+  console.log(`Marquee career-signal check: ${MARQUEE.length}/${MARQUEE.length} OK`);
 }
 
 /** Review artifact: every shipped entry, its position, and how it was decided. */

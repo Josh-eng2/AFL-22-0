@@ -142,13 +142,26 @@ export function useSkip(kind) {
 // the on-court quality signal the draft steers toward when seeking stars/GOATs.
 const TIER_RANK = { starter: 0, star: 1, goat: 2 };
 
-/** Quality tier derived from the player's `overall` rating. Cutoffs 92/97
- * are carried over from the NBA original's percentile-equivalent bands;
- * revisit once a real AFL composite rating (docs/afl-port-plan.md §4.4)
- * replaces the current rating-mirrors-overall placeholder. */
+/**
+ * Quality tier derived from the player's `overall` rating.
+ *
+ * Cutoffs are set by PERCENTILE of the shipped database, not by round numbers,
+ * so the bands keep selecting the same slice of the league as the rating model
+ * changes. Against the Phase B composite (scripts/add_overall.js):
+ *
+ *   goat  >= 95  — top 2.1% (17 entries)
+ *   star  >= 92  — top 5.7% (47 entries)
+ *
+ * These preserve the shares the NBA original's 97/92 bands selected under the
+ * old stat-line placeholder (1.8% / 5.7%). `star` needed no change; `goat`
+ * moved 97 -> 95 because the composite's top tail is tighter — 97+ now selects
+ * only 0.7% of the database, which would have quietly cut the GOAT pool by
+ * more than half. Re-derive from the distribution add_overall.js prints if the
+ * rating model changes again.
+ */
 export function playerTier(p) {
   const overall = p.overall ?? 77;
-  if (overall >= 97) return 'goat';
+  if (overall >= 95) return 'goat';
   if (overall >= 92) return 'star';
   return 'starter';
 }

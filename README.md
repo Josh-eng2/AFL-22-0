@@ -21,6 +21,10 @@ Eight → premiership.
 - ✅ **Real player database** — 828 entries across 92 club-decade buckets
   (1970s–2020s), derived from AFL Tables data. Each entry is a real player's
   best single season at that club in that decade. See [`data/README.md`](data/README.md).
+- ✅ **Real ratings** — `overall` is an award/career composite (Brownlow rate,
+  goalkicking honours, longevity, production), corrected for the well-known
+  vote bias against key defenders and normalised per era so each decade's best
+  is a 99. Replaces the Phase A stat-line placeholder.
 - ⬜ Balance tuning (Phase C), branding assets, Firebase, and launch prep are
   still outstanding — see [`docs/afl-build-out-plan.md`](docs/afl-build-out-plan.md).
 
@@ -61,10 +65,15 @@ The player database ships pre-generated at `js/data/players.js` (inlined from
 bash scripts/afl_vendor_data.sh     # fetch the pinned source corpus (~137 MB, gitignored)
 node scripts/afl_build_seasons.mjs  # per-game rows -> per-season lines
 node scripts/afl_build_db.mjs       # best season per club-decade -> curated boards
-bash scripts/update_players.sh      # popularity -> rating -> inline js/data/players.js
+bash scripts/update_players.sh      # popularity -> rating -> overall -> inline players.js
 node scripts/validate_players.js    # structural validation (must exit 0)
 node scripts/audit_stats.js         # realism triage
 ```
+
+To rebuild only the ratings, skip the first three steps — `update_players.sh`
+works from the committed `players.json` with no source corpus present. Use
+`node scripts/add_overall.js --explain="<name>"` to see which inputs produced
+any given player's rating.
 
 Add `--review` to `afl_build_db.mjs` to regenerate the position-review artifact.
 Audit methodology: [`docs/player-data-audit/rubric.md`](docs/player-data-audit/rubric.md).
