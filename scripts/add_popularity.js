@@ -1,23 +1,25 @@
 'use strict';
 /**
  * scripts/add_popularity.js
- * Adds a `popularity` integer (1-100) to every player in players.json.
+ * Sets the `popularity` integer (35-99) on every player in players.json.
  * Run:  node scripts/add_popularity.js
  *
- * Logic:
- *  1. Named overrides for every well-known player (curated by hand).
- *  2. For everyone else: stat-based formula using goals as the main driver
- *     (most recognisable stat in the public eye, same role ppg played in
- *     the NBA original), with a small deterministic jitter so role-players
- *     aren't all identical.
+ * Precedence, highest first:
+ *  1. NAMED  — curated household-name overrides. Recognition is cultural, not
+ *     statistical: Jason Dunstall and Dermott Brereton are famous for reasons
+ *     no stat line encodes, and a quiet 300-gamer can out-rate a superstar on
+ *     raw output.
+ *  2. The value afl_build_db.mjs already computed from real signals (Brownlow
+ *     votes across the club-decade, games played, finals appearances, quality
+ *     composite). This is a far better prior than any single-stat formula —
+ *     crucially it doesn't punish defenders and rucks, who score few goals.
+ *  3. formulaPopularity() — last-resort fallback for entries built outside the
+ *     pipeline (e.g. a hand-added player).
  *
- * NAMED currently only covers the ~40 players in the hand-written stub
- * roster (docs/afl-port-plan.md's "3 clubs x 2 decades" starter DB). Once
- * the real ~800-1000 player dataset lands (Phase 3 of the port plan), this
- * needs the same scale of curated list the NBA original had (~700 names) —
- * built from Brownlow/Norm Smith/Coleman winners, Hall of Fame and Legend
- * status, premierships, and a subjective recognisability pass, per
- * docs/afl-port-plan.md §4.5.
+ * The NBA original recomputed popularity for everyone from a points-per-game
+ * formula. That is exactly the wrong shape for AFL: goals are concentrated in
+ * two positions, so a goals-driven formula would rate every key defender as
+ * an unknown. Hence the precedence above.
  */
 const fs   = require('fs');
 const path = require('path');
@@ -25,87 +27,98 @@ const path = require('path');
 const SRC  = path.join(__dirname, '..', 'players.json');
 const db   = JSON.parse(fs.readFileSync(SRC, 'utf8'));
 
-// ─── Curated overrides (name → popularity) ───────────────────────────────────
+// ─── Curated household names (name → popularity) ─────────────────────────────
+// Names must match the DISAMBIGUATED names in players.json (Gary Ablett Sr /
+// Gary Ablett Jr, Josh P. / Josh J. Kennedy) — see scripts/afl_positions.mjs.
 const NAMED = {
-  // Carlton
-  'Stephen Kernahan':        90,
-  'Greg Williams':           85,
-  'Stephen Silvagni':        82,
-  'Craig Bradley':           78,
-  'Justin Madden':           55,
-  'Ang Christou':            45,
-  'Anthony Koutoufides':     80,
-  'Charlie Curnow':          82,
-  'Patrick Cripps':          90,
-  'Jacob Weitering':         68,
-  'Kade Simpson':            65,
-  'Matthew Kreuzer':         55,
-  'Eddie Betts':             92,
-  'Marc Murphy':             60,
-  // Essendon
-  'James Hird':              95,
-  'Dustin Fletcher':         80,
-  "Gary O'Donnell":          55,
-  'Simon Madden':            70,
-  'Michael Long':            88,
-  'Joe Misiti':              45,
-  'Joe Daniher':             65,
-  'Zach Merrett':            72,
-  'Michael Hurley':          58,
-  'Adam Saad':               55,
-  'Tom Bellchambers':        50,
-  'Orazio Fantasia':         52,
-  'Dyson Heppell':           65,
-  // North Melbourne
-  'Wayne Carey':             97,
-  'Anthony Stevens':         65,
-  'Glenn Archer':            78,
-  'David King':              68,
-  'Corey McKernan':          60,
-  'Wayne Schwass':           62,
-  'Ben Brown':               60,
-  'Ben Cunnington':          62,
-  'Scott Thompson':          55,
-  'Shaun Higgins':           60,
-  'Todd Goldstein':          72,
-  'Lindsay Thomas':          55,
-  'Jack Ziebell':            58,
+  // Immortals / modern superstars
+  'Gary Ablett Sr': 99, 'Gary Ablett Jr': 97, 'Wayne Carey': 97,
+  'Leigh Matthews': 96, 'Tony Lockett': 96, 'Jason Dunstall': 92,
+  'Lance Franklin': 96, 'Dustin Martin': 95, 'Chris Judd': 92,
+  'Nathan Buckley': 91, 'James Hird': 93, 'Michael Voss': 90,
+  'Robert Harvey': 88, 'Nicky Winmar': 90, 'Michael Long': 90,
+  'Adam Goodes': 90, 'Patrick Dangerfield': 92, 'Marcus Bontempelli': 90,
+  'Patrick Cripps': 88, 'Nat Fyfe': 88, 'Scott Pendlebury': 89,
+  'Joel Selwood': 89, 'Luke Hodge': 86, 'Sam Mitchell': 82,
+  'Jarryd Roughead': 80, 'Cyril Rioli': 89, 'Buddy Franklin': 95,
+
+  // Cult figures / crowd favourites
+  'Dermott Brereton': 88, 'Warwick Capper': 86, 'Peter Daicos': 90,
+  'Tony Modra': 84, 'Brendan Fevola': 84, 'Eddie Betts': 92,
+  'Jim Krakouer': 82, 'Phil Krakouer': 78, 'Maurice Rioli Sr': 82,
+  'Robert DiPierdomenico': 78, 'Doug Hawkins': 80, 'Rex Hunt': 62,
+  'Barry Breen': 60, 'Kevin Bartlett': 86, 'Malcolm Blight': 86,
+  'Robert Flower': 84, 'Bruce Doull': 82, 'Peter Knights': 80,
+
+  // Champions of their clubs
+  'Stephen Silvagni': 85, 'Dustin Fletcher': 82, 'Glenn Archer': 80,
+  'Matthew Scarlett': 78, 'Alex Rance': 80, 'Jeremy McGovern': 76,
+  'Matthew Richardson': 84, 'Matthew Lloyd': 84, 'Nick Riewoldt': 88,
+  'Matthew Pavlich': 86, 'Jonathan Brown': 86, 'Barry Hall': 85,
+  'Josh J. Kennedy': 82, 'Josh P. Kennedy': 78, 'Tom Hawkins': 82,
+  'Jack Riewoldt': 80, 'Travis Cloke': 74, 'Taylor Walker': 76,
+  'Simon Black': 84, 'Jason Akermanis': 84, 'Shane Crawford': 84,
+  'Ben Cousins': 88, 'Daniel Kerr': 74, 'Mark Ricciuto': 82,
+  'Andrew McLeod': 86, 'Gavin Wanganeen': 82, 'Paul Kelly': 80,
+  'Michael OLoughlin': 80, "Michael O'Loughlin": 80, 'Brett Kirk': 74,
+  'Chris Grant': 78, 'Brad Johnson': 78, 'Rohan Smith': 68,
+  'Wayne Schimmelbusch': 74, 'Todd Goldstein': 70, 'Brent Harvey': 78,
+  'Dean Cox': 78, 'Nic Naitanui': 86, 'Aaron Sandilands': 78,
+  'Max Gawn': 84, 'Christian Petracca': 84, 'Clayton Oliver': 80,
+  'Lachie Neale': 82, 'Dayne Zorko': 72, 'Charlie Curnow': 80,
+  'Toby Greene': 76, 'Isaac Heeney': 80, 'Errol Gulden': 74,
+  'Nick Daicos': 88, 'Harry McKay': 74, 'Jeremy Cameron': 80,
+  'Paul Salmon': 72, 'Gerard Healy': 72, 'Tim Watson': 80,
+  'Terry Daniher': 74, 'Simon Madden': 74, 'Justin Madden': 66,
+  'Gary Ayres': 74, 'John Platten': 78, 'Chris Langford': 66,
+  'Stephen Kernahan': 86, 'Greg Williams': 82, 'Craig Bradley': 78,
+  'Anthony Koutoufides': 82, 'Marc Murphy': 68, 'Trent Cotchin': 78,
+  'Jack Riewoldt Richmond': 78, 'Dane Swan': 84, 'Steele Sidebottom': 70,
+  'Travis Boak': 72, 'Kane Cornes': 68, 'Warren Tredrea': 74,
+  'Robbie Gray': 78, 'Ollie Wines': 70, 'Rory Sloane': 74,
+  'Ken Hinkley': 58, 'Peter Hudson': 84, 'Bernie Quinlan': 74,
+  'Michael Roach': 72, 'Ross Glendinning': 70, 'Guy McKenna': 68,
+  'Dean Kemp': 70, 'Chris Lewis': 70, 'Peter Matera': 78,
+  'Scott Lucas': 68, 'Chris Tarrant': 66, 'Jarrad Waite': 62,
+  'Max King': 70, 'Jamarra Ugle-Hagan': 72, 'Jack Lukosius': 62,
+  'Tom J. Lynch': 74, 'Tom T. Lynch': 58, 'Eric Hipwood': 60,
+  'Sam Reid': 60, 'Jamie Elliott': 70, 'Bayley Fritsch': 66,
 };
 
-// ─── Stat-based fallback ──────────────────────────────────────────────────────
+// ─── Stat-based fallback (last resort only) ─────────────────────────────────
 function formulaPopularity(player) {
-  // Base from goals — most recognisable stat in the public eye
-  const goalsBase = Math.min(player.goals / 4, 1) * 55; // 4 goals/game → 55 pts
-
-  // Supporting stats add a little
+  const goalsBase = Math.min((player.goals || 0) / 4, 1) * 40;
   const supportBase =
-    (player.disposals  / 30) * 8 +
-    (player.marks      / 8)  * 7 +
-    (player.tackles     / 6)  * 5 +
-    (player.clearances / 8)  * 5;
-
-  const base = Math.round(goalsBase + supportBase);
+    ((player.disposals  || 0) / 30) * 22 +
+    ((player.marks      || 0) / 8)  * 10 +
+    ((player.tackles    || 0) / 6)  * 6 +
+    ((player.clearances || 0) / 8)  * 6 +
+    ((player.hitouts    || 0) / 35) * 8;
+  const base = Math.round(35 + goalsBase + supportBase);
 
   // Deterministic jitter from the player id so the same player always
   // gets the same score (no randomness).
   let hash = 0;
-  for (let i = 0; i < (player.id || player.name).length; i++) {
-    hash = ((hash << 5) - hash) + (player.id || player.name).charCodeAt(i);
+  const seed = player.id || player.name || '';
+  for (let i = 0; i < seed.length; i++) {
+    hash = ((hash << 5) - hash) + seed.charCodeAt(i);
     hash |= 0;
   }
-  const jitter = Math.abs(hash % 11) - 5; // -5 … +5
+  const jitter = Math.abs(hash % 7) - 3; // -3 … +3
 
-  return Math.min(100, Math.max(0, base + jitter));
+  return Math.min(99, Math.max(35, base + jitter));
 }
 
 // ─── Apply ────────────────────────────────────────────────────────────────────
-let total = 0, named = 0, formula = 0;
+let total = 0, named = 0, kept = 0, formula = 0;
 
 for (const key of Object.keys(db)) {
   for (const player of db[key]) {
     if (NAMED[player.name] !== undefined) {
       player.popularity = NAMED[player.name];
       named++;
+    } else if (Number.isInteger(player.popularity) && player.popularity >= 1) {
+      kept++;   // pipeline-computed value (Brownlow/games/finals informed)
     } else {
       player.popularity = formulaPopularity(player);
       formula++;
@@ -117,7 +130,8 @@ for (const key of Object.keys(db)) {
 fs.writeFileSync(SRC, JSON.stringify(db, null, 2), 'utf8');
 
 console.log(`Done.`);
-console.log(`  Total players     : ${total}`);
-console.log(`  Named overrides   : ${named}`);
-console.log(`  Formula-derived   : ${formula}`);
+console.log(`  Total players       : ${total}`);
+console.log(`  Curated overrides   : ${named}`);
+console.log(`  Pipeline-computed   : ${kept}`);
+console.log(`  Formula fallback    : ${formula}`);
 console.log(`Wrote ${SRC}`);

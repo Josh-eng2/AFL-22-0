@@ -12,26 +12,17 @@ sequencing lives there. Read it before touching this repo.
 
 ## Current status
 
-**The app does not run correctly yet.** What's done so far is the data layer only:
+**Playable end to end** — draft → 22-game home-and-away season → AFL Final
+Eight → premiership.
 
-- ✅ NBA-specific data, the NBA 2K rating pipeline, and NBA daily-challenge content
-  have been stripped out.
-- ✅ A small **stub** `players.json` exists — 3 clubs (Carlton, Essendon, North
-  Melbourne) × 2 decades (1990s, 2010s), 41 real AFL players across the six AFL
-  position slots — enough to unblock engine and UI development. It is **not**
-  researched/audited data; it exists to build against, and gets replaced by the real
-  ~800-1000 player dataset in Phase 3 of the plan.
-- ✅ The AFL stat/position/archetype/trait schema (disposals, goals, marks, tackles,
-  clearances, hitouts; KD/HB/MID/RUC/KF/SF; six new archetypes) is defined and the
-  data pipeline scripts (`add_rating.js`, `add_popularity.js`, `validate_players.js`)
-  are adapted to it.
-- ❌ **The game engine is still the NBA version.** `js/logic/state.js` (club list,
-  decades, positions, coaches), `js/logic/positions.js`, `js/logic/chemistry.js`,
-  `js/logic/simulation.js`, `js/logic/era.js`, the finals bracket, and all UI copy
-  still expect NBA teams/positions/archetypes. Because the club and decade names in
-  the new `players.json` don't match `state.js`'s NBA team/decade lists, **every
-  draft spin currently comes back empty** — the app will not play a game yet. This
-  is Phase 4/5 of the plan and hasn't started.
+- ✅ Engine fully ported to AFL: 18 clubs, six decades, the six-slot spine
+  (KD/HB/MID/RUC/KF/SF), AFL chemistry synergies, a 22-game season sim, and
+  the real AFL Final Eight (McIntyre system) with the double chance.
+- ✅ **Real player database** — 828 entries across 92 club-decade buckets
+  (1970s–2020s), derived from AFL Tables data. Each entry is a real player's
+  best single season at that club in that decade. See [`data/README.md`](data/README.md).
+- ⬜ Balance tuning (Phase C), branding assets, Firebase, and launch prep are
+  still outstanding — see [`docs/afl-build-out-plan.md`](docs/afl-build-out-plan.md).
 
 ## Run it locally
 
@@ -42,8 +33,18 @@ python3 -m http.server 8000
 # open http://localhost:8000
 ```
 
-It will load, but the draft wheel will not find any players until the engine port
-(Phase 4 in the plan) is done.
+## Data attribution
+
+Player data is derived from
+**[akareen/AFL-Data-Analysis](https://github.com/akareen/AFL-Data-Analysis)**
+(**MIT licence**, © 2023 Adam Kareen), a mirror of
+[AFL Tables](https://afltables.com/afl/afl_index.html) — pinned at commit
+`c71299ef01958e5454dc4583c6787775f9e14b53`.
+
+The ~137 MB source corpus is **not committed**; only the derived
+`players.json` ships. Full provenance, the measured per-decade stat-coverage
+table, and the blank-semantics/imputation policy are in
+[`data/README.md`](data/README.md).
 
 ## Tech
 
@@ -53,13 +54,20 @@ Tailwind is compiled ahead of time into the committed `css/tailwind.css`; re-run
 
 ## Data pipeline
 
-The player database is committed pre-generated at `js/data/players.js` (inlined from
-`players.json`). To regenerate after editing `players.json`:
+The player database ships pre-generated at `js/data/players.js` (inlined from
+`players.json`). To rebuild it from source:
 
 ```bash
-scripts/update_players.sh   # add_popularity.js -> add_rating.js -> inline_players.js
-node scripts/validate_players.js
+bash scripts/afl_vendor_data.sh     # fetch the pinned source corpus (~137 MB, gitignored)
+node scripts/afl_build_seasons.mjs  # per-game rows -> per-season lines
+node scripts/afl_build_db.mjs       # best season per club-decade -> curated boards
+bash scripts/update_players.sh      # popularity -> rating -> inline js/data/players.js
+node scripts/validate_players.js    # structural validation (must exit 0)
+node scripts/audit_stats.js         # realism triage
 ```
+
+Add `--review` to `afl_build_db.mjs` to regenerate the position-review artifact.
+Audit methodology: [`docs/player-data-audit/rubric.md`](docs/player-data-audit/rubric.md).
 
 ---
 

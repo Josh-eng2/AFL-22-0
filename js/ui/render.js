@@ -141,6 +141,27 @@ export function fmtPG(n) {
   return (Number(n) || 0).toFixed(1);
 }
 
+/**
+ * Asterisk for a stat that was estimated rather than measured.
+ *
+ * Tackles weren't recorded before 1987 and clearances before ~1998, so those
+ * values are imputed from position-and-era medians (see data/README.md). The
+ * numbers are honest estimates, but presenting an estimate identically to a
+ * measurement would not be — hence the mark.
+ */
+export function imputedMark(p, statKey) {
+  return (p?.imputed || []).includes(statKey)
+    ? '<span class="imputed-mark" title="Estimated — this stat was not recorded in this era">*</span>'
+    : '';
+}
+
+/** Footnote explaining the asterisks on a card that has any. */
+export function imputedNote(p) {
+  const imp = p?.imputed || [];
+  if (!imp.length) return '';
+  return `<p class="text-[9px] text-muted-fg/70 mt-1 leading-tight">* ${imp.join(' & ')} estimated — not recorded in this era</p>`;
+}
+
 /** Conjugate series status verbs for 2nd-person "You" vs 3rd-person labels. */
 function seriesAgree(label, thirdPerson, secondPerson) {
   return label === 'You' ? secondPerson : thirdPerson;
@@ -1327,10 +1348,12 @@ function renderDraftCard(p, index) {
       </div>
       <p class="font-bold text-sm text-foreground leading-tight mb-1.5 draft-card__name">${p.name}</p>
       <div class="flex flex-wrap gap-x-2 gap-y-0.5 draft-card__stats">
-        ${[['GLS', p.goals], ['MKS', p.marks], ['DSP', p.disposals], ['TCK', p.tackles], ['CLR', p.clearances]].map(([l, v]) =>
-          `<span class="text-[10px] text-muted-fg"><span class="font-semibold text-foreground">${fmtPG(v)}</span> ${l}</span>`
+        ${[['GLS', p.goals, 'goals'], ['MKS', p.marks, 'marks'], ['DSP', p.disposals, 'disposals'],
+           ['TCK', p.tackles, 'tackles'], ['CLR', p.clearances, 'clearances']].map(([l, v, key]) =>
+          `<span class="text-[10px] text-muted-fg"><span class="font-semibold text-foreground">${fmtPG(v)}${imputedMark(p, key)}</span> ${l}</span>`
         ).join('')}
       </div>
+      ${imputedNote(p)}
       ${p.traits && p.traits.length ? `
         <div class="flex flex-wrap gap-1 mt-1.5 draft-card-traits">
           ${p.traits.map(t => `<span class="text-[9px] font-bold px-1.5 py-0.5 rounded-full bg-slate-100 text-slate-600 border border-slate-200">${t}</span>`).join('')}

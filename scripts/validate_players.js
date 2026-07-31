@@ -44,6 +44,24 @@ const STAT_BOUNDS = {
 
 const BUCKET_KEY_RE = /^[A-Za-z]+_(19[7-9]0s|20[0-2]0s)$/;
 
+// Stats that may legitimately be imputed — the two the source never recorded
+// in the early decades (tackles pre-1987, clearances pre-1998).
+const IMPUTABLE = new Set(['tackles', 'clearances']);
+
+// Historical identities a club legitimately played under (port plan §3.1).
+// Anything else in eraClubName is a data error, not a nickname.
+const ERA_CLUB_NAMES = {
+  WesternBulldogs: ['Footscray'],
+  Sydney:          ['South Melbourne'],
+  BrisbaneLions:   ['Brisbane Bears', 'Fitzroy'],
+  NorthMelbourne:  ['Kangaroos'],
+};
+
+// Every board must be able to fill the spine; smalls can be covered by
+// secondary positions at runtime, the key posts largely cannot.
+const CORE_ROLES = ['KD', 'MID', 'RUC', 'KF'];
+const MIN_BUCKET_DEPTH = 5;
+
 // Clubs that didn't exist (in their current form) for the full 1970s-2020s
 // range this game covers. Any club not listed here is treated as having
 // existed the whole time (true for every "continuous VFL/AFL presence" club
@@ -79,6 +97,7 @@ function main() {
   }
 
   const errors = [];
+  const warnings = [];
   const idsSeen = new Map(); // id -> [ "Club_decade / Name", ... ]
 
   for (const bucketKey of Object.keys(db)) {
@@ -148,6 +167,81 @@ function main() {
       if (typeof p.popularity !== 'number' || !Number.isInteger(p.popularity)) {
         errors.push(`${where}: "popularity" = ${JSON.stringify(p.popularity)} is not an integer`);
       }
+
+      // ── eraClubName: the era-accurate display identity ────────────────────
+      // Only meaningful for clubs that changed name/merged (port plan §3.1).
+      if (p.eraClubName !== undefined) {
+        if (typeof p.eraClubName !== 'string' || !p.eraClubName.trim()) {
+          errors.push(`${where}: "eraClubName" must be a non-empty string`);
+        } else {
+          const club = bucketKey.split('_')[0];
+          const allowed = ERA_CLUB_NAMES[club];
+          if (!allowed) {
+            errors.push(`${where}: "${club}" never had an alternate identity — remove eraClubName "${p.eraClubName}"`);
+          } else if (!allowed.includes(p.eraClubName)) {
+            errors.push(`${where}: eraClubName "${p.eraClubName}" not valid for ${club} (expected one of ${allowed.join(', ')})`);
+          }
+        }
+      }
+
+      // ── A.4 blank semantics, asserted ─────────────────────────────────────
+      // The whole point of the two-way blank rule is that a stat the era
+      // never recorded must be IMPUTED, never silently zeroed. Guard both
+      // directions so a future pipeline change can't quietly reintroduce the
+      // bug: (a) imputed must name only real, imputable stats, and (b) a
+      // pre-recording-era entry must not carry a bare 0.
+      const decadeStart = parseInt(bucketKey.split('_')[1], 10);
+      if (p.imputed !== undefined) {
+        if (!Array.isArray(p.imputed) || p.imputed.length === 0) {
+          errors.push(`${where}: "imputed" must be a non-empty array when present`);
+        } else {
+          for (const st of p.imputed) {
+            if (!IMPUTABLE.has(st)) {
+              errors.push(`${where}: "imputed" names "${st}" — only ${[...IMPUTABLE].join('/')} are imputable`);
+            } else if (p[st] === 0) {
+              errors.push(`${where}: "${st}" is flagged imputed but is 0 — imputation must produce a real estimate`);
+            }
+          }
+        }
+      }
+      // Tackles aren't recorded before 1987, clearances before ~1998. A zero
+      // in those windows means the blank-semantics path was bypassed.
+      if (decadeStart <= 1980 && p.tackles === 0 && !(p.imputed || []).includes('tackles')) {
+        errors.push(`${where}: tackles = 0 in the ${bucketKey.split('_')[1]} — tackles weren't recorded before 1987, so this must be imputed`);
+      }
+      if (decadeStart <= 1990 && p.clearances === 0 && !(p.imputed || []).includes('clearances')) {
+        errors.push(`${where}: clearances = 0 in the ${bucketKey.split('_')[1]} — clearances weren't recorded before ~1998, so this must be imputed`);
+      }
+    }
+
+    // ── Bucket must be draftable ────────────────────────────────────────────
+    // The engine can fill ANY slot with ANY player — positions.js derives a
+    // secondary position at runtime and out-of-position placement is legal
+    // (it just carries a "Versatile … (-3%)" chemistry penalty). So a bucket
+    // missing one core role is playable, not broken, and some club-decades
+    // genuinely lack one (Port Adelaide only existed 1997-99; 1970s defenders
+    // often posted no stat-distinguishable profile).
+    //
+    // What IS broken is a degenerate board — one that offers no real choice.
+    // Error on that; warn on a missing core role so it stays visible.
+    if (players.length >= 6) {
+      const posSet = new Set(players.map(p => p.pos));
+      if (posSet.size < 4) {
+        errors.push(`Bucket "${bucketKey}" has ${players.length} players covering only ${posSet.size} position(s) (${[...posSet].join('/')}) — degenerate board`);
+      }
+      const counts = {};
+      for (const p of players) counts[p.pos] = (counts[p.pos] || 0) + 1;
+      const [topPos, topN] = Object.entries(counts).sort((a, b) => b[1] - a[1])[0];
+      if (topN / players.length > 0.6) {
+        errors.push(`Bucket "${bucketKey}" is ${Math.round((topN / players.length) * 100)}% ${topPos} (${topN}/${players.length}) — degenerate board`);
+      }
+      const missingCore = CORE_ROLES.filter(r => !posSet.has(r));
+      if (missingCore.length) {
+        warnings.push(`Bucket "${bucketKey}" has no ${missingCore.join('/')} — playable via secondary/out-of-position, but thin`);
+      }
+    }
+    if (players.length && players.length < MIN_BUCKET_DEPTH) {
+      warnings.push(`Bucket "${bucketKey}" has only ${players.length} players (target >= ${MIN_BUCKET_DEPTH})`);
     }
   }
 
@@ -157,13 +251,39 @@ function main() {
     }
   }
 
-  if (errors.length) fail(errors);
+  // A name is the engine's cross-era clone key (draftedPlayerNames), so two
+  // DIFFERENT players sharing a name would wrongly block each other in the
+  // draft. Distinct birth-era players must be disambiguated upstream
+  // (NAME_BY_KEY in scripts/afl_positions.mjs).
+  const nameToIdRoots = new Map();
+  for (const [bucketKey, players] of Object.entries(db)) {
+    if (!Array.isArray(players)) continue;
+    for (const p of players) {
+      if (!p.name || !p.id) continue;
+      const root = String(p.id).replace(/_\d{2}(_[a-z]{3}\d+)?$/, '');
+      if (!nameToIdRoots.has(p.name)) nameToIdRoots.set(p.name, new Set());
+      nameToIdRoots.get(p.name).add(root);
+    }
+  }
+
+  if (errors.length) fail(errors, warnings);
 
   const totalPlayers = Object.values(db).reduce((n, arr) => n + arr.length, 0);
-  console.log(`OK — ${Object.keys(db).length} buckets, ${totalPlayers} players, no structural issues found.`);
+  const imputedCount = Object.values(db).flat().filter(p => p.imputed).length;
+  if (warnings.length) {
+    console.warn(`${warnings.length} warning(s):`);
+    for (const w of warnings) console.warn(`  ! ${w}`);
+    console.warn('');
+  }
+  console.log(`OK — ${Object.keys(db).length} buckets, ${totalPlayers} players, ${imputedCount} with imputed stats, no structural issues found.`);
 }
 
-function fail(errors) {
+function fail(errors, warnings = []) {
+  if (warnings.length) {
+    console.warn(`${warnings.length} warning(s):`);
+    for (const w of warnings) console.warn(`  ! ${w}`);
+    console.warn("");
+  }
   console.error(`FAILED — ${errors.length} issue(s):\n`);
   for (const e of errors) console.error(`  - ${e}`);
   process.exit(1);

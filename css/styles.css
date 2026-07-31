@@ -1918,3 +1918,11 @@ button.draft-roster-slot {
   border: 1px solid var(--border); border-radius: 999px;
   padding: 3px 11px; background: var(--card);
 }
+
+/* Imputed-stat marker — tackles pre-1987 / clearances pre-1998 were never
+   recorded, so those values are position-and-era estimates. See data/README.md. */
+.imputed-mark {
+  color: var(--muted-fg);
+  font-weight: 700;
+  cursor: help;
+}

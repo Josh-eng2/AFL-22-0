@@ -1,2 +1,7 @@
 .claude/
 __pycache__/
+
+# Vendored AFL source corpus (~137 MB, akareen/AFL-Data-Analysis).
+# Never commit it — only the derived players.json ships.
+# Re-fetch with: bash scripts/afl_vendor_data.sh
+vendor/

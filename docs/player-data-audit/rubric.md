@@ -1,172 +1,187 @@
-# Player data realism rubric
+# Player data realism rubric (AFL)
 
-This is the methodology for the player-database realism audit. Read this
-before touching any batch — it's written so a session with zero memory of
-prior conversations can pick up `progress.md` and execute correctly without
-re-deriving any of these decisions.
+Methodology for auditing `players.json`. Read this before touching any batch —
+it is written so a session with zero memory of prior conversations can execute
+correctly without re-deriving any of these decisions.
 
-**Source of truth:** `players.json` (root of repo). Edit it directly.
-`js/data/players.js` is generated — never hand-edit it; regenerate with
-`node scripts/inline_players.js` after every batch.
+**Source of truth:** `players.json` at the repo root. `js/data/players.js` is
+generated — never hand-edit it; regenerate with `bash scripts/update_players.sh`.
 
-**Do not touch:** `secondaryPos` isn't stored anywhere — it's derived at
-runtime by `js/logic/positions.js` from `pos`/`ppg`/`apg`/`rpg`/`bpg`/
-`archetype`/`traits`. Fixing those fields fixes secondary positions
-automatically; there's nothing to hand-edit.
+**Most entries should not be hand-edited at all.** Unlike the NBA original
+this game is ported from — where every stat line was typed in by hand — this
+database is *derived* from a real per-game corpus
+(`akareen/AFL-Data-Analysis`, MIT, pinned; see `data/README.md`). If a stat
+line is wrong, the fix almost always belongs in the pipeline
+(`scripts/afl_build_seasons.mjs` / `afl_build_db.mjs`), not in the JSON —
+otherwise the next pipeline run silently reverts it.
+
+Hand-maintained layers that *are* meant to be edited:
+
+| file | what it holds |
+|---|---|
+| `scripts/afl_positions.mjs` | position overrides, name repairs, collision disambiguation |
+| `scripts/add_popularity.js` | curated household-name popularity |
+
+**Do not touch:** `secondaryPos` isn't stored — `js/logic/positions.js`
+derives it at runtime from `pos` and the stat line. Fixing `pos` fixes the
+secondary automatically.
+
+---
 
 ## Per-field targets
 
-### Stats (`ppg`, `rpg`, `apg`, `spg`, `bpg`)
-Each entry represents one player's real per-game averages for a specific
-team, in a season that plausibly falls within the entry's decade bucket.
-Not a fabricated "sounds about right" line — an actual season that player
-had with that team. Preserve the existing numeric style (mixed integers
-and one-decimal floats, e.g. `22`, `26.9` — don't force uniform decimal
-places).
+### Stats (`disposals`, `goals`, `marks`, `tackles`, `clearances`, `hitouts`)
 
-Two known bad patterns already found in the data to watch for everywhere:
-- **Inflated/fabricated lines** that don't correspond to any real season
-  (example found in scoping: a Bulls_1980s Jordan entry at 40 ppg / 4.5
-  spg — no such Jordan season exists; his real career-high was 37.1 ppg
-  in '86-87, 3.2 spg in '87-88).
-- **Team/decade mismatches** — stats attributed to a team/decade the
-  player barely played for (example found: a Lakers_2010s LeBron entry
-  at 35.5 ppg / 11 apg — not a real LeBron season, and he only played
-  half of one partial season for the Lakers before the 2010s ended).
+Each entry is one player's **real per-game averages from a single real
+season** at that club, within that decade — never a decade average, and never
+a fabricated "sounds about right" line. The pipeline enforces this by picking
+the player's best qualifying season (>= 8 games) by stat composite.
 
-Era-pace note: 1960s/1970s league-wide rebounding and scoring pace was
-much higher than modern basketball (no shot clock pressure comparable to
-today, faster pace, no 3-point line until 1979-80). Big rebounding/scoring
-numbers in those decades are normal and shouldn't be "corrected" toward
-modern-looking numbers — verify against real stats for that era, not
-modern intuition.
+`hitouts` is display/synergy-only: it is deliberately excluded from
+`add_rating.js`'s weighted formula (port plan §D4) because it is ~zero for
+five of the six positions and would distort the balance model.
 
-### Rigor tiers (how hard to verify)
-Checking all 938 entries against a box score with equal rigor isn't a good
-use of a limited number of sessions. Split by the entry's **current**
-`popularity` value before you start correcting it:
+**Era plausibility.** Disposal volume did *not* simply rise over time. The
+1970s was kick-dominated and its best ball-winners posted enormous numbers —
+Wayne Richardson averaged 32.8 disposals in 1971 off 27 kicks a game. Do not
+"correct" a large 1970s disposal count toward modern norms; check the source
+first. Conversely, scoring *fell*: a 1980s forward's goal average came in a
+much higher-scoring league than a 2020s forward's.
 
-- **`popularity >= 75`** (star/GOAT tier, ~150-200 entries): full
-  research-grade verification. Use WebFetch/WebSearch against a real
-  stats source (Basketball-Reference or equivalent) and confirm the
-  specific season. These are the players anyone playing the game will
-  recognize and scrutinize — get them right.
-- **`popularity < 75`** (the long tail, ~700+ entries): a lighter
-  internal-consistency pass. Fix anything statistically absurd (a
-  bench-tier player with superstar numbers, obviously copy-pasted stat
-  lines between different players, a stat at zero across the board,
-  numbers inconsistent with the assigned archetype/position) without
-  necessarily verifying every decimal against a box score. If something
-  looks fine and plausible for a role player of that era/position, leave
-  it. Spend your lookups on the top tier.
+`scripts/audit_stats.js` encodes era-aware ceilings for exactly this reason.
 
-### Archetype
-Exactly one of these 6 values (case-sensitive, must match exactly —
-`js/logic/chemistry.js` and `js/logic/positions.js` both switch on the
-literal string):
+### Imputed stats — the rule that matters most
 
-| Archetype | Real-world signal |
-|---|---|
-| `Playmaker` | Primary ball-handler/facilitator; offense runs through their passing |
-| `Sharpshooter` | Elite perimeter/catch-and-shoot scorer; floor-spacing threat |
-| `Lockdown Defender` | Defense is their calling card — on-ball stopper or havoc-generating defender |
-| `Slasher` | Attacks the rim off the dribble/in transition; scores by getting downhill, not standing shooting |
-| `Paint Beast` | Interior force — rebounding and/or rim protection is the primary value |
-| `Two-Way Star` | Genuine two-way superstar — elite on both ends, not just good defense with modest offense |
+Tackles were not recorded before **1987**; clearances not before **~1998**.
+For entries in those windows the value is **estimated**, and the entry carries
+`imputed: ["tackles", ...]` naming which.
 
-Pick by real playing style and reputation, not just "which stat is
-highest" — e.g., a player who both defends elite and scores at a star
-level is `Two-Way Star`, not `Lockdown Defender` just because their
-steal/block numbers are good.
+Three things follow:
 
-### Traits
-2 or 3 tags per player (existing data never uses 1 or 4+ — keep that
-convention). Full vocabulary, split by whether the trait is read by
-chemistry bonuses/penalties (`js/logic/chemistry.js`) or purely
-decorative:
+1. **Never treat a missing tackle/clearance as `0`.** A blank in 1975 means
+   "not recorded", not "did nothing". Zeroing it makes every 1970s player look
+   like a non-tackler and drags the whole era's balance ratio down.
+   `validate_players.js` fails the build if this regresses.
+2. **Never remove an `imputed` flag to make a line look cleaner.** The flag is
+   what drives the asterisk in the UI. Silently presenting an estimate as a
+   measurement is the failure mode this whole policy exists to prevent.
+3. An imputed value should read as a plausible estimate for that position and
+   era — not as a career-best. `audit_stats.js` flags implausible ones.
 
-**Mechanically live** (chemistry.js checks for these exact strings):
-`Point God`, `Elite Playmaker`, `Rim Protector`, `Floor Spacer`,
-`Lockdown Defender`, `Volume Shooter`, `Clutch`, `Glue Guy`,
-`Rebounding Machine`, `Hustle Player`, `Clutch Assassin`,
-`Defensive Stopper`, `Floor General`, `Slasher` (as a trait — distinct
-from the `Slasher` archetype), `Post Scorer`, `Mid-Range Maestro`,
-`3-and-D`, `Lob Threat`.
+Full policy, including the zero-blank vs missing-blank column split:
+`data/README.md`.
 
-**Decorative only** (shown as badges, no bonus logic reads them):
-`Franchise Player`, `Stretch Big`, `Volume Scorer` (each has ≤1 holder —
-avoid assigning; use the canonical vocabulary above instead).
+### `pos` — six slots, hand-reviewed
 
-**Retired from the vocabulary**: `Championship DNA`, `Court Vision`,
-`Iron Man`, `Post Maestro` have zero holders in the data and their
-original chemistry bonuses were retargeted onto live traits
-("Pinpoint Passing" → `Point God`, "Kick-Out Game" → `Post Scorer`).
-Do not assign them.
+`KD` (key defender), `HB` (half-back), `MID`, `RUC`, `KF` (key forward),
+`SF` (small forward).
 
-### Popularity
-Handled separately from the per-decade stat batches — see
-`progress.md` batch 27. Two mechanisms:
-- `NAMED` dict in `scripts/add_popularity.js` (keyed by **player name**,
-  applies to every team/decade entry that player has — approved decision:
-  keep it name-keyed, not per-career-stage; don't restructure this into
-  an id-keyed override).
-- Stat-derived formula (`formulaPopularity()` in the same file) for
-  everyone not in `NAMED`. This auto-corrects once the underlying stats
-  are fixed — don't hand-set popularity for un-named role players.
+**The stat-line heuristic is a first pass and must never be trusted alone.**
+AFL stat lines under-determine position, and worst for exactly the players
+people recognise. Glenn Archer's best season reads 12.9 disposals / 1.3 goals
+/ 3.1 marks — statistically a small forward. He was one of the most famous
+*defenders* of his era. Nothing in the numbers says otherwise.
 
-Curate `NAMED` by real career accolades + Hall-of-Fame stature + cultural
-fame, on the existing 35–99 scale. Known-bad examples found in scoping to
-anchor calibration: Harden and Embiid (both MVPs) pinned at 65, below
-several non-MVP role players; Karl Malone (2x MVP, 2nd all-time scorer at
-retirement) at 70; Jokic (multi-MVP) at 80, below several non-MVP peers.
-After editing `NAMED`, regenerate with `bash scripts/update_players.sh`
-(runs `add_popularity.js` then `inline_players.js`) rather than hand-editing
-`popularity` values in `players.json` directly.
+It is worse before 2000: `rebound_50s`, `inside_50s`, `one_percenters` and
+`contested_marks` — the columns that actually separate a half-back from a
+small forward — are 0% populated pre-1990 and only ~21% in the 1990s. For the
+1970s and 1980s the heuristic works from disposals / goals / marks / hitouts
+alone.
 
-## Per-batch workflow
+**Audit protocol:**
 
-1. Open `progress.md`, find the first batch with status `pending`.
-2. For each player in that batch's buckets: check/correct stats
-   (research-grade if `popularity >= 75`, consistency-pass otherwise),
-   reassign `archetype`/`traits` if wrong.
-3. Run `node scripts/validate_players.js` — must pass clean before
-   moving on.
-4. Run `node scripts/inline_players.js` to resync `js/data/players.js`.
-5. Smoke-test: serve the repo root, load the app with a Firebase-CDN
-   stub import map (network is blocked in this sandbox — see any prior
-   session's use of `_fb-stub.js` + an import map redirecting the three
-   `gstatic.com` firebase URLs to it), draft a roster touching a few
-   just-edited players, run a season sim. Confirm no console errors and
-   the picks/stats render as expected.
-6. Commit the batch with a message naming what changed (e.g. "Player
-   data audit: batch 3 — 1970s Blazers-Jazz").
-7. Update `progress.md`: flip the batch to `done`, add a one-line log
-   entry of anything notable (corrections made, judgment calls, players
-   you weren't fully confident on).
+```bash
+node scripts/afl_build_db.mjs --review    # writes position-review.md
+```
 
-## Data integrity constraints (enforced by `scripts/validate_players.js`)
-- Every `id` unique across the whole file (3 known collisions exist at
-  the start of this project — see `progress.md` batch 28).
-- `archetype` ∈ the 6 canonical values.
-- `pos` ∈ `{PG, SG, SF, PF, C}`.
-- `traits.length` ∈ `{2, 3}`.
-- `popularity` is an integer in `[35, 99]` (observed existing range).
-- Stats are non-negative numbers within loose sanity bounds (ppg ≤ 50,
-  rpg ≤ 30, apg ≤ 20, spg ≤ 6, bpg ≤ 8) — catches fat-finger typos, not a
-  realism check by itself.
+Then, in `docs/player-data-audit/position-review.md`:
 
-## Review cadence
-One PR per decade (7 checkpoints: 1960s, 1970s, 1980s, 1990s, 2000s,
-2010s, 2020s), squash-merged after review — same workflow as the rest of
-this project. The popularity-dict batch and the wrap-up batch each get
-their own PR too.
+1. Read the **"Low-confidence heuristic calls"** table at the top first.
+   Any name you recognise in there deserves a decision.
+2. Scan each bucket for a position that contradicts its own stat line —
+   high hitouts not marked `RUC`, 25+ disposals marked `KF`, a `KD` kicking
+   two goals a game.
+3. Fix by adding to `POSITION_OVERRIDES` in `scripts/afl_positions.mjs` and
+   re-running. Never edit `players.json` directly.
 
-## Required follow-up after the full pass (not part of this project)
-Once all batches land, the underlying stat distribution across all 938
-players will have shifted (fabricated inflated lines get corrected, which
-likely compresses the top end). `js/logic/simulation.js`'s `STARTER_BASE`
-(derived live from the DB) will shift with it, and `SIM_CENTER` was
-calibrated against the pre-audit distribution. Flag a difficulty
-re-calibration pass once this project is done — this was already an open
-thread from the original project brief ("playtest feel of the 5-pick
-draft + new difficulty").
+Genuine swingmen (Paul Roos at CHB *and* CHF, Kurt Tippett forward *and* ruck,
+Trent Croad both ends) will always trip a contradiction check. That is fine —
+pick the role they are best remembered in and let `positions.js` derive the
+secondary at runtime. Note the decision rather than churning it.
+
+### `archetype` and `traits`
+
+Archetype in: Ball Magnet / Goal Sneak / Power Forward / Intercept Marker /
+Lockdown Defender / Ruck Bull. Rule-derived from position + stat line.
+
+Traits: **2-3** per player from the 21-trait AFL vocabulary (port plan §3.4).
+Derived from real signals where possible — Brownlow votes -> *Ball Winner*,
+finals played -> *Big Finals Performer*, one club across a career ->
+*One-Club Champion*.
+
+### Names
+
+Three source defects are repaired in the pipeline, all documented in
+`data/README.md`:
+
+- stripped apostrophes (`OBrien` -> `O'Brien`) — fixed by rule;
+- dropped Dutch particles (`Goey` -> `De Goey`) — fixed by explicit list;
+- **collisions between different players sharing a name** — fixed by
+  `NAME_BY_KEY`.
+
+The collision case is the one to watch when adding data. Two distinct players
+under one name is not merely a display error: the engine uses the name as its
+cross-era clone guard (`draftedPlayerNames`), so they would wrongly block each
+other in the draft. Established football convention wins where one exists
+(Gary Ablett Sr / Jr; Josh P. / Josh J. Kennedy).
+
+### `eraClubName`
+
+Set only where a club has since been renamed or merged, so the era-accurate
+identity displays: **Footscray** -> Western Bulldogs, **South Melbourne** ->
+Sydney, **Brisbane Bears** / **Fitzroy** -> Brisbane Lions, **Kangaroos** ->
+North Melbourne. `validate_players.js` rejects any other value.
+
+### Club-era legality
+
+No entry may place a player at a club in a decade that club did not exist:
+West Coast and Brisbane 1987+, Adelaide 1991+, Fremantle 1995+, Port Adelaide
+1997+, Gold Coast 2011+, GWS 2012+. Enforced by `CLUB_FIRST_YEAR` in
+`validate_players.js`.
+
+---
+
+## Board quality
+
+Each `Club_Decade` bucket is a draft board. Targets:
+
+- **5-9 entries**, aiming for 9.
+- **Genuine choice.** The validator errors on a degenerate board — fewer than
+  four distinct positions, or one position exceeding 60% of the bucket.
+- **Spine coverage** (`KD`, `MID`, `RUC`, `KF`) is a *warning*, not an error.
+  The engine can fill any slot with any player via secondary positions or an
+  out-of-position placement (a "Versatile ... (-3%)" chemistry penalty), and
+  some club-decades genuinely lack a role — Port Adelaide only existed
+  1997-99, and many 1970s defenders posted no stat-distinguishable profile.
+
+---
+
+## Running the audit
+
+```bash
+bash scripts/update_players.sh      # regenerate derived fields + js/data/players.js
+node scripts/validate_players.js    # structural — MUST exit 0
+node scripts/audit_stats.js         # realism triage
+node scripts/audit_stats.js --decade=1980
+```
+
+`validate_players.js` is mechanical (schema, bounds, ids, legality,
+blank-semantics asserts, board degeneracy). `audit_stats.js` is heuristic —
+every flag is a *candidate for review*, not a proven error. **Verify against
+the vendored source before changing anything**; an earlier ceiling in that
+script flagged a genuine 1971 record as an outlier.
+
+Note that `DUP` (two players with an identical stat line) is low-signal here,
+unlike in the NBA original: these lines are machine-derived from real data, so
+a duplicate is usually coincidence between two low-output players — a 1970s
+line is only three numbers wide.
