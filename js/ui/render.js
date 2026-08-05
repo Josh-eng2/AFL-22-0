@@ -2568,14 +2568,63 @@ function renderPlayoffs() {
   const simLabel   = ts ? 'Simulating...' : `Simulate ${roundName}`;
   const headline   = reveal
     ? (po.champion
-        ? '🏆 Premiers!'
+        ? '🏆 PREMIERS!'
         : po.championTeam
-          ? `🏆 ${po.championTeam.name} Win the Flag`
-          : `💔 Eliminated — ${po.eliminatedIn}`)
-    : 'Finals Bracket';
+          ? `🏆 ${po.championTeam.name.toUpperCase()} WIN THE FLAG`
+          : `💔 ELIMINATED — ${(po.eliminatedIn || '').toUpperCase()}`)
+    : 'ROAD TO THE FLAG';
+
+  // Short round labels for the status line only. The long ROUND_NAMES
+  // ("Preliminary Finals") pushed the sub-line onto a second row on every
+  // phone, which is the same reason upstream carries a short set.
+  const SHORT_ROUNDS = ['Finals Wk 1', 'Semis', 'Prelims', 'Grand Final'];
+
+  // Where the player actually stands right now. Read off the same display
+  // state the bracket renders from, so the sentence and the tree can't
+  // disagree.
+  //
+  // The Final Eight needs a case the NBA original has no analogue for: a
+  // top-four seed that wins its Qualifying Final takes the double chance and
+  // sits out Week 2 entirely. Such a player is in week2.byes, not in any Week
+  // 2 matchup, so a plain "find me in this round's matchups" lookup finds
+  // nothing and silently degrades to a bare round name. Handled explicitly.
+  const seriesStatus = (() => {
+    if (reveal) return '';
+    if (po.eliminated) return ` · Eliminated in the ${po.eliminatedIn}`;
+    const shortRound = SHORT_ROUNDS[Math.min(po.currentRound, SHORT_ROUNDS.length - 1)];
+    const bd = getBracketDisplayState(po);
+
+    if (po.currentRound === 1 && bd.week2.byes?.some(t => t?.isPlayer)) {
+      return ' · <b>Double chance</b> — won the Qualifying Final, straight to a Preliminary';
+    }
+
+    const slots = po.currentRound === 0 ? bd.week1
+      : po.currentRound === 1 ? bd.week2.matchups
+      : po.currentRound === 2 ? bd.week3.matchups
+      : bd.week4.matchups;
+    const mine = slots.find(m => m?.top?.isPlayer || m?.bottom?.isPlayer);
+    if (!mine) return ` · ${shortRound}`;
+
+    // The opponent is named in the bracket directly below — repeating it here
+    // only pushes the line onto a second row on phones.
+    const iAmTop = !!mine.top?.isPlayer;
+    const my     = iAmTop ? mine.topScore : mine.bottomScore;
+    const theirs = iAmTop ? mine.bottomScore : mine.topScore;
+    if (mine.live && my !== null && theirs !== null) {
+      return ` · ${shortRound}, ${my === theirs ? `series&nbsp;tied&nbsp;${my}–${theirs}` : `series&nbsp;${my}–${theirs}`}`;
+    }
+    // A Week 1 Qualifying Final loss is NOT elimination — the double chance
+    // sends that team to a Semi. Never imply the run is over.
+    if (mine.complete && po.currentRound === 0 && !po.eliminated) {
+      const iWon = iAmTop ? mine.topWon : !mine.topWon;
+      if (!iWon) return ' · Lost the Qualifying Final — alive via the double chance';
+    }
+    return ` · ${shortRound}`;
+  })();
+
   const champBanner = reveal && po.championTeam && !po.champion ? `
         <div class="rounded-xl border-2 border-amber-300 bg-amber-50 p-4 text-center card-shadow">
-          <p class="text-xs font-bold uppercase tracking-widest text-amber-600 mb-1">Premiers</p>
+          <p class="text-xs font-bold uppercase tracking-widest text-amber-600 mb-1">AFL Premiers</p>
           <p class="text-xl font-black text-amber-700">🏆 ${po.championTeam.name}</p>
           <p class="text-xs text-muted-fg mt-1">Your run ended in the ${po.eliminatedIn || 'Finals'}</p>
         </div>` : '';
@@ -2585,10 +2634,11 @@ function renderPlayoffs() {
     ${renderHeader(false)}
     <main class="flex-1 flex flex-col items-center px-4 py-6">
       <div class="w-full max-w-3xl flex flex-col gap-4">
-        <div class="text-center">
-          <p class="text-xs font-bold uppercase tracking-widest text-primary mb-1">AFL Finals</p>
-          <h1 class="text-2xl font-black text-foreground">${headline}</h1>
-          <p class="text-sm text-muted-fg mt-1">Home-and-Away: ${r.wins}–${r.losses} · Seed #${po.playerSeed}</p>
+        <!-- ── Broadcast title band ───────────────────────────────────── -->
+        <div class="broadcast-band">
+          <p class="broadcast-band__eyebrow">AFL Finals</p>
+          <h1 class="cond broadcast-band__title">${headline}</h1>
+          <p class="broadcast-band__sub">Home&nbsp;&amp;&nbsp;away&nbsp;${r.wins}–${r.losses} · <b>#${po.playerSeed}&nbsp;seed</b>${seriesStatus}</p>
         </div>
         <div class="rounded-2xl border border-border bg-white p-3 sm:p-4 card-shadow overflow-hidden">
           ${renderPlayoffBracketTree(po)}
