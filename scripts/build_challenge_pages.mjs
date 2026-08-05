@@ -24,7 +24,7 @@ import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
-const ORIGIN = 'https://canyougo820.com';
+const ORIGIN = 'https://josh-eng2.github.io/AFL-22-0';
 const OUT_DIR = join(ROOT, 'daily');
 
 // js/data/players.js removes the loading overlay on load — stub the one DOM
@@ -195,7 +195,7 @@ const TYPE_BLURB = {
 function renderPage(ch, slug, dates) {
   const facts = ruleFacts(ch);
   const locked = ch.type === 'locked' ? getLockedPlayer(ch) : null;
-  const title = `${ch.title} — 82-0 Daily Challenge`;
+  const title = `${ch.title} — 22-0 Daily Challenge`;
   // Kept under ~158 chars so Google renders it in full. The suffix is dropped
   // rather than truncated mid-sentence when a long rule leaves no room.
   const suffix = ` How the ${ch.title} daily challenge works and how to clear it.`;
@@ -218,10 +218,10 @@ function renderPage(ch, slug, dates) {
   <link rel="canonical" href="${url}" />
   <link rel="icon" href="../favicon.ico" sizes="48x48" />
   <link rel="icon" href="../favicon.svg" type="image/svg+xml" />
-  <meta name="robots" content="max-image-preview:large" />
+  <meta name="robots" content="max-image-preview:none" />
 
   <meta property="og:type"        content="article" />
-  <meta property="og:site_name"   content="Can You Go 82-0?" />
+  <meta property="og:site_name"   content="Can You Go 22-0?" />
   <meta property="og:url"         content="${url}" />
   <meta property="og:title"       content="${esc(title)}" />
   <meta property="og:description" content="${esc(ch.desc)}" />
@@ -235,7 +235,7 @@ function renderPage(ch, slug, dates) {
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Fira+Sans:wght@400;500;600;700;900&display=swap" rel="stylesheet" />
   <script>
-    try { if (localStorage.getItem('nba820_theme') === 'dark') document.documentElement.setAttribute('data-theme', 'dark'); } catch(e){}
+    try { if (localStorage.getItem('afl220_theme') === 'dark') document.documentElement.setAttribute('data-theme', 'dark'); } catch(e){}
   </script>
   <link rel="stylesheet" href="../css/styles.css" />
 
@@ -247,10 +247,10 @@ ${JSON.stringify({
   url,
   description: ch.desc,
   inLanguage: 'en',
-  isPartOf: { '@type': 'WebSite', name: 'Can You Go 82-0?', url: ORIGIN + '/' },
+  isPartOf: { '@type': 'WebSite', name: 'Can You Go 22-0?', url: ORIGIN + '/' },
   about: {
     '@type': 'VideoGame',
-    name: 'Can You Go 82-0?',
+    name: 'Can You Go 22-0?',
     url: ORIGIN + '/',
     applicationCategory: 'GameApplication',
     gamePlatform: 'Web Browser',
