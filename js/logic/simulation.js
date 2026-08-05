@@ -449,7 +449,10 @@ export function simulateSeason(starters, coach = null, profile = null) {
   const avgPop      = allPlayers.length
     ? allPlayers.reduce((s, p) => s + (p.popularity || 50), 0) / allPlayers.length
     : 50;
-  const popNorm     = Math.max(0, Math.min(1, (avgPop - POP_FLOOR) / (POP_CEIL - POP_FLOOR)));
+  // No upper clamp: a roster averaging above POP_CEIL keeps pushing popMul past
+  // MUL_MAX instead of capping at the same boost as exactly 100. Inert today —
+  // the DB tops out at 99, and this is a mean — but kept in step with aiDraft.js.
+  const popNorm     = Math.max(0, (avgPop - POP_FLOOR) / (POP_CEIL - POP_FLOOR));
   const popMul      = MUL_MIN + popNorm * (MUL_MAX - MUL_MIN);
 
   // ── Player-Rating modifier ────────────────────────────────────────────────

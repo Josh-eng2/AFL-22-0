@@ -41,7 +41,8 @@
         "bestAndFairest": null,
         "longevity": 0.429,
         "production": 0.342
-      }
+      },
+      "popularityBase": 41
     },
     {
       "id": "nigel_smart_98",
@@ -81,7 +82,8 @@
         "bestAndFairest": null,
         "longevity": 0.892,
         "production": 0.253
-      }
+      },
+      "popularityBase": 80
     },
     {
       "id": "mark_bickley_98",
@@ -121,7 +123,8 @@
         "bestAndFairest": null,
         "longevity": 0.887,
         "production": 0.501
-      }
+      },
+      "popularityBase": 72
     },
     {
       "id": "mark_ricciuto_98",
@@ -204,7 +207,8 @@
         "bestAndFairest": null,
         "longevity": 0.429,
         "production": 0.287
-      }
+      },
+      "popularityBase": 79
     },
     {
       "id": "tony_mcguinness_92",
@@ -247,7 +251,8 @@
         "bestAndFairest": null,
         "longevity": 0.567,
         "production": 0.411
-      }
+      },
+      "popularityBase": 78
     },
     {
       "id": "shaun_rehn_98",
@@ -287,7 +292,8 @@
         "bestAndFairest": null,
         "longevity": 0.558,
         "production": 0.276
-      }
+      },
+      "popularityBase": 81
     },
     {
       "id": "darren_jarman_96",
@@ -330,7 +336,8 @@
         "bestAndFairest": null,
         "longevity": 0.567,
         "production": 0.581
-      }
+      },
+      "popularityBase": 74
     },
     {
       "id": "rod_jameson_91",
@@ -373,7 +380,8 @@
         "bestAndFairest": null,
         "longevity": 0.616,
         "production": 0.519
-      }
+      },
+      "popularityBase": 59
     }
   ],
   "Adelaide_2000s": [
@@ -415,7 +423,8 @@
         "bestAndFairest": null,
         "longevity": 0.804,
         "production": 0.516
-      }
+      },
+      "popularityBase": 67
     },
     {
       "id": "andrew_mcleod_01",
@@ -495,7 +504,8 @@
         "bestAndFairest": null,
         "longevity": 0.971,
         "production": 0.589
-      }
+      },
+      "popularityBase": 84
     },
     {
       "id": "tyson_edwards_06",
@@ -535,7 +545,8 @@
         "bestAndFairest": null,
         "longevity": 1,
         "production": 0.423
-      }
+      },
+      "popularityBase": 84
     },
     {
       "id": "mark_ricciuto_00",
@@ -615,7 +626,8 @@
         "bestAndFairest": null,
         "longevity": 0.73,
         "production": 0.634
-      }
+      },
+      "popularityBase": 82
     },
     {
       "id": "rhett_biglands_06",
@@ -655,7 +667,8 @@
         "bestAndFairest": null,
         "longevity": 0.602,
         "production": 0.007
-      }
+      },
+      "popularityBase": 50
     },
     {
       "id": "scott_welsh_04",
@@ -695,7 +708,8 @@
         "bestAndFairest": null,
         "longevity": 0.627,
         "production": 0.132
-      }
+      },
+      "popularityBase": 57
     },
     {
       "id": "darren_jarman_00",
@@ -735,7 +749,8 @@
         "bestAndFairest": null,
         "longevity": 0.362,
         "production": 0.571
-      }
+      },
+      "popularityBase": 52
     }
   ],
   "Adelaide_2010s": [
@@ -777,7 +792,8 @@
         "bestAndFairest": null,
         "longevity": 0.773,
         "production": 0.19
-      }
+      },
+      "popularityBase": 46
     },
     {
       "id": "rory_laird_18",
@@ -817,7 +833,8 @@
         "bestAndFairest": null,
         "longevity": 0.713,
         "production": 0.831
-      }
+      },
+      "popularityBase": 82
     },
     {
       "id": "rory_sloane_17",
@@ -897,7 +914,8 @@
         "bestAndFairest": null,
         "longevity": 0.796,
         "production": 0.858
-      }
+      },
+      "popularityBase": 83
     },
     {
       "id": "patrick_dangerfield_15",
@@ -977,7 +995,8 @@
         "bestAndFairest": null,
         "longevity": 0.518,
         "production": 0.801
-      }
+      },
+      "popularityBase": 80
     },
     {
       "id": "sam_jacobs_17",
@@ -1017,7 +1036,8 @@
         "bestAndFairest": null,
         "longevity": 0.769,
         "production": 0.13
-      }
+      },
+      "popularityBase": 79
     },
     {
       "id": "taylor_walker_12",
@@ -1139,7 +1159,8 @@
         "bestAndFairest": null,
         "longevity": 0.162,
         "production": 0.313
-      }
+      },
+      "popularityBase": 40
     },
     {
       "id": "rory_laird_22",
@@ -1179,7 +1200,8 @@
         "bestAndFairest": null,
         "longevity": 0.542,
         "production": 1
-      }
+      },
+      "popularityBase": 82
     },
     {
       "id": "jordan_dawson_23",
@@ -1219,7 +1241,8 @@
         "bestAndFairest": null,
         "longevity": 0.31,
         "production": 0.662
-      }
+      },
+      "popularityBase": 80
     },
     {
       "id": "ben_keays_21",
@@ -1259,7 +1282,8 @@
         "bestAndFairest": null,
         "longevity": 0.412,
         "production": 0.769
-      }
+      },
+      "popularityBase": 77
     },
     {
       "id": "matt_crouch_24",
@@ -1299,7 +1323,8 @@
         "bestAndFairest": null,
         "longevity": 0.279,
         "production": 0.705
-      }
+      },
+      "popularityBase": 51
     },
     {
       "id": "rory_sloane_21",
@@ -1379,7 +1404,8 @@
         "bestAndFairest": null,
         "longevity": 0.385,
         "production": 0.192
-      }
+      },
+      "popularityBase": 61
     },
     {
       "id": "taylor_walker_23",
@@ -1459,7 +1485,8 @@
         "bestAndFairest": null,
         "longevity": 0.182,
         "production": 0.758
-      }
+      },
+      "popularityBase": 55
     }
   ],
   "BrisbaneLions_1980s": [
@@ -1505,7 +1532,8 @@
         "bestAndFairest": null,
         "longevity": 0.695,
         "production": 0.128
-      }
+      },
+      "popularityBase": 69
     },
     {
       "id": "paul_roos_88",
@@ -1549,7 +1577,8 @@
         "bestAndFairest": null,
         "longevity": 0.817,
         "production": 0.766
-      }
+      },
+      "popularityBase": 81
     },
     {
       "id": "scott_mcivor_89",
@@ -1593,7 +1622,8 @@
         "bestAndFairest": null,
         "longevity": 0.492,
         "production": 0.287
-      }
+      },
+      "popularityBase": 63
     },
     {
       "id": "leon_harris_88",
@@ -1637,7 +1667,8 @@
         "bestAndFairest": null,
         "longevity": 0.687,
         "production": 0.232
-      }
+      },
+      "popularityBase": 58
     },
     {
       "id": "geoff_raines_88",
@@ -1681,7 +1712,8 @@
         "bestAndFairest": null,
         "longevity": 0.433,
         "production": 0.132
-      }
+      },
+      "popularityBase": 66
     },
     {
       "id": "matthew_rendell_83",
@@ -1726,7 +1758,8 @@
         "bestAndFairest": null,
         "longevity": 0.618,
         "production": 0.336
-      }
+      },
+      "popularityBase": 57
     },
     {
       "id": "richard_osborne_89",
@@ -1770,7 +1803,8 @@
         "bestAndFairest": null,
         "longevity": 0.73,
         "production": 0.632
-      }
+      },
+      "popularityBase": 81
     },
     {
       "id": "bernie_quinlan_83",
@@ -1859,7 +1893,8 @@
         "bestAndFairest": null,
         "longevity": 0.389,
         "production": 0.681
-      }
+      },
+      "popularityBase": 54
     }
   ],
   "BrisbaneLions_1990s": [
@@ -1902,7 +1937,8 @@
         "bestAndFairest": null,
         "longevity": 0.78,
         "production": 0.441
-      }
+      },
+      "popularityBase": 63
     },
     {
       "id": "paul_roos_90",
@@ -1946,7 +1982,8 @@
         "bestAndFairest": null,
         "longevity": 0.603,
         "production": 0.729
-      }
+      },
+      "popularityBase": 77
     },
     {
       "id": "michael_voss_98",
@@ -2031,7 +2068,8 @@
         "bestAndFairest": null,
         "longevity": 0.577,
         "production": 0.381
-      }
+      },
+      "popularityBase": 79
     },
     {
       "id": "nigel_lappin_99",
@@ -2072,7 +2110,8 @@
         "bestAndFairest": null,
         "longevity": 0.717,
         "production": 0.097
-      }
+      },
+      "popularityBase": 77
     },
     {
       "id": "marcus_ashcroft_99",
@@ -2113,7 +2152,8 @@
         "bestAndFairest": null,
         "longevity": 0.924,
         "production": 0.211
-      }
+      },
+      "popularityBase": 69
     },
     {
       "id": "matthew_clarke_98",
@@ -2154,7 +2194,8 @@
         "bestAndFairest": null,
         "longevity": 0.683,
         "production": 0.007
-      }
+      },
+      "popularityBase": 77
     },
     {
       "id": "alastair_lynch_93",
@@ -2198,7 +2239,8 @@
         "bestAndFairest": null,
         "longevity": 0.833,
         "production": 0.681
-      }
+      },
+      "popularityBase": 73
     },
     {
       "id": "jason_akermanis_99",
@@ -2281,7 +2323,8 @@
         "bestAndFairest": null,
         "longevity": 0.687,
         "production": 0.631
-      }
+      },
+      "popularityBase": 66
     },
     {
       "id": "chris_johnson_01",
@@ -2321,7 +2364,8 @@
         "bestAndFairest": null,
         "longevity": 0.841,
         "production": 0.183
-      }
+      },
+      "popularityBase": 73
     },
     {
       "id": "simon_black_01",
@@ -2401,7 +2445,8 @@
         "bestAndFairest": null,
         "longevity": 1,
         "production": 0.397
-      }
+      },
+      "popularityBase": 84
     },
     {
       "id": "nigel_lappin_04",
@@ -2441,7 +2486,8 @@
         "bestAndFairest": null,
         "longevity": 0.844,
         "production": 0.589
-      }
+      },
+      "popularityBase": 83
     },
     {
       "id": "michael_voss_01",
@@ -2520,7 +2566,8 @@
         "bestAndFairest": null,
         "longevity": 0.426,
         "production": 0.618
-      }
+      },
+      "popularityBase": 65
     },
     {
       "id": "jonathan_brown_06",
@@ -2642,7 +2689,8 @@
         "bestAndFairest": null,
         "longevity": 0.509,
         "production": 0.667
-      }
+      },
+      "popularityBase": 56
     },
     {
       "id": "daniel_rich_12",
@@ -2682,7 +2730,8 @@
         "bestAndFairest": null,
         "longevity": 0.77,
         "production": 0.783
-      }
+      },
+      "popularityBase": 69
     },
     {
       "id": "tom_rockliff_14",
@@ -2722,7 +2771,8 @@
         "bestAndFairest": null,
         "longevity": 0.612,
         "production": 0.99
-      }
+      },
+      "popularityBase": 84
     },
     {
       "id": "dayne_zorko_17",
@@ -2802,7 +2852,8 @@
         "bestAndFairest": null,
         "longevity": 0.341,
         "production": 0.807
-      }
+      },
+      "popularityBase": 80
     },
     {
       "id": "lachie_neale_19",
@@ -2882,7 +2933,8 @@
         "bestAndFairest": null,
         "longevity": 0.53,
         "production": 0.784
-      }
+      },
+      "popularityBase": 69
     },
     {
       "id": "jonathan_brown_10",
@@ -2962,7 +3014,8 @@
         "bestAndFairest": null,
         "longevity": 0.366,
         "production": 0.413
-      }
+      },
+      "popularityBase": 53
     }
   ],
   "BrisbaneLions_2020s": [
@@ -3004,7 +3057,8 @@
         "bestAndFairest": null,
         "longevity": 0.679,
         "production": 0.269
-      }
+      },
+      "popularityBase": 60
     },
     {
       "id": "jarrod_berry_24",
@@ -3044,7 +3098,8 @@
         "bestAndFairest": null,
         "longevity": 0.589,
         "production": 0.59
-      }
+      },
+      "popularityBase": 56
     },
     {
       "id": "lachie_neale_24",
@@ -3124,7 +3179,8 @@
         "bestAndFairest": null,
         "longevity": 0.654,
         "production": 0.566
-      }
+      },
+      "popularityBase": 82
     },
     {
       "id": "jarryd_lyons_21",
@@ -3164,7 +3220,8 @@
         "bestAndFairest": null,
         "longevity": 0.478,
         "production": 0.872
-      }
+      },
+      "popularityBase": 82
     },
     {
       "id": "dayne_zorko_21",
@@ -3244,7 +3301,8 @@
         "bestAndFairest": null,
         "longevity": 0.584,
         "production": 0.26
-      }
+      },
+      "popularityBase": 48
     },
     {
       "id": "joe_daniher_24",
@@ -3284,7 +3342,8 @@
         "bestAndFairest": null,
         "longevity": 0.568,
         "production": 0.274
-      }
+      },
+      "popularityBase": 71
     },
     {
       "id": "charlie_cameron_22",
@@ -3324,7 +3383,8 @@
         "bestAndFairest": null,
         "longevity": 0.706,
         "production": 0.321
-      }
+      },
+      "popularityBase": 59
     }
   ],
   "Carlton_1970s": [
@@ -3414,7 +3474,8 @@
         "bestAndFairest": null,
         "longevity": 0.537,
         "production": 0.043
-      }
+      },
+      "popularityBase": 41
     },
     {
       "id": "trevor_keogh_76",
@@ -3458,7 +3519,8 @@
         "bestAndFairest": null,
         "longevity": 0.869,
         "production": 0.201
-      }
+      },
+      "popularityBase": 44
     },
     {
       "id": "barry_armstrong_76",
@@ -3502,7 +3564,8 @@
         "bestAndFairest": null,
         "longevity": 0.811,
         "production": 0.3
-      }
+      },
+      "popularityBase": 44
     },
     {
       "id": "david_mckay_73",
@@ -3546,7 +3609,8 @@
         "bestAndFairest": null,
         "longevity": 0.95,
         "production": 0.724
-      }
+      },
+      "popularityBase": 45
     },
     {
       "id": "peter_jones_73",
@@ -3590,7 +3654,8 @@
         "bestAndFairest": null,
         "longevity": 0.883,
         "production": 0.5
-      }
+      },
+      "popularityBase": 45
     },
     {
       "id": "alex_jesaulenko_70",
@@ -3634,7 +3699,8 @@
         "bestAndFairest": null,
         "longevity": 0.911,
         "production": 0.821
-      }
+      },
+      "popularityBase": 47
     },
     {
       "id": "robert_walls_76",
@@ -3678,7 +3744,8 @@
         "bestAndFairest": null,
         "longevity": 0.787,
         "production": 0.429
-      }
+      },
+      "popularityBase": 45
     },
     {
       "id": "syd_jackson_70",
@@ -3722,7 +3789,8 @@
         "bestAndFairest": null,
         "longevity": 0.487,
         "production": 0.626
-      }
+      },
+      "popularityBase": 42
     }
   ],
   "Carlton_1980s": [
@@ -3811,7 +3879,8 @@
         "bestAndFairest": null,
         "longevity": 0.639,
         "production": 0.1
-      }
+      },
+      "popularityBase": 71
     },
     {
       "id": "ken_hunter_83",
@@ -3855,7 +3924,8 @@
         "bestAndFairest": null,
         "longevity": 0.653,
         "production": 0.741
-      }
+      },
+      "popularityBase": 64
     },
     {
       "id": "paul_meldrum_86",
@@ -3899,7 +3969,8 @@
         "bestAndFairest": null,
         "longevity": 0.574,
         "production": 0.147
-      }
+      },
+      "popularityBase": 79
     },
     {
       "id": "wayne_johnston_87",
@@ -3942,7 +4013,8 @@
         "bestAndFairest": null,
         "longevity": 0.848,
         "production": 0.232
-      }
+      },
+      "popularityBase": 79
     },
     {
       "id": "craig_bradley_86",
@@ -4116,7 +4188,8 @@
         "bestAndFairest": null,
         "longevity": 0.432,
         "production": 0.054
-      }
+      },
+      "popularityBase": 72
     }
   ],
   "Carlton_1990s": [
@@ -4204,7 +4277,8 @@
         "bestAndFairest": null,
         "longevity": 0.671,
         "production": 0.373
-      }
+      },
+      "popularityBase": 77
     },
     {
       "id": "fraser_brown_98",
@@ -4244,7 +4318,8 @@
         "bestAndFairest": null,
         "longevity": 0.664,
         "production": 0.549
-      }
+      },
+      "popularityBase": 83
     },
     {
       "id": "craig_bradley_98",
@@ -4324,7 +4399,8 @@
         "bestAndFairest": null,
         "longevity": 0.898,
         "production": 0.866
-      }
+      },
+      "popularityBase": 78
     },
     {
       "id": "anthony_koutoufides_99",
@@ -4493,7 +4569,8 @@
         "bestAndFairest": null,
         "longevity": 0.251,
         "production": 0.395
-      }
+      },
+      "popularityBase": 54
     }
   ],
   "Carlton_2000s": [
@@ -4535,7 +4612,8 @@
         "bestAndFairest": null,
         "longevity": 0.585,
         "production": 0.584
-      }
+      },
+      "popularityBase": 46
     },
     {
       "id": "heath_scotland_06",
@@ -4575,7 +4653,8 @@
         "bestAndFairest": null,
         "longevity": 0.616,
         "production": 0.796
-      }
+      },
+      "popularityBase": 79
     },
     {
       "id": "anthony_koutoufides_00",
@@ -4655,7 +4734,8 @@
         "bestAndFairest": null,
         "longevity": 0.523,
         "production": 0.254
-      }
+      },
+      "popularityBase": 79
     },
     {
       "id": "chris_judd_09",
@@ -4735,7 +4815,8 @@
         "bestAndFairest": null,
         "longevity": 0.654,
         "production": 0.423
-      }
+      },
+      "popularityBase": 76
     },
     {
       "id": "corey_mckernan_02",
@@ -4775,7 +4856,8 @@
         "bestAndFairest": null,
         "longevity": 0.375,
         "production": 0.276
-      }
+      },
+      "popularityBase": 53
     },
     {
       "id": "brendan_fevola_08",
@@ -4855,7 +4937,8 @@
         "bestAndFairest": null,
         "longevity": 0.401,
         "production": 0.55
-      }
+      },
+      "popularityBase": 48
     }
   ],
   "Carlton_2010s": [
@@ -4897,7 +4980,8 @@
         "bestAndFairest": null,
         "longevity": 0.488,
         "production": 0.039
-      }
+      },
+      "popularityBase": 41
     },
     {
       "id": "kade_simpson_10",
@@ -4937,7 +5021,8 @@
         "bestAndFairest": null,
         "longevity": 0.892,
         "production": 0.818
-      }
+      },
+      "popularityBase": 82
     },
     {
       "id": "marc_murphy_11",
@@ -5017,7 +5102,8 @@
         "bestAndFairest": null,
         "longevity": 0.755,
         "production": 0.807
-      }
+      },
+      "popularityBase": 83
     },
     {
       "id": "patrick_cripps_16",
@@ -5137,7 +5223,8 @@
         "bestAndFairest": null,
         "longevity": 0.58,
         "production": 0.581
-      }
+      },
+      "popularityBase": 73
     },
     {
       "id": "jarrad_waite_10",
@@ -5217,7 +5304,8 @@
         "bestAndFairest": null,
         "longevity": 0.555,
         "production": 0.657
-      }
+      },
+      "popularityBase": 63
     }
   ],
   "Carlton_2020s": [
@@ -5259,7 +5347,8 @@
         "bestAndFairest": null,
         "longevity": 0.51,
         "production": 0.516
-      }
+      },
+      "popularityBase": 51
     },
     {
       "id": "sam_docherty_22",
@@ -5299,7 +5388,8 @@
         "bestAndFairest": null,
         "longevity": 0.41,
         "production": 0.818
-      }
+      },
+      "popularityBase": 64
     },
     {
       "id": "patrick_cripps_22",
@@ -5379,7 +5469,8 @@
         "bestAndFairest": null,
         "longevity": 0.419,
         "production": 0.755
-      }
+      },
+      "popularityBase": 81
     },
     {
       "id": "george_hewett_22",
@@ -5419,7 +5510,8 @@
         "bestAndFairest": null,
         "longevity": 0.389,
         "production": 0.755
-      }
+      },
+      "popularityBase": 57
     },
     {
       "id": "tom_de_koning_24",
@@ -5458,7 +5550,8 @@
         "bestAndFairest": null,
         "longevity": 0.292,
         "production": 0.515
-      }
+      },
+      "popularityBase": 44
     },
     {
       "id": "charlie_curnow_23",
@@ -5577,7 +5670,8 @@
         "bestAndFairest": null,
         "longevity": 0.278,
         "production": 0.008
-      }
+      },
+      "popularityBase": 40
     }
   ],
   "Collingwood_1970s": [
@@ -5623,7 +5717,8 @@
         "bestAndFairest": null,
         "longevity": 0.594,
         "production": 0.538
-      }
+      },
+      "popularityBase": 42
     },
     {
       "id": "alan_atkinson_78",
@@ -5666,7 +5761,8 @@
         "bestAndFairest": null,
         "longevity": 0.541,
         "production": 0.01
-      }
+      },
+      "popularityBase": 41
     },
     {
       "id": "wayne_richardson_71",
@@ -5710,7 +5806,8 @@
         "bestAndFairest": null,
         "longevity": 0.883,
         "production": 0.881
-      }
+      },
+      "popularityBase": 47
     },
     {
       "id": "max_richardson_72",
@@ -5754,7 +5851,8 @@
         "bestAndFairest": null,
         "longevity": 0.885,
         "production": 0.22
-      }
+      },
+      "popularityBase": 44
     },
     {
       "id": "ray_shaw_78",
@@ -5798,7 +5896,8 @@
         "bestAndFairest": null,
         "longevity": 0.577,
         "production": 0.447
-      }
+      },
+      "popularityBase": 43
     },
     {
       "id": "ronnie_wearmouth_77",
@@ -5842,7 +5941,8 @@
         "bestAndFairest": null,
         "longevity": 0.742,
         "production": 0.088
-      }
+      },
+      "popularityBase": 43
     },
     {
       "id": "len_thompson_72",
@@ -5886,7 +5986,8 @@
         "bestAndFairest": null,
         "longevity": 0.886,
         "production": 0.724
-      }
+      },
+      "popularityBase": 46
     },
     {
       "id": "peter_mckenna_70",
@@ -5930,7 +6031,8 @@
         "bestAndFairest": null,
         "longevity": 0.482,
         "production": 0.982
-      }
+      },
+      "popularityBase": 46
     },
     {
       "id": "ross_dunne_74",
@@ -5974,7 +6076,8 @@
         "bestAndFairest": null,
         "longevity": 0.757,
         "production": 0.438
-      }
+      },
+      "popularityBase": 44
     }
   ],
   "Collingwood_1980s": [
@@ -6019,7 +6122,8 @@
         "bestAndFairest": null,
         "longevity": 0.332,
         "production": 0.465
-      }
+      },
+      "popularityBase": 52
     },
     {
       "id": "bruce_abernethy_84",
@@ -6063,7 +6167,8 @@
         "bestAndFairest": null,
         "longevity": 0.303,
         "production": 0.138
-      }
+      },
+      "popularityBase": 59
     },
     {
       "id": "tony_shaw_84",
@@ -6107,7 +6212,8 @@
         "bestAndFairest": null,
         "longevity": 0.978,
         "production": 0.508
-      }
+      },
+      "popularityBase": 79
     },
     {
       "id": "darren_millane_88",
@@ -6150,7 +6256,8 @@
         "bestAndFairest": null,
         "longevity": 0.473,
         "production": 0.271
-      }
+      },
+      "popularityBase": 78
     },
     {
       "id": "shane_morwood_83",
@@ -6194,7 +6301,8 @@
         "bestAndFairest": null,
         "longevity": 0.551,
         "production": 0.132
-      }
+      },
+      "popularityBase": 75
     },
     {
       "id": "david_cloke_85",
@@ -6238,7 +6346,8 @@
         "bestAndFairest": null,
         "longevity": 0.66,
         "production": 0.396
-      }
+      },
+      "popularityBase": 78
     },
     {
       "id": "wes_fellowes_87",
@@ -6281,7 +6390,8 @@
         "bestAndFairest": null,
         "longevity": 0.375,
         "production": 0.16
-      }
+      },
+      "popularityBase": 65
     },
     {
       "id": "brian_taylor_86",
@@ -6325,7 +6435,8 @@
         "bestAndFairest": null,
         "longevity": 0.386,
         "production": 0.804
-      }
+      },
+      "popularityBase": 61
     },
     {
       "id": "peter_daicos_82",
@@ -6413,7 +6524,8 @@
         "bestAndFairest": null,
         "longevity": 0.464,
         "production": 0.089
-      }
+      },
+      "popularityBase": 50
     },
     {
       "id": "gavin_crosisca_98",
@@ -6453,7 +6565,8 @@
         "bestAndFairest": null,
         "longevity": 0.81,
         "production": 0.262
-      }
+      },
+      "popularityBase": 69
     },
     {
       "id": "nathan_buckley_99",
@@ -6536,7 +6649,8 @@
         "bestAndFairest": null,
         "longevity": 0.74,
         "production": 0.271
-      }
+      },
+      "popularityBase": 81
     },
     {
       "id": "paul_williams_98",
@@ -6576,7 +6690,8 @@
         "bestAndFairest": null,
         "longevity": 0.77,
         "production": 0.115
-      }
+      },
+      "popularityBase": 80
     },
     {
       "id": "tony_francis_91",
@@ -6619,7 +6734,8 @@
         "bestAndFairest": null,
         "longevity": 0.599,
         "production": 0.332
-      }
+      },
+      "popularityBase": 80
     },
     {
       "id": "damian_monkhorst_99",
@@ -6659,7 +6775,8 @@
         "bestAndFairest": null,
         "longevity": 0.78,
         "production": 0.108
-      }
+      },
+      "popularityBase": 81
     },
     {
       "id": "gavin_brown_90",
@@ -6702,7 +6819,8 @@
         "bestAndFairest": null,
         "longevity": 0.795,
         "production": 0.652
-      }
+      },
+      "popularityBase": 82
     },
     {
       "id": "peter_daicos_90",
@@ -6787,7 +6905,8 @@
         "bestAndFairest": null,
         "longevity": 0.733,
         "production": 0.41
-      }
+      },
+      "popularityBase": 58
     },
     {
       "id": "heath_shaw_06",
@@ -6827,7 +6946,8 @@
         "bestAndFairest": null,
         "longevity": 0.635,
         "production": 0.547
-      }
+      },
+      "popularityBase": 69
     },
     {
       "id": "nathan_buckley_00",
@@ -6947,7 +7067,8 @@
         "bestAndFairest": null,
         "longevity": 0.922,
         "production": 0.254
-      }
+      },
+      "popularityBase": 81
     },
     {
       "id": "paul_licuria_05",
@@ -6987,7 +7108,8 @@
         "bestAndFairest": null,
         "longevity": 0.7,
         "production": 0.366
-      }
+      },
+      "popularityBase": 80
     },
     {
       "id": "josh_fraser_06",
@@ -7027,7 +7149,8 @@
         "bestAndFairest": null,
         "longevity": 0.819,
         "production": 0.601
-      }
+      },
+      "popularityBase": 80
     },
     {
       "id": "chris_tarrant_03",
@@ -7107,7 +7230,8 @@
         "bestAndFairest": null,
         "longevity": 0.852,
         "production": 0.785
-      }
+      },
+      "popularityBase": 70
     }
   ],
   "Collingwood_2010s": [
@@ -7149,7 +7273,8 @@
         "bestAndFairest": null,
         "longevity": 0.56,
         "production": 0.243
-      }
+      },
+      "popularityBase": 42
     },
     {
       "id": "josh_thomas_13",
@@ -7189,7 +7314,8 @@
         "bestAndFairest": null,
         "longevity": 0.436,
         "production": 0.57
-      }
+      },
+      "popularityBase": 52
     },
     {
       "id": "scott_pendlebury_11",
@@ -7349,7 +7475,8 @@
         "bestAndFairest": null,
         "longevity": 0.559,
         "production": 0.925
-      }
+      },
+      "popularityBase": 83
     },
     {
       "id": "brodie_grundy_19",
@@ -7389,7 +7516,8 @@
         "bestAndFairest": null,
         "longevity": 0.611,
         "production": 0.834
-      }
+      },
+      "popularityBase": 83
     },
     {
       "id": "travis_cloke_11",
@@ -7511,7 +7639,8 @@
         "bestAndFairest": null,
         "longevity": 0.529,
         "production": 0.465
-      }
+      },
+      "popularityBase": 55
     },
     {
       "id": "john_noble_23",
@@ -7551,7 +7680,8 @@
         "bestAndFairest": null,
         "longevity": 0.44,
         "production": 0.311
-      }
+      },
+      "popularityBase": 48
     },
     {
       "id": "nick_daicos_24",
@@ -7631,7 +7761,8 @@
         "bestAndFairest": null,
         "longevity": 0.488,
         "production": 0.566
-      }
+      },
+      "popularityBase": 81
     },
     {
       "id": "jack_crisp_22",
@@ -7671,7 +7802,8 @@
         "bestAndFairest": null,
         "longevity": 0.648,
         "production": 0.461
-      }
+      },
+      "popularityBase": 80
     },
     {
       "id": "scott_pendlebury_23",
@@ -7751,7 +7883,8 @@
         "bestAndFairest": null,
         "longevity": 0.358,
         "production": 0.667
-      }
+      },
+      "popularityBase": 60
     },
     {
       "id": "brody_mihocek_23",
@@ -7791,7 +7924,8 @@
         "bestAndFairest": null,
         "longevity": 0.483,
         "production": 0.058
-      }
+      },
+      "popularityBase": 57
     },
     {
       "id": "jamie_elliott_21",
@@ -7877,7 +8011,8 @@
         "bestAndFairest": null,
         "longevity": 0.362,
         "production": 0.441
-      }
+      },
+      "popularityBase": 40
     },
     {
       "id": "ken_fletcher_77",
@@ -7921,7 +8056,8 @@
         "bestAndFairest": null,
         "longevity": 0.772,
         "production": 0.327
-      }
+      },
+      "popularityBase": 43
     },
     {
       "id": "andrew_wilson_73",
@@ -7965,7 +8101,8 @@
         "bestAndFairest": null,
         "longevity": 0.415,
         "production": 0.484
-      }
+      },
+      "popularityBase": 42
     },
     {
       "id": "brian_walsh_75",
@@ -8009,7 +8146,8 @@
         "bestAndFairest": null,
         "longevity": 0.221,
         "production": 0.83
-      }
+      },
+      "popularityBase": 42
     },
     {
       "id": "graham_moss_76",
@@ -8053,7 +8191,8 @@
         "bestAndFairest": null,
         "longevity": 0.314,
         "production": 0.846
-      }
+      },
+      "popularityBase": 42
     },
     {
       "id": "simon_madden_77",
@@ -8141,7 +8280,8 @@
         "bestAndFairest": null,
         "longevity": 0.448,
         "production": 0.526
-      }
+      },
+      "popularityBase": 43
     },
     {
       "id": "geoff_blethyn_72",
@@ -8185,7 +8325,8 @@
         "bestAndFairest": null,
         "longevity": 0.245,
         "production": 0.698
-      }
+      },
+      "popularityBase": 42
     },
     {
       "id": "robin_close_73",
@@ -8228,7 +8369,8 @@
         "bestAndFairest": null,
         "longevity": 0.382,
         "production": 0.321
-      }
+      },
+      "popularityBase": 41
     }
   ],
   "Essendon_1980s": [
@@ -8273,7 +8415,8 @@
         "bestAndFairest": null,
         "longevity": 0.413,
         "production": 0.313
-      }
+      },
+      "popularityBase": 45
     },
     {
       "id": "kevin_walsh_87",
@@ -8316,7 +8459,8 @@
         "bestAndFairest": null,
         "longevity": 0.698,
         "production": 0.01
-      }
+      },
+      "popularityBase": 63
     },
     {
       "id": "tim_watson_80",
@@ -8404,7 +8548,8 @@
         "bestAndFairest": null,
         "longevity": 0.84,
         "production": 0.411
-      }
+      },
+      "popularityBase": 80
     },
     {
       "id": "simon_madden_83",
@@ -8492,7 +8637,8 @@
         "bestAndFairest": null,
         "longevity": 0.829,
         "production": 0.457
-      }
+      },
+      "popularityBase": 74
     },
     {
       "id": "terry_daniher_83",
@@ -8580,7 +8726,8 @@
         "bestAndFairest": null,
         "longevity": 0.677,
         "production": 0.228
-      }
+      },
+      "popularityBase": 71
     },
     {
       "id": "alan_ezard_87",
@@ -8623,7 +8770,8 @@
         "bestAndFairest": null,
         "longevity": 0.651,
         "production": 0.321
-      }
+      },
+      "popularityBase": 62
     }
   ],
   "Essendon_1990s": [
@@ -8711,7 +8859,8 @@
         "bestAndFairest": null,
         "longevity": 0.914,
         "production": 0.558
-      }
+      },
+      "popularityBase": 79
     },
     {
       "id": "darren_bewick_95",
@@ -8754,7 +8903,8 @@
         "bestAndFairest": null,
         "longevity": 0.87,
         "production": 0.3
-      }
+      },
+      "popularityBase": 82
     },
     {
       "id": "mark_mercuri_99",
@@ -8794,7 +8944,8 @@
         "bestAndFairest": null,
         "longevity": 0.669,
         "production": 0.35
-      }
+      },
+      "popularityBase": 82
     },
     {
       "id": "james_hird_98",
@@ -8920,7 +9071,8 @@
         "bestAndFairest": null,
         "longevity": 0.667,
         "production": 0.13
-      }
+      },
+      "popularityBase": 67
     },
     {
       "id": "paul_salmon_93",
@@ -9006,7 +9158,8 @@
         "bestAndFairest": null,
         "longevity": 0.415,
         "production": 0.107
-      }
+      },
+      "popularityBase": 53
     }
   ],
   "Essendon_2000s": [
@@ -9088,7 +9241,8 @@
         "bestAndFairest": null,
         "longevity": 0.639,
         "production": 0.59
-      }
+      },
+      "popularityBase": 73
     },
     {
       "id": "jason_johnson_04",
@@ -9128,7 +9282,8 @@
         "bestAndFairest": null,
         "longevity": 0.734,
         "production": 0.447
-      }
+      },
+      "popularityBase": 83
     },
     {
       "id": "james_hird_00",
@@ -9208,7 +9363,8 @@
         "bestAndFairest": null,
         "longevity": 0.809,
         "production": 0.287
-      }
+      },
+      "popularityBase": 75
     },
     {
       "id": "david_hille_08",
@@ -9248,7 +9404,8 @@
         "bestAndFairest": null,
         "longevity": 0.592,
         "production": 0.433
-      }
+      },
+      "popularityBase": 54
     },
     {
       "id": "matthew_lloyd_01",
@@ -9368,7 +9525,8 @@
         "bestAndFairest": null,
         "longevity": 0.462,
         "production": 0.263
-      }
+      },
+      "popularityBase": 48
     }
   ],
   "Essendon_2010s": [
@@ -9410,7 +9568,8 @@
         "bestAndFairest": null,
         "longevity": 0.68,
         "production": 0.795
-      }
+      },
+      "popularityBase": 78
     },
     {
       "id": "jake_melksham_13",
@@ -9449,7 +9608,8 @@
         "bestAndFairest": null,
         "longevity": 0.556,
         "production": 0.638
-      }
+      },
+      "popularityBase": 46
     },
     {
       "id": "dyson_heppell_14",
@@ -9489,7 +9649,8 @@
         "bestAndFairest": null,
         "longevity": 0.747,
         "production": 0.705
-      }
+      },
+      "popularityBase": 83
     },
     {
       "id": "jobe_watson_12",
@@ -9529,7 +9690,8 @@
         "bestAndFairest": null,
         "longevity": 0.581,
         "production": 0.939
-      }
+      },
+      "popularityBase": 83
     },
     {
       "id": "david_zaharakis_14",
@@ -9569,7 +9731,8 @@
         "bestAndFairest": null,
         "longevity": 0.776,
         "production": 0.35
-      }
+      },
+      "popularityBase": 82
     },
     {
       "id": "zach_merrett_16",
@@ -9609,7 +9772,8 @@
         "bestAndFairest": null,
         "longevity": 0.607,
         "production": 0.755
-      }
+      },
+      "popularityBase": 82
     },
     {
       "id": "tom_bellchambers_17",
@@ -9649,7 +9813,8 @@
         "bestAndFairest": null,
         "longevity": 0.447,
         "production": 0.06
-      }
+      },
+      "popularityBase": 57
     },
     {
       "id": "joe_daniher_17",
@@ -9689,7 +9854,8 @@
         "bestAndFairest": null,
         "longevity": 0.451,
         "production": 0.344
-      }
+      },
+      "popularityBase": 64
     },
     {
       "id": "anthony_mcdonald_tipungwuti_17",
@@ -9729,7 +9895,8 @@
         "bestAndFairest": null,
         "longevity": 0.386,
         "production": 0.292
-      }
+      },
+      "popularityBase": 56
     }
   ],
   "Essendon_2020s": [
@@ -9771,7 +9938,8 @@
         "bestAndFairest": null,
         "longevity": 0.35,
         "production": 0.313
-      }
+      },
+      "popularityBase": 41
     },
     {
       "id": "kyle_langford_21",
@@ -9811,7 +9979,8 @@
         "bestAndFairest": null,
         "longevity": 0.386,
         "production": 0.701
-      }
+      },
+      "popularityBase": 52
     },
     {
       "id": "darcy_parish_23",
@@ -9851,7 +10020,8 @@
         "bestAndFairest": null,
         "longevity": 0.409,
         "production": 0.89
-      }
+      },
+      "popularityBase": 81
     },
     {
       "id": "zach_merrett_23",
@@ -9891,7 +10061,8 @@
         "bestAndFairest": null,
         "longevity": 0.529,
         "production": 0.721
-      }
+      },
+      "popularityBase": 81
     },
     {
       "id": "nic_martin_24",
@@ -9931,7 +10102,8 @@
         "bestAndFairest": null,
         "longevity": 0.241,
         "production": 0.366
-      }
+      },
+      "popularityBase": 73
     },
     {
       "id": "jake_stringer_21",
@@ -9971,7 +10143,8 @@
         "bestAndFairest": null,
         "longevity": 0.463,
         "production": 0.473
-      }
+      },
+      "popularityBase": 61
     },
     {
       "id": "sam_draper_21",
@@ -10011,7 +10184,8 @@
         "bestAndFairest": null,
         "longevity": 0.274,
         "production": 0.049
-      }
+      },
+      "popularityBase": 49
     },
     {
       "id": "peter_wright_22",
@@ -10051,7 +10225,8 @@
         "bestAndFairest": null,
         "longevity": 0.318,
         "production": 0.121
-      }
+      },
+      "popularityBase": 60
     },
     {
       "id": "anthony_mcdonald_tipungwuti_21",
@@ -10090,7 +10265,8 @@
         "bestAndFairest": null,
         "longevity": 0.237,
         "production": 0.04
-      }
+      },
+      "popularityBase": 44
     }
   ],
   "Fremantle_1990s": [
@@ -10132,7 +10308,8 @@
         "bestAndFairest": null,
         "longevity": 0.367,
         "production": 0.606
-      }
+      },
+      "popularityBase": 60
     },
     {
       "id": "scott_chisholm_96",
@@ -10175,7 +10352,8 @@
         "bestAndFairest": null,
         "longevity": 0.247,
         "production": 0.235
-      }
+      },
+      "popularityBase": 63
     },
     {
       "id": "dale_kickett_98",
@@ -10215,7 +10393,8 @@
         "bestAndFairest": null,
         "longevity": 0.45,
         "production": 0.183
-      }
+      },
+      "popularityBase": 55
     },
     {
       "id": "adrian_fletcher_99",
@@ -10255,7 +10434,8 @@
         "bestAndFairest": null,
         "longevity": 0.355,
         "production": 0.549
-      }
+      },
+      "popularityBase": 63
     },
     {
       "id": "andrew_wills_97",
@@ -10298,7 +10478,8 @@
         "bestAndFairest": null,
         "longevity": 0.363,
         "production": 0.168
-      }
+      },
+      "popularityBase": 61
     },
     {
       "id": "craig_callaghan_98",
@@ -10338,7 +10519,8 @@
         "bestAndFairest": null,
         "longevity": 0.349,
         "production": 0.176
-      }
+      },
+      "popularityBase": 53
     },
     {
       "id": "matthew_burton_98",
@@ -10378,7 +10560,8 @@
         "bestAndFairest": null,
         "longevity": 0.317,
         "production": 0.192
-      }
+      },
+      "popularityBase": 60
     },
     {
       "id": "peter_mann_95",
@@ -10421,7 +10604,8 @@
         "bestAndFairest": null,
         "longevity": 0.295,
         "production": 0.182
-      }
+      },
+      "popularityBase": 52
     },
     {
       "id": "clive_waterhouse_99",
@@ -10461,7 +10645,8 @@
         "bestAndFairest": null,
         "longevity": 0.265,
         "production": 0.263
-      }
+      },
+      "popularityBase": 50
     }
   ],
   "Fremantle_2000s": [
@@ -10503,7 +10688,8 @@
         "bestAndFairest": null,
         "longevity": 0.688,
         "production": 0.727
-      }
+      },
+      "popularityBase": 66
     },
     {
       "id": "matthew_carr_05",
@@ -10543,7 +10729,8 @@
         "bestAndFairest": null,
         "longevity": 0.545,
         "production": 0.538
-      }
+      },
+      "popularityBase": 50
     },
     {
       "id": "peter_bell_01",
@@ -10583,7 +10770,8 @@
         "bestAndFairest": null,
         "longevity": 0.767,
         "production": 0.606
-      }
+      },
+      "popularityBase": 82
     },
     {
       "id": "paul_hasleby_03",
@@ -10623,7 +10811,8 @@
         "bestAndFairest": null,
         "longevity": 0.723,
         "production": 0.473
-      }
+      },
+      "popularityBase": 82
     },
     {
       "id": "troy_cook_00",
@@ -10663,7 +10852,8 @@
         "bestAndFairest": null,
         "longevity": 0.617,
         "production": 0.287
-      }
+      },
+      "popularityBase": 79
     },
     {
       "id": "aaron_sandilands_09",
@@ -10783,7 +10973,8 @@
         "bestAndFairest": null,
         "longevity": 0.472,
         "production": 0.217
-      }
+      },
+      "popularityBase": 70
     },
     {
       "id": "jeff_farmer_07",
@@ -10823,7 +11014,8 @@
         "bestAndFairest": null,
         "longevity": 0.645,
         "production": 0.644
-      }
+      },
+      "popularityBase": 58
     }
   ],
   "Fremantle_2010s": [
@@ -10865,7 +11057,8 @@
         "bestAndFairest": null,
         "longevity": 0.604,
         "production": 0.584
-      }
+      },
+      "popularityBase": 48
     },
     {
       "id": "michael_johnson_10",
@@ -10905,7 +11098,8 @@
         "bestAndFairest": null,
         "longevity": 0.747,
         "production": 0.469
-      }
+      },
+      "popularityBase": 55
     },
     {
       "id": "nat_fyfe_15",
@@ -10985,7 +11179,8 @@
         "bestAndFairest": null,
         "longevity": 0.957,
         "production": 0.791
-      }
+      },
+      "popularityBase": 84
     },
     {
       "id": "lachie_neale_16",
@@ -11065,7 +11260,8 @@
         "bestAndFairest": null,
         "longevity": 0.566,
         "production": 0.791
-      }
+      },
+      "popularityBase": 83
     },
     {
       "id": "aaron_sandilands_11",
@@ -11185,7 +11381,8 @@
         "bestAndFairest": null,
         "longevity": 0.705,
         "production": 0.85
-      }
+      },
+      "popularityBase": 82
     }
   ],
   "Fremantle_2020s": [
@@ -11227,7 +11424,8 @@
         "bestAndFairest": null,
         "longevity": 0.332,
         "production": 0.039
-      }
+      },
+      "popularityBase": 46
     },
     {
       "id": "james_aish_22",
@@ -11266,7 +11464,8 @@
         "bestAndFairest": null,
         "longevity": 0.481,
         "production": 0.453
-      }
+      },
+      "popularityBase": 45
     },
     {
       "id": "caleb_serong_23",
@@ -11306,7 +11505,8 @@
         "bestAndFairest": null,
         "longevity": 0.393,
         "production": 0.866
-      }
+      },
+      "popularityBase": 82
     },
     {
       "id": "andrew_brayshaw_22",
@@ -11346,7 +11546,8 @@
         "bestAndFairest": null,
         "longevity": 0.453,
         "production": 0.742
-      }
+      },
+      "popularityBase": 81
     },
     {
       "id": "david_mundy_21",
@@ -11386,7 +11587,8 @@
         "bestAndFairest": null,
         "longevity": 0.518,
         "production": 0.517
-      }
+      },
+      "popularityBase": 73
     },
     {
       "id": "luke_ryan_24",
@@ -11426,7 +11628,8 @@
         "bestAndFairest": null,
         "longevity": 0.461,
         "production": 0.14
-      }
+      },
+      "popularityBase": 71
     },
     {
       "id": "sean_darcy_21",
@@ -11466,7 +11669,8 @@
         "bestAndFairest": null,
         "longevity": 0.347,
         "production": 0.581
-      }
+      },
+      "popularityBase": 60
     },
     {
       "id": "rory_lobb_21",
@@ -11506,7 +11710,8 @@
         "bestAndFairest": null,
         "longevity": 0.349,
         "production": 0.087
-      }
+      },
+      "popularityBase": 60
     },
     {
       "id": "michael_walters_20",
@@ -11546,7 +11751,8 @@
         "bestAndFairest": null,
         "longevity": 0.502,
         "production": 0.626
-      }
+      },
+      "popularityBase": 51
     }
   ],
   "GWS_2010s": [
@@ -11588,7 +11794,8 @@
         "bestAndFairest": null,
         "longevity": 0.677,
         "production": 0.538
-      }
+      },
+      "popularityBase": 54
     },
     {
       "id": "matt_de_boer_18",
@@ -11628,7 +11835,8 @@
         "bestAndFairest": null,
         "longevity": 0.472,
         "production": 0.523
-      }
+      },
+      "popularityBase": 42
     },
     {
       "id": "callan_ward_14",
@@ -11668,7 +11876,8 @@
         "bestAndFairest": null,
         "longevity": 0.806,
         "production": 0.721
-      }
+      },
+      "popularityBase": 83
     },
     {
       "id": "josh_kelly_17",
@@ -11708,7 +11917,8 @@
         "bestAndFairest": null,
         "longevity": 0.647,
         "production": 0.839
-      }
+      },
+      "popularityBase": 83
     },
     {
       "id": "stephen_coniglio_18",
@@ -11748,7 +11958,8 @@
         "bestAndFairest": null,
         "longevity": 0.645,
         "production": 0.858
-      }
+      },
+      "popularityBase": 83
     },
     {
       "id": "lachie_whitfield_19",
@@ -11788,7 +11999,8 @@
         "bestAndFairest": null,
         "longevity": 0.706,
         "production": 0.589
-      }
+      },
+      "popularityBase": 82
     },
     {
       "id": "shane_mumford_15",
@@ -11828,7 +12040,8 @@
         "bestAndFairest": null,
         "longevity": 0.549,
         "production": 0.22
-      }
+      },
+      "popularityBase": 63
     },
     {
       "id": "jeremy_cameron_19",
@@ -11950,7 +12163,8 @@
         "bestAndFairest": null,
         "longevity": 0.388,
         "production": 0.225
-      }
+      },
+      "popularityBase": 48
     },
     {
       "id": "harry_himmelberg_22",
@@ -11990,7 +12204,8 @@
         "bestAndFairest": null,
         "longevity": 0.551,
         "production": 0.501
-      }
+      },
+      "popularityBase": 50
     },
     {
       "id": "tom_green_23",
@@ -12030,7 +12245,8 @@
         "bestAndFairest": null,
         "longevity": 0.375,
         "production": 0.839
-      }
+      },
+      "popularityBase": 82
     },
     {
       "id": "josh_kelly_21",
@@ -12070,7 +12286,8 @@
         "bestAndFairest": null,
         "longevity": 0.563,
         "production": 0.617
-      }
+      },
+      "popularityBase": 81
     },
     {
       "id": "lachie_whitfield_24",
@@ -12110,7 +12327,8 @@
         "bestAndFairest": null,
         "longevity": 0.595,
         "production": 0.319
-      }
+      },
+      "popularityBase": 73
     },
     {
       "id": "tim_taranto_21",
@@ -12150,7 +12368,8 @@
         "bestAndFairest": null,
         "longevity": 0.323,
         "production": 0.67
-      }
+      },
+      "popularityBase": 70
     },
     {
       "id": "kieren_briggs_23",
@@ -12190,7 +12409,8 @@
         "bestAndFairest": null,
         "longevity": 0.202,
         "production": 0.641
-      }
+      },
+      "popularityBase": 44
     },
     {
       "id": "jesse_hogan_24",
@@ -12230,7 +12450,8 @@
         "bestAndFairest": null,
         "longevity": 0.432,
         "production": 0.328
-      }
+      },
+      "popularityBase": 69
     },
     {
       "id": "toby_greene_23",
@@ -12316,7 +12537,8 @@
         "bestAndFairest": null,
         "longevity": 0.598,
         "production": 0.19
-      }
+      },
+      "popularityBase": 41
     },
     {
       "id": "michael_turner_79",
@@ -12360,7 +12582,8 @@
         "bestAndFairest": null,
         "longevity": 0.541,
         "production": 0.389
-      }
+      },
+      "popularityBase": 41
     },
     {
       "id": "ian_nankervis_70",
@@ -12404,7 +12627,8 @@
         "bestAndFairest": null,
         "longevity": 0.853,
         "production": 0.625
-      }
+      },
+      "popularityBase": 44
     },
     {
       "id": "bruce_nankervis_78",
@@ -12448,7 +12672,8 @@
         "bestAndFairest": null,
         "longevity": 0.711,
         "production": 0.332
-      }
+      },
+      "popularityBase": 43
     },
     {
       "id": "sam_newman_70",
@@ -12492,7 +12717,8 @@
         "bestAndFairest": null,
         "longevity": 0.66,
         "production": 0.361
-      }
+      },
+      "popularityBase": 43
     },
     {
       "id": "david_clarke_72",
@@ -12536,7 +12762,8 @@
         "bestAndFairest": null,
         "longevity": 0.681,
         "production": 0.767
-      }
+      },
+      "popularityBase": 44
     },
     {
       "id": "larry_donohue_76",
@@ -12580,7 +12807,8 @@
         "bestAndFairest": null,
         "longevity": 0.368,
         "production": 0.632
-      }
+      },
+      "popularityBase": 43
     },
     {
       "id": "bill_ryan_71",
@@ -12624,7 +12852,8 @@
         "bestAndFairest": null,
         "longevity": 0.22,
         "production": 0.873
-      }
+      },
+      "popularityBase": 43
     },
     {
       "id": "terry_bright_77",
@@ -12668,7 +12897,8 @@
         "bestAndFairest": null,
         "longevity": 0.471,
         "production": 0.371
-      }
+      },
+      "popularityBase": 41
     }
   ],
   "Geelong_1980s": [
@@ -12713,7 +12943,8 @@
         "bestAndFairest": null,
         "longevity": 0.577,
         "production": 0.384
-      }
+      },
+      "popularityBase": 50
     },
     {
       "id": "mark_bos_87",
@@ -12756,7 +12987,8 @@
         "bestAndFairest": null,
         "longevity": 0.768,
         "production": 0.071
-      }
+      },
+      "popularityBase": 46
     },
     {
       "id": "paul_couch_89",
@@ -12799,7 +13031,8 @@
         "bestAndFairest": null,
         "longevity": 0.576,
         "production": 0.434
-      }
+      },
+      "popularityBase": 79
     },
     {
       "id": "andrew_bews_85",
@@ -12843,7 +13076,8 @@
         "bestAndFairest": null,
         "longevity": 0.69,
         "production": 0.411
-      }
+      },
+      "popularityBase": 73
     },
     {
       "id": "mark_bairstow_88",
@@ -12886,7 +13120,8 @@
         "bestAndFairest": null,
         "longevity": 0.37,
         "production": 0.411
-      }
+      },
+      "popularityBase": 70
     },
     {
       "id": "neville_bruns_88",
@@ -12929,7 +13164,8 @@
         "bestAndFairest": null,
         "longevity": 0.73,
         "production": 0.176
-      }
+      },
+      "popularityBase": 65
     },
     {
       "id": "damian_bourke_85",
@@ -12973,7 +13209,8 @@
         "bestAndFairest": null,
         "longevity": 0.333,
         "production": 0.025
-      }
+      },
+      "popularityBase": 65
     },
     {
       "id": "gary_ablett_sr_89",
@@ -13059,7 +13296,8 @@
         "bestAndFairest": null,
         "longevity": 0.66,
         "production": 0.532
-      }
+      },
+      "popularityBase": 52
     }
   ],
   "Geelong_1990s": [
@@ -13101,7 +13339,8 @@
         "bestAndFairest": null,
         "longevity": 0.825,
         "production": 0.213
-      }
+      },
+      "popularityBase": 73
     },
     {
       "id": "brad_sholl_98",
@@ -13141,7 +13380,8 @@
         "bestAndFairest": null,
         "longevity": 0.53,
         "production": 0.444
-      }
+      },
+      "popularityBase": 79
     },
     {
       "id": "garry_hocking_98",
@@ -13181,7 +13421,8 @@
         "bestAndFairest": null,
         "longevity": 0.959,
         "production": 0.461
-      }
+      },
+      "popularityBase": 84
     },
     {
       "id": "peter_riccardi_99",
@@ -13221,7 +13462,8 @@
         "bestAndFairest": null,
         "longevity": 0.885,
         "production": 0.211
-      }
+      },
+      "popularityBase": 82
     },
     {
       "id": "paul_couch_91",
@@ -13264,7 +13506,8 @@
         "bestAndFairest": null,
         "longevity": 0.831,
         "production": 0.332
-      }
+      },
+      "popularityBase": 81
     },
     {
       "id": "mark_bairstow_91",
@@ -13307,7 +13550,8 @@
         "bestAndFairest": null,
         "longevity": 0.468,
         "production": 0.529
-      }
+      },
+      "popularityBase": 80
     },
     {
       "id": "john_barnes_99",
@@ -13347,7 +13591,8 @@
         "bestAndFairest": null,
         "longevity": 0.724,
         "production": 0.13
-      }
+      },
+      "popularityBase": 79
     },
     {
       "id": "gary_ablett_sr_93",
@@ -13515,7 +13760,8 @@
         "bestAndFairest": null,
         "longevity": 0.817,
         "production": 0.716
-      }
+      },
+      "popularityBase": 63
     },
     {
       "id": "gary_ablett_jr_09",
@@ -13595,7 +13841,8 @@
         "bestAndFairest": null,
         "longevity": 0.941,
         "production": 0.67
-      }
+      },
+      "popularityBase": 84
     },
     {
       "id": "paul_chapman_09",
@@ -13635,7 +13882,8 @@
         "bestAndFairest": null,
         "longevity": 0.858,
         "production": 0.801
-      }
+      },
+      "popularityBase": 84
     },
     {
       "id": "jimmy_bartel_07",
@@ -13675,7 +13923,8 @@
         "bestAndFairest": null,
         "longevity": 0.884,
         "production": 0.742
-      }
+      },
+      "popularityBase": 84
     },
     {
       "id": "steven_king_00",
@@ -13715,7 +13964,8 @@
         "bestAndFairest": null,
         "longevity": 0.633,
         "production": 0.543
-      }
+      },
+      "popularityBase": 69
     },
     {
       "id": "ben_graham_01",
@@ -13755,7 +14005,8 @@
         "bestAndFairest": null,
         "longevity": 0.563,
         "production": 0.182
-      }
+      },
+      "popularityBase": 79
     },
     {
       "id": "steve_johnson_07",
@@ -13795,7 +14046,8 @@
         "bestAndFairest": null,
         "longevity": 0.8,
         "production": 0.829
-      }
+      },
+      "popularityBase": 81
     }
   ],
   "Geelong_2010s": [
@@ -13837,7 +14089,8 @@
         "bestAndFairest": null,
         "longevity": 0.83,
         "production": 0.106
-      }
+      },
+      "popularityBase": 44
     },
     {
       "id": "harry_taylor_12",
@@ -13877,7 +14130,8 @@
         "bestAndFairest": null,
         "longevity": 0.977,
         "production": 0.327
-      }
+      },
+      "popularityBase": 82
     },
     {
       "id": "joel_selwood_14",
@@ -13957,7 +14211,8 @@
         "bestAndFairest": null,
         "longevity": 0.995,
         "production": 0.823
-      }
+      },
+      "popularityBase": 85
     },
     {
       "id": "patrick_dangerfield_17",
@@ -14077,7 +14332,8 @@
         "bestAndFairest": null,
         "longevity": 0.852,
         "production": 0.724
-      }
+      },
+      "popularityBase": 52
     },
     {
       "id": "tom_hawkins_18",
@@ -14157,7 +14413,8 @@
         "bestAndFairest": null,
         "longevity": 0.75,
         "production": 0.955
-      }
+      },
+      "popularityBase": 83
     }
   ],
   "Geelong_2020s": [
@@ -14199,7 +14456,8 @@
         "bestAndFairest": null,
         "longevity": 0.536,
         "production": 0.269
-      }
+      },
+      "popularityBase": 46
     },
     {
       "id": "tom_stewart_24",
@@ -14239,7 +14497,8 @@
         "bestAndFairest": null,
         "longevity": 0.537,
         "production": 0.613
-      }
+      },
+      "popularityBase": 79
     },
     {
       "id": "patrick_dangerfield_21",
@@ -14319,7 +14578,8 @@
         "bestAndFairest": null,
         "longevity": 0.543,
         "production": 0.662
-      }
+      },
+      "popularityBase": 81
     },
     {
       "id": "mitch_duncan_21",
@@ -14359,7 +14619,8 @@
         "bestAndFairest": null,
         "longevity": 0.702,
         "production": 0.397
-      }
+      },
+      "popularityBase": 61
     },
     {
       "id": "mark_blicavs_22",
@@ -14399,7 +14660,8 @@
         "bestAndFairest": null,
         "longevity": 0.718,
         "production": 0.543
-      }
+      },
+      "popularityBase": 58
     },
     {
       "id": "jeremy_cameron_23",
@@ -14519,7 +14781,8 @@
         "bestAndFairest": null,
         "longevity": 0.317,
         "production": 0.498
-      }
+      },
+      "popularityBase": 53
     }
   ],
   "GoldCoast_2010s": [
@@ -14561,7 +14824,8 @@
         "bestAndFairest": null,
         "longevity": 0.574,
         "production": 0.631
-      }
+      },
+      "popularityBase": 57
     },
     {
       "id": "jack_martin_19",
@@ -14601,7 +14865,8 @@
         "bestAndFairest": null,
         "longevity": 0.409,
         "production": 0.701
-      }
+      },
+      "popularityBase": 49
     },
     {
       "id": "gary_ablett_jr_14",
@@ -14681,7 +14946,8 @@
         "bestAndFairest": null,
         "longevity": 0.403,
         "production": 0.434
-      }
+      },
+      "popularityBase": 74
     },
     {
       "id": "dion_prestia_15",
@@ -14721,7 +14987,8 @@
         "bestAndFairest": null,
         "longevity": 0.494,
         "production": 0.823
-      }
+      },
+      "popularityBase": 70
     },
     {
       "id": "jarrod_witts_19",
@@ -14760,7 +15027,8 @@
         "bestAndFairest": null,
         "longevity": 0.348,
         "production": 0.232
-      }
+      },
+      "popularityBase": 47
     },
     {
       "id": "tom_j_lynch_16",
@@ -14840,7 +15108,8 @@
         "bestAndFairest": null,
         "longevity": 0.292,
         "production": 0.366
-      }
+      },
+      "popularityBase": 72
     },
     {
       "id": "alex_sexton_18",
@@ -14879,7 +15148,8 @@
         "bestAndFairest": null,
         "longevity": 0.461,
         "production": 0.126
-      }
+      },
+      "popularityBase": 42
     }
   ],
   "GoldCoast_2020s": [
@@ -14921,7 +15191,8 @@
         "bestAndFairest": null,
         "longevity": 0.277,
         "production": 0.774
-      }
+      },
+      "popularityBase": 49
     },
     {
       "id": "wil_powell_23",
@@ -14961,7 +15232,8 @@
         "bestAndFairest": null,
         "longevity": 0.322,
         "production": 0.35
-      }
+      },
+      "popularityBase": 41
     },
     {
       "id": "touk_miller_22",
@@ -15001,7 +15273,8 @@
         "bestAndFairest": null,
         "longevity": 0.445,
         "production": 0.957
-      }
+      },
+      "popularityBase": 82
     },
     {
       "id": "noah_anderson_23",
@@ -15041,7 +15314,8 @@
         "bestAndFairest": null,
         "longevity": 0.375,
         "production": 0.696
-      }
+      },
+      "popularityBase": 81
     },
     {
       "id": "matt_rowell_23",
@@ -15081,7 +15355,8 @@
         "bestAndFairest": null,
         "longevity": 0.288,
         "production": 0.705
-      }
+      },
+      "popularityBase": 81
     },
     {
       "id": "sam_flanders_24",
@@ -15121,7 +15396,8 @@
         "bestAndFairest": null,
         "longevity": 0.22,
         "production": 0.617
-      }
+      },
+      "popularityBase": 58
     },
     {
       "id": "jarrod_witts_24",
@@ -15160,7 +15436,8 @@
         "bestAndFairest": null,
         "longevity": 0.382,
         "production": 0.298
-      }
+      },
+      "popularityBase": 50
     },
     {
       "id": "jack_lukosius_23",
@@ -15239,7 +15516,8 @@
         "bestAndFairest": null,
         "longevity": 0.214,
         "production": 0.157
-      }
+      },
+      "popularityBase": 44
     }
   ],
   "Hawthorn_1970s": [
@@ -15329,7 +15607,8 @@
         "bestAndFairest": null,
         "longevity": 0.734,
         "production": 0.219
-      }
+      },
+      "popularityBase": 42
     },
     {
       "id": "leigh_matthews_77",
@@ -15417,7 +15696,8 @@
         "bestAndFairest": null,
         "longevity": 0.791,
         "production": 0.447
-      }
+      },
+      "popularityBase": 44
     },
     {
       "id": "don_scott_79",
@@ -15461,7 +15741,8 @@
         "bestAndFairest": null,
         "longevity": 0.948,
         "production": 0.16
-      }
+      },
+      "popularityBase": 44
     },
     {
       "id": "alan_martello_73",
@@ -15505,7 +15786,8 @@
         "bestAndFairest": null,
         "longevity": 0.941,
         "production": 0.298
-      }
+      },
+      "popularityBase": 44
     },
     {
       "id": "michael_moncrieff_76",
@@ -15549,7 +15831,8 @@
         "bestAndFairest": null,
         "longevity": 0.818,
         "production": 0.409
-      }
+      },
+      "popularityBase": 45
     },
     {
       "id": "peter_hudson_71",
@@ -15636,7 +15919,8 @@
         "bestAndFairest": null,
         "longevity": 0.195,
         "production": 0.395
-      }
+      },
+      "popularityBase": 40
     }
   ],
   "Hawthorn_1980s": [
@@ -15811,7 +16095,8 @@
         "bestAndFairest": null,
         "longevity": 1,
         "production": 0.397
-      }
+      },
+      "popularityBase": 81
     },
     {
       "id": "john_platten_87",
@@ -15897,7 +16182,8 @@
         "bestAndFairest": null,
         "longevity": 0.562,
         "production": 0.033
-      }
+      },
+      "popularityBase": 70
     },
     {
       "id": "jason_dunstall_89",
@@ -16026,7 +16312,8 @@
         "bestAndFairest": null,
         "longevity": 0.273,
         "production": 0.126
-      }
+      },
+      "popularityBase": 50
     }
   ],
   "Hawthorn_1990s": [
@@ -16114,7 +16401,8 @@
         "bestAndFairest": null,
         "longevity": 0.711,
         "production": 0.12
-      }
+      },
+      "popularityBase": 69
     },
     {
       "id": "shane_crawford_99",
@@ -16240,7 +16528,8 @@
         "bestAndFairest": null,
         "longevity": 0.599,
         "production": 0.496
-      }
+      },
+      "popularityBase": 80
     },
     {
       "id": "paul_salmon_98",
@@ -16366,7 +16655,8 @@
         "bestAndFairest": null,
         "longevity": 0.649,
         "production": 0.549
-      }
+      },
+      "popularityBase": 70
     },
     {
       "id": "paul_dear_90",
@@ -16408,7 +16698,8 @@
         "bestAndFairest": null,
         "longevity": 0.461,
         "production": 0.438
-      }
+      },
+      "popularityBase": 48
     }
   ],
   "Hawthorn_2000s": [
@@ -16450,7 +16741,8 @@
         "bestAndFairest": null,
         "longevity": 0.723,
         "production": 0.631
-      }
+      },
+      "popularityBase": 63
     },
     {
       "id": "luke_hodge_05",
@@ -16610,7 +16902,8 @@
         "bestAndFairest": null,
         "longevity": 0.519,
         "production": 0.652
-      }
+      },
+      "popularityBase": 81
     },
     {
       "id": "chance_bateman_09",
@@ -16650,7 +16943,8 @@
         "bestAndFairest": null,
         "longevity": 0.571,
         "production": 0.14
-      }
+      },
+      "popularityBase": 77
     },
     {
       "id": "peter_everitt_05",
@@ -16690,7 +16984,8 @@
         "bestAndFairest": null,
         "longevity": 0.515,
         "production": 0.618
-      }
+      },
+      "popularityBase": 69
     },
     {
       "id": "lance_franklin_08",
@@ -16770,7 +17065,8 @@
         "bestAndFairest": null,
         "longevity": 0.509,
         "production": 0.592
-      }
+      },
+      "popularityBase": 66
     }
   ],
   "Hawthorn_2010s": [
@@ -16812,7 +17108,8 @@
         "bestAndFairest": null,
         "longevity": 0.835,
         "production": 0.106
-      }
+      },
+      "popularityBase": 44
     },
     {
       "id": "luke_hodge_15",
@@ -16892,7 +17189,8 @@
         "bestAndFairest": null,
         "longevity": 1,
         "production": 0.806
-      }
+      },
+      "popularityBase": 82
     },
     {
       "id": "jordan_lewis_14",
@@ -16932,7 +17230,8 @@
         "bestAndFairest": null,
         "longevity": 0.907,
         "production": 0.791
-      }
+      },
+      "popularityBase": 85
     },
     {
       "id": "sam_mitchell_11",
@@ -17012,7 +17311,8 @@
         "bestAndFairest": null,
         "longevity": 0.671,
         "production": 0.192
-      }
+      },
+      "popularityBase": 63
     },
     {
       "id": "jarryd_roughead_15",
@@ -17092,7 +17392,8 @@
         "bestAndFairest": null,
         "longevity": 0.896,
         "production": 0.409
-      }
+      },
+      "popularityBase": 83
     },
     {
       "id": "cyril_rioli_16",
@@ -17174,7 +17475,8 @@
         "bestAndFairest": null,
         "longevity": 0.316,
         "production": 0.727
-      }
+      },
+      "popularityBase": 41
     },
     {
       "id": "changkuoth_jiath_21",
@@ -17214,7 +17516,8 @@
         "bestAndFairest": null,
         "longevity": 0.177,
         "production": 0.279
-      }
+      },
+      "popularityBase": 49
     },
     {
       "id": "tom_mitchell_21",
@@ -17254,7 +17557,8 @@
         "bestAndFairest": null,
         "longevity": 0.369,
         "production": 0.839
-      }
+      },
+      "popularityBase": 81
     },
     {
       "id": "jai_newcombe_23",
@@ -17294,7 +17598,8 @@
         "bestAndFairest": null,
         "longevity": 0.27,
         "production": 0.606
-      }
+      },
+      "popularityBase": 80
     },
     {
       "id": "james_worpel_23",
@@ -17334,7 +17639,8 @@
         "bestAndFairest": null,
         "longevity": 0.399,
         "production": 0.529
-      }
+      },
+      "popularityBase": 72
     },
     {
       "id": "james_sicily_23",
@@ -17374,7 +17680,8 @@
         "bestAndFairest": null,
         "longevity": 0.381,
         "production": 0.242
-      }
+      },
+      "popularityBase": 68
     },
     {
       "id": "jonathon_ceglar_21",
@@ -17413,7 +17720,8 @@
         "bestAndFairest": null,
         "longevity": 0.176,
         "production": 0.321
-      }
+      },
+      "popularityBase": 45
     },
     {
       "id": "jack_gunston_20",
@@ -17453,7 +17761,8 @@
         "bestAndFairest": null,
         "longevity": 0.443,
         "production": 0.05
-      }
+      },
+      "popularityBase": 53
     },
     {
       "id": "chad_wingard_21",
@@ -17492,7 +17801,8 @@
         "bestAndFairest": null,
         "longevity": 0.393,
         "production": 0.742
-      }
+      },
+      "popularityBase": 58
     }
   ],
   "Melbourne_1970s": [
@@ -17538,7 +17848,8 @@
         "bestAndFairest": null,
         "longevity": 0.609,
         "production": 0.727
-      }
+      },
+      "popularityBase": 42
     },
     {
       "id": "tony_sullivan_74",
@@ -17582,7 +17893,8 @@
         "bestAndFairest": null,
         "longevity": 0.573,
         "production": 0.052
-      }
+      },
+      "popularityBase": 41
     },
     {
       "id": "greg_wells_76",
@@ -17626,7 +17938,8 @@
         "bestAndFairest": null,
         "longevity": 0.796,
         "production": 0.549
-      }
+      },
+      "popularityBase": 44
     },
     {
       "id": "robert_flower_79",
@@ -17713,7 +18026,8 @@
         "bestAndFairest": null,
         "longevity": 0.544,
         "production": 0.381
-      }
+      },
+      "popularityBase": 42
     },
     {
       "id": "steven_smith_76",
@@ -17757,7 +18071,8 @@
         "bestAndFairest": null,
         "longevity": 0.493,
         "production": 0.667
-      }
+      },
+      "popularityBase": 41
     },
     {
       "id": "garry_baker_79",
@@ -17800,7 +18115,8 @@
         "bestAndFairest": null,
         "longevity": 0.405,
         "production": 0.487
-      }
+      },
+      "popularityBase": 41
     },
     {
       "id": "greg_parke_72",
@@ -17844,7 +18160,8 @@
         "bestAndFairest": null,
         "longevity": 0.363,
         "production": 0.526
-      }
+      },
+      "popularityBase": 42
     },
     {
       "id": "ray_biffin_76",
@@ -17887,7 +18204,8 @@
         "bestAndFairest": null,
         "longevity": 0.523,
         "production": 0.292
-      }
+      },
+      "popularityBase": 42
     }
   ],
   "Melbourne_1980s": [
@@ -17932,7 +18250,8 @@
         "bestAndFairest": null,
         "longevity": 0.101,
         "production": 0.516
-      }
+      },
+      "popularityBase": 47
     },
     {
       "id": "steven_stretch_89",
@@ -17975,7 +18294,8 @@
         "bestAndFairest": null,
         "longevity": 0.53,
         "production": 0.244
-      }
+      },
+      "popularityBase": 56
     },
     {
       "id": "brian_wilson_82",
@@ -18019,7 +18339,8 @@
         "bestAndFairest": null,
         "longevity": 0.634,
         "production": 0.644
-      }
+      },
+      "popularityBase": 73
     },
     {
       "id": "robert_flower_83",
@@ -18107,7 +18428,8 @@
         "bestAndFairest": null,
         "longevity": 0.448,
         "production": 0.531
-      }
+      },
+      "popularityBase": 76
     },
     {
       "id": "jim_stynes_89",
@@ -18150,7 +18472,8 @@
         "bestAndFairest": null,
         "longevity": 0.559,
         "production": 0.349
-      }
+      },
+      "popularityBase": 57
     },
     {
       "id": "steven_odwyer_88",
@@ -18193,7 +18516,8 @@
         "bestAndFairest": null,
         "longevity": 0.315,
         "production": 0.108
-      }
+      },
+      "popularityBase": 59
     },
     {
       "id": "gerard_healy_82",
@@ -18281,7 +18605,8 @@
         "bestAndFairest": null,
         "longevity": 0.526,
         "production": 0.438
-      }
+      },
+      "popularityBase": 74
     }
   ],
   "Melbourne_1990s": [
@@ -18326,7 +18651,8 @@
         "bestAndFairest": null,
         "longevity": 0.358,
         "production": 0.146
-      }
+      },
+      "popularityBase": 44
     },
     {
       "id": "brett_lovett_94",
@@ -18369,7 +18695,8 @@
         "bestAndFairest": null,
         "longevity": 0.742,
         "production": 0.407
-      }
+      },
+      "popularityBase": 78
     },
     {
       "id": "todd_viney_98",
@@ -18409,7 +18736,8 @@
         "bestAndFairest": null,
         "longevity": 0.847,
         "production": 0.185
-      }
+      },
+      "popularityBase": 82
     },
     {
       "id": "stephen_tingay_93",
@@ -18452,7 +18780,8 @@
         "bestAndFairest": null,
         "longevity": 0.631,
         "production": 0.185
-      }
+      },
+      "popularityBase": 79
     },
     {
       "id": "jim_stynes_91",
@@ -18495,7 +18824,8 @@
         "bestAndFairest": null,
         "longevity": 0.904,
         "production": 0.846
-      }
+      },
+      "popularityBase": 83
     },
     {
       "id": "garry_lyon_95",
@@ -18538,7 +18868,8 @@
         "bestAndFairest": null,
         "longevity": 0.672,
         "production": 0.609
-      }
+      },
+      "popularityBase": 79
     },
     {
       "id": "david_schwarz_99",
@@ -18578,7 +18909,8 @@
         "bestAndFairest": null,
         "longevity": 0.516,
         "production": 0.263
-      }
+      },
+      "popularityBase": 74
     },
     {
       "id": "david_neitz_99",
@@ -18618,7 +18950,8 @@
         "bestAndFairest": null,
         "longevity": 0.749,
         "production": 0.15
-      }
+      },
+      "popularityBase": 74
     },
     {
       "id": "jeff_farmer_98",
@@ -18658,7 +18991,8 @@
         "bestAndFairest": null,
         "longevity": 0.495,
         "production": 0.232
-      }
+      },
+      "popularityBase": 61
     }
   ],
   "Melbourne_2000s": [
@@ -18700,7 +19034,8 @@
         "bestAndFairest": null,
         "longevity": 0.446,
         "production": 0.707
-      }
+      },
+      "popularityBase": 48
     },
     {
       "id": "andrew_leoncelli_02",
@@ -18740,7 +19075,8 @@
         "bestAndFairest": null,
         "longevity": 0.416,
         "production": 0.729
-      }
+      },
+      "popularityBase": 66
     },
     {
       "id": "cameron_bruce_06",
@@ -18780,7 +19116,8 @@
         "bestAndFairest": null,
         "longevity": 0.846,
         "production": 0.496
-      }
+      },
+      "popularityBase": 83
     },
     {
       "id": "adem_yze_02",
@@ -18820,7 +19157,8 @@
         "bestAndFairest": null,
         "longevity": 0.823,
         "production": 0.381
-      }
+      },
+      "popularityBase": 82
     },
     {
       "id": "travis_johnstone_06",
@@ -18860,7 +19198,8 @@
         "bestAndFairest": null,
         "longevity": 0.645,
         "production": 0.168
-      }
+      },
+      "popularityBase": 81
     },
     {
       "id": "shane_woewodin_00",
@@ -18900,7 +19239,8 @@
         "bestAndFairest": null,
         "longevity": 0.456,
         "production": 0.35
-      }
+      },
+      "popularityBase": 77
     },
     {
       "id": "jeff_white_00",
@@ -18940,7 +19280,8 @@
         "bestAndFairest": null,
         "longevity": 0.871,
         "production": 0.396
-      }
+      },
+      "popularityBase": 81
     },
     {
       "id": "david_neitz_02",
@@ -18980,7 +19321,8 @@
         "bestAndFairest": null,
         "longevity": 0.826,
         "production": 0.203
-      }
+      },
+      "popularityBase": 81
     },
     {
       "id": "aaron_davey_06",
@@ -19020,7 +19362,8 @@
         "bestAndFairest": null,
         "longevity": 0.541,
         "production": 0.498
-      }
+      },
+      "popularityBase": 54
     }
   ],
   "Melbourne_2010s": [
@@ -19062,7 +19405,8 @@
         "bestAndFairest": null,
         "longevity": 0.533,
         "production": 0.745
-      }
+      },
+      "popularityBase": 48
     },
     {
       "id": "aaron_davey_10",
@@ -19102,7 +19446,8 @@
         "bestAndFairest": null,
         "longevity": 0.351,
         "production": 0.423
-      }
+      },
+      "popularityBase": 54
     },
     {
       "id": "nathan_jones_14",
@@ -19142,7 +19487,8 @@
         "bestAndFairest": null,
         "longevity": 0.87,
         "production": 0.689
-      }
+      },
+      "popularityBase": 83
     },
     {
       "id": "clayton_oliver_18",
@@ -19222,7 +19568,8 @@
         "bestAndFairest": null,
         "longevity": 0.578,
         "production": 0.755
-      }
+      },
+      "popularityBase": 80
     },
     {
       "id": "bernie_vince_15",
@@ -19262,7 +19609,8 @@
         "bestAndFairest": null,
         "longevity": 0.499,
         "production": 0.473
-      }
+      },
+      "popularityBase": 73
     },
     {
       "id": "max_gawn_19",
@@ -19342,7 +19690,8 @@
         "bestAndFairest": null,
         "longevity": 0.688,
         "production": 0.446
-      }
+      },
+      "popularityBase": 66
     },
     {
       "id": "jeff_garlett_15",
@@ -19381,7 +19730,8 @@
         "bestAndFairest": null,
         "longevity": 0.381,
         "production": 0.202
-      }
+      },
+      "popularityBase": 44
     }
   ],
   "Melbourne_2020s": [
@@ -19423,7 +19773,8 @@
         "bestAndFairest": null,
         "longevity": 0.604,
         "production": 0.384
-      }
+      },
+      "popularityBase": 51
     },
     {
       "id": "ed_langdon_24",
@@ -19463,7 +19814,8 @@
         "bestAndFairest": null,
         "longevity": 0.553,
         "production": 0.485
-      }
+      },
+      "popularityBase": 56
     },
     {
       "id": "clayton_oliver_22",
@@ -19583,7 +19935,8 @@
         "bestAndFairest": null,
         "longevity": 0.575,
         "production": 0.577
-      }
+      },
+      "popularityBase": 81
     },
     {
       "id": "angus_brayshaw_22",
@@ -19623,7 +19976,8 @@
         "bestAndFairest": null,
         "longevity": 0.466,
         "production": 0.35
-      }
+      },
+      "popularityBase": 57
     },
     {
       "id": "max_gawn_24",
@@ -19703,7 +20057,8 @@
         "bestAndFairest": null,
         "longevity": 0.496,
         "production": 0.079
-      }
+      },
+      "popularityBase": 53
     },
     {
       "id": "bayley_fritsch_21",
@@ -19789,7 +20144,8 @@
         "bestAndFairest": null,
         "longevity": 0.936,
         "production": 0.19
-      }
+      },
+      "popularityBase": 44
     },
     {
       "id": "ken_montgomery_75",
@@ -19833,7 +20189,8 @@
         "bestAndFairest": null,
         "longevity": 0.71,
         "production": 0.12
-      }
+      },
+      "popularityBase": 42
     },
     {
       "id": "wayne_schimmelbusch_76",
@@ -19921,7 +20278,8 @@
         "bestAndFairest": null,
         "longevity": 0.963,
         "production": 0.115
-      }
+      },
+      "popularityBase": 44
     },
     {
       "id": "barry_cable_70",
@@ -19965,7 +20323,8 @@
         "bestAndFairest": null,
         "longevity": 0.577,
         "production": 0.3
-      }
+      },
+      "popularityBase": 43
     },
     {
       "id": "graeme_melrose_77",
@@ -20009,7 +20368,8 @@
         "bestAndFairest": null,
         "longevity": 0.53,
         "production": 0.461
-      }
+      },
+      "popularityBase": 43
     },
     {
       "id": "barry_goodingham_73",
@@ -20053,7 +20413,8 @@
         "bestAndFairest": null,
         "longevity": 0.54,
         "production": 0.472
-      }
+      },
+      "popularityBase": 43
     },
     {
       "id": "malcolm_blight_79",
@@ -20141,7 +20502,8 @@
         "bestAndFairest": null,
         "longevity": 0.583,
         "production": 0.571
-      }
+      },
+      "popularityBase": 43
     }
   ],
   "NorthMelbourne_1980s": [
@@ -20186,7 +20548,8 @@
         "bestAndFairest": null,
         "longevity": 0.181,
         "production": 0.41
-      }
+      },
+      "popularityBase": 47
     },
     {
       "id": "john_law_88",
@@ -20229,7 +20592,8 @@
         "bestAndFairest": null,
         "longevity": 0.81,
         "production": 0.01
-      }
+      },
+      "popularityBase": 52
     },
     {
       "id": "jim_krakouer_87",
@@ -20315,7 +20679,8 @@
         "bestAndFairest": null,
         "longevity": 0.496,
         "production": 0.193
-      }
+      },
+      "popularityBase": 79
     },
     {
       "id": "mark_arceri_89",
@@ -20358,7 +20723,8 @@
         "bestAndFairest": null,
         "longevity": 0.277,
         "production": 0.232
-      }
+      },
+      "popularityBase": 71
     },
     {
       "id": "peter_german_88",
@@ -20401,7 +20767,8 @@
         "bestAndFairest": null,
         "longevity": 0.471,
         "production": 0.22
-      }
+      },
+      "popularityBase": 62
     },
     {
       "id": "stephen_mccann_83",
@@ -20445,7 +20812,8 @@
         "bestAndFairest": null,
         "longevity": 0.758,
         "production": 0.667
-      }
+      },
+      "popularityBase": 58
     },
     {
       "id": "ross_glendinning_84",
@@ -20616,7 +20984,8 @@
         "bestAndFairest": null,
         "longevity": 0.912,
         "production": 0.084
-      }
+      },
+      "popularityBase": 62
     },
     {
       "id": "anthony_stevens_99",
@@ -20657,7 +21026,8 @@
         "bestAndFairest": null,
         "longevity": 0.986,
         "production": 0.287
-      }
+      },
+      "popularityBase": 82
     },
     {
       "id": "wayne_schwass_93",
@@ -20700,7 +21070,8 @@
         "bestAndFairest": null,
         "longevity": 0.807,
         "production": 0.176
-      }
+      },
+      "popularityBase": 80
     },
     {
       "id": "david_king_98",
@@ -20741,7 +21112,8 @@
         "bestAndFairest": null,
         "longevity": 0.765,
         "production": 0.04
-      }
+      },
+      "popularityBase": 79
     },
     {
       "id": "corey_mckernan_99",
@@ -20782,7 +21154,8 @@
         "bestAndFairest": null,
         "longevity": 0.772,
         "production": 0.689
-      }
+      },
+      "popularityBase": 82
     },
     {
       "id": "wayne_carey_99",
@@ -20867,7 +21240,8 @@
         "bestAndFairest": null,
         "longevity": 0.774,
         "production": 0.757
-      }
+      },
+      "popularityBase": 81
     },
     {
       "id": "craig_sholl_97",
@@ -20911,7 +21285,8 @@
         "bestAndFairest": null,
         "longevity": 0.915,
         "production": 0.219
-      }
+      },
+      "popularityBase": 78
     }
   ],
   "NorthMelbourne_2000s": [
@@ -20995,7 +21370,8 @@
         "bestAndFairest": null,
         "longevity": 0.504,
         "production": 0.638
-      }
+      },
+      "popularityBase": 52
     },
     {
       "id": "adam_simpson_03",
@@ -21036,7 +21412,8 @@
         "bestAndFairest": null,
         "longevity": 0.935,
         "production": 0.589
-      }
+      },
+      "popularityBase": 83
     },
     {
       "id": "shannon_grant_01",
@@ -21077,7 +21454,8 @@
         "bestAndFairest": null,
         "longevity": 0.92,
         "production": 0.606
-      }
+      },
+      "popularityBase": 83
     },
     {
       "id": "brent_harvey_01",
@@ -21159,7 +21537,8 @@
         "bestAndFairest": null,
         "longevity": 0.59,
         "production": 0.271
-      }
+      },
+      "popularityBase": 76
     },
     {
       "id": "david_hale_08",
@@ -21200,7 +21579,8 @@
         "bestAndFairest": null,
         "longevity": 0.605,
         "production": 0.377
-      }
+      },
+      "popularityBase": 56
     },
     {
       "id": "drew_petrie_09",
@@ -21241,7 +21621,8 @@
         "bestAndFairest": null,
         "longevity": 0.844,
         "production": 0.217
-      }
+      },
+      "popularityBase": 78
     },
     {
       "id": "byron_pickett_01",
@@ -21282,7 +21663,8 @@
         "bestAndFairest": null,
         "longevity": 0.448,
         "production": 0.498
-      }
+      },
+      "popularityBase": 53
     }
   ],
   "NorthMelbourne_2010s": [
@@ -21324,7 +21706,8 @@
         "bestAndFairest": null,
         "longevity": 0.838,
         "production": 0.584
-      }
+      },
+      "popularityBase": 70
     },
     {
       "id": "leigh_adams_11",
@@ -21363,7 +21746,8 @@
         "bestAndFairest": null,
         "longevity": 0.346,
         "production": 0.68
-      }
+      },
+      "popularityBase": 55
     },
     {
       "id": "ben_cunnington_18",
@@ -21403,7 +21787,8 @@
         "bestAndFairest": null,
         "longevity": 0.846,
         "production": 0.689
-      }
+      },
+      "popularityBase": 84
     },
     {
       "id": "andrew_swallow_12",
@@ -21443,7 +21828,8 @@
         "bestAndFairest": null,
         "longevity": 0.739,
         "production": 0.814
-      }
+      },
+      "popularityBase": 83
     },
     {
       "id": "jack_ziebell_13",
@@ -21483,7 +21869,8 @@
         "bestAndFairest": null,
         "longevity": 0.901,
         "production": 0.597
-      }
+      },
+      "popularityBase": 83
     },
     {
       "id": "brent_harvey_10",
@@ -21603,7 +21990,8 @@
         "bestAndFairest": null,
         "longevity": 0.773,
         "production": 0.309
-      }
+      },
+      "popularityBase": 81
     },
     {
       "id": "lindsay_thomas_13",
@@ -21643,7 +22031,8 @@
         "bestAndFairest": null,
         "longevity": 0.694,
         "production": 0.346
-      }
+      },
+      "popularityBase": 54
     }
   ],
   "NorthMelbourne_2020s": [
@@ -21685,7 +22074,8 @@
         "bestAndFairest": null,
         "longevity": 0.363,
         "production": 0.362
-      }
+      },
+      "popularityBase": 40
     },
     {
       "id": "luke_mcdonald_22",
@@ -21725,7 +22115,8 @@
         "bestAndFairest": null,
         "longevity": 0.466,
         "production": 0.298
-      }
+      },
+      "popularityBase": 46
     },
     {
       "id": "luke_davies_uniacke_23",
@@ -21765,7 +22156,8 @@
         "bestAndFairest": null,
         "longevity": 0.33,
         "production": 0.769
-      }
+      },
+      "popularityBase": 81
     },
     {
       "id": "harry_sheezel_24",
@@ -21805,7 +22197,8 @@
         "bestAndFairest": null,
         "longevity": 0.159,
         "production": 0.721
-      }
+      },
+      "popularityBase": 63
     },
     {
       "id": "jy_simpkin_22",
@@ -21845,7 +22238,8 @@
         "bestAndFairest": null,
         "longevity": 0.411,
         "production": 0.517
-      }
+      },
+      "popularityBase": 61
     },
     {
       "id": "ben_cunnington_21",
@@ -21885,7 +22279,8 @@
         "bestAndFairest": null,
         "longevity": 0.33,
         "production": 0.849
-      }
+      },
+      "popularityBase": 60
     },
     {
       "id": "todd_goldstein_20",
@@ -21965,7 +22360,8 @@
         "bestAndFairest": null,
         "longevity": 0.373,
         "production": 0.121
-      }
+      },
+      "popularityBase": 62
     },
     {
       "id": "paul_curtis_24",
@@ -22004,7 +22400,8 @@
         "bestAndFairest": null,
         "longevity": 0.213,
         "production": 0.07
-      }
+      },
+      "popularityBase": 40
     }
   ],
   "PortAdelaide_1990s": [
@@ -22086,7 +22483,8 @@
         "bestAndFairest": null,
         "longevity": 0.245,
         "production": 0.01
-      }
+      },
+      "popularityBase": 54
     },
     {
       "id": "shayne_breuer_98",
@@ -22125,7 +22523,8 @@
         "bestAndFairest": null,
         "longevity": 0.288,
         "production": 0.298
-      }
+      },
+      "popularityBase": 52
     },
     {
       "id": "josh_francou_99",
@@ -22165,7 +22564,8 @@
         "bestAndFairest": null,
         "longevity": 0.347,
         "production": 0.201
-      }
+      },
+      "popularityBase": 58
     },
     {
       "id": "brayden_lyle_99",
@@ -22205,7 +22605,8 @@
         "bestAndFairest": null,
         "longevity": 0.292,
         "production": 0.108
-      }
+      },
+      "popularityBase": 55
     },
     {
       "id": "brendon_lade_99",
@@ -22245,7 +22646,8 @@
         "bestAndFairest": null,
         "longevity": 0.44,
         "production": 0.192
-      }
+      },
+      "popularityBase": 64
     },
     {
       "id": "matthew_primus_98",
@@ -22284,7 +22686,8 @@
         "bestAndFairest": null,
         "longevity": 0.277,
         "production": 0.075
-      }
+      },
+      "popularityBase": 55
     },
     {
       "id": "warren_tredrea_99",
@@ -22363,7 +22766,8 @@
         "bestAndFairest": null,
         "longevity": 0.471,
         "production": 0.14
-      }
+      },
+      "popularityBase": 46
     }
   ],
   "PortAdelaide_2000s": [
@@ -22405,7 +22809,8 @@
         "bestAndFairest": null,
         "longevity": 0.801,
         "production": 0.039
-      }
+      },
+      "popularityBase": 46
     },
     {
       "id": "shaun_burgoyne_06",
@@ -22445,7 +22850,8 @@
         "bestAndFairest": null,
         "longevity": 0.884,
         "production": 0.863
-      }
+      },
+      "popularityBase": 83
     },
     {
       "id": "peter_burgoyne_03",
@@ -22485,7 +22891,8 @@
         "bestAndFairest": null,
         "longevity": 0.918,
         "production": 0.484
-      }
+      },
+      "popularityBase": 84
     },
     {
       "id": "chad_cornes_07",
@@ -22525,7 +22932,8 @@
         "bestAndFairest": null,
         "longevity": 0.941,
         "production": 0.434
-      }
+      },
+      "popularityBase": 84
     },
     {
       "id": "kane_cornes_07",
@@ -22605,7 +23013,8 @@
         "bestAndFairest": null,
         "longevity": 0.475,
         "production": 0.484
-      }
+      },
+      "popularityBase": 81
     },
     {
       "id": "brendon_lade_06",
@@ -22645,7 +23054,8 @@
         "bestAndFairest": null,
         "longevity": 0.808,
         "production": 0.515
-      }
+      },
+      "popularityBase": 80
     },
     {
       "id": "warren_tredrea_04",
@@ -22725,7 +23135,8 @@
         "bestAndFairest": null,
         "longevity": 0.321,
         "production": 0.469
-      }
+      },
+      "popularityBase": 60
     }
   ],
   "PortAdelaide_2010s": [
@@ -22767,7 +23178,8 @@
         "bestAndFairest": null,
         "longevity": 0.631,
         "production": 0.41
-      }
+      },
+      "popularityBase": 47
     },
     {
       "id": "matthew_broadbent_12",
@@ -22807,7 +23219,8 @@
         "bestAndFairest": null,
         "longevity": 0.66,
         "production": 0.689
-      }
+      },
+      "popularityBase": 61
     },
     {
       "id": "travis_boak_19",
@@ -22887,7 +23300,8 @@
         "bestAndFairest": null,
         "longevity": 0.783,
         "production": 0.644
-      }
+      },
+      "popularityBase": 83
     },
     {
       "id": "ollie_wines_17",
@@ -22967,7 +23381,8 @@
         "bestAndFairest": null,
         "longevity": 0.879,
         "production": 0.81
-      }
+      },
+      "popularityBase": 79
     },
     {
       "id": "jay_schulz_12",
@@ -23007,7 +23422,8 @@
         "bestAndFairest": null,
         "longevity": 0.54,
         "production": 0.293
-      }
+      },
+      "popularityBase": 61
     },
     {
       "id": "robbie_gray_15",
@@ -23087,7 +23503,8 @@
         "bestAndFairest": null,
         "longevity": 0.678,
         "production": 0.864
-      }
+      },
+      "popularityBase": 79
     }
   ],
   "PortAdelaide_2020s": [
@@ -23129,7 +23546,8 @@
         "bestAndFairest": null,
         "longevity": 0.479,
         "production": 0.164
-      }
+      },
+      "popularityBase": 53
     },
     {
       "id": "ryan_burton_22",
@@ -23169,7 +23587,8 @@
         "bestAndFairest": null,
         "longevity": 0.483,
         "production": 0.327
-      }
+      },
+      "popularityBase": 42
     },
     {
       "id": "ollie_wines_21",
@@ -23289,7 +23708,8 @@
         "bestAndFairest": null,
         "longevity": 0.509,
         "production": 0.577
-      }
+      },
+      "popularityBase": 82
     },
     {
       "id": "zak_butters_24",
@@ -23329,7 +23749,8 @@
         "bestAndFairest": null,
         "longevity": 0.48,
         "production": 0.606
-      }
+      },
+      "popularityBase": 82
     },
     {
       "id": "jeremy_finlayson_22",
@@ -23368,7 +23789,8 @@
         "bestAndFairest": null,
         "longevity": 0.292,
         "production": 0.377
-      }
+      },
+      "popularityBase": 49
     },
     {
       "id": "charlie_dixon_21",
@@ -23408,7 +23830,8 @@
         "bestAndFairest": null,
         "longevity": 0.543,
         "production": 0.14
-      }
+      },
+      "popularityBase": 64
     },
     {
       "id": "robbie_gray_21",
@@ -23494,7 +23917,8 @@
         "bestAndFairest": null,
         "longevity": 0.237,
         "production": 0.039
-      }
+      },
+      "popularityBase": 39
     },
     {
       "id": "francis_bourke_70",
@@ -23538,7 +23962,8 @@
         "bestAndFairest": null,
         "longevity": 0.935,
         "production": 0.469
-      }
+      },
+      "popularityBase": 44
     },
     {
       "id": "dick_clay_70",
@@ -23582,7 +24007,8 @@
         "bestAndFairest": null,
         "longevity": 0.638,
         "production": 0.523
-      }
+      },
+      "popularityBase": 43
     },
     {
       "id": "kevin_bartlett_77",
@@ -23670,7 +24096,8 @@
         "bestAndFairest": null,
         "longevity": 0.886,
         "production": 0.381
-      }
+      },
+      "popularityBase": 45
     },
     {
       "id": "bryan_wood_77",
@@ -23714,7 +24141,8 @@
         "bestAndFairest": null,
         "longevity": 0.796,
         "production": 0.22
-      }
+      },
+      "popularityBase": 43
     },
     {
       "id": "neil_balme_77",
@@ -23758,7 +24186,8 @@
         "bestAndFairest": null,
         "longevity": 0.718,
         "production": 0.377
-      }
+      },
+      "popularityBase": 44
     },
     {
       "id": "royce_hart_71",
@@ -23802,7 +24231,8 @@
         "bestAndFairest": null,
         "longevity": 0.627,
         "production": 0.471
-      }
+      },
+      "popularityBase": 44
     },
     {
       "id": "barry_richardson_72",
@@ -23846,7 +24276,8 @@
         "bestAndFairest": null,
         "longevity": 0.306,
         "production": 0.478
-      }
+      },
+      "popularityBase": 41
     }
   ],
   "Richmond_1980s": [
@@ -23890,7 +24321,8 @@
         "bestAndFairest": null,
         "longevity": 0.133,
         "production": 0.19
-      }
+      },
+      "popularityBase": 42
     },
     {
       "id": "trevor_poole_86",
@@ -23933,7 +24365,8 @@
         "bestAndFairest": null,
         "longevity": 0.414,
         "production": 0.423
-      }
+      },
+      "popularityBase": 52
     },
     {
       "id": "dale_weightman_88",
@@ -23976,7 +24409,8 @@
         "bestAndFairest": null,
         "longevity": 0.832,
         "production": 0.381
-      }
+      },
+      "popularityBase": 79
     },
     {
       "id": "maurice_rioli_sr_83",
@@ -24064,7 +24498,8 @@
         "bestAndFairest": null,
         "longevity": 0.753,
         "production": 0.232
-      }
+      },
+      "popularityBase": 67
     },
     {
       "id": "phil_egan_88",
@@ -24107,7 +24542,8 @@
         "bestAndFairest": null,
         "longevity": 0.443,
         "production": 0.301
-      }
+      },
+      "popularityBase": 65
     },
     {
       "id": "michael_pickering_85",
@@ -24151,7 +24587,8 @@
         "bestAndFairest": null,
         "longevity": 0.418,
         "production": 0.457
-      }
+      },
+      "popularityBase": 60
     },
     {
       "id": "michael_roach_85",
@@ -24238,7 +24675,8 @@
         "bestAndFairest": null,
         "longevity": 0.195,
         "production": 0.592
-      }
+      },
+      "popularityBase": 59
     }
   ],
   "Richmond_1990s": [
@@ -24280,7 +24718,8 @@
         "bestAndFairest": null,
         "longevity": 0.457,
         "production": 0.039
-      }
+      },
+      "popularityBase": 64
     },
     {
       "id": "chris_bond_96",
@@ -24323,7 +24762,8 @@
         "bestAndFairest": null,
         "longevity": 0.455,
         "production": 0.219
-      }
+      },
+      "popularityBase": 67
     },
     {
       "id": "wayne_campbell_99",
@@ -24363,7 +24803,8 @@
         "bestAndFairest": null,
         "longevity": 0.825,
         "production": 0.529
-      }
+      },
+      "popularityBase": 82
     },
     {
       "id": "matthew_knights_98",
@@ -24403,7 +24844,8 @@
         "bestAndFairest": null,
         "longevity": 0.824,
         "production": 0.147
-      }
+      },
+      "popularityBase": 81
     },
     {
       "id": "paul_broderick_98",
@@ -24443,7 +24885,8 @@
         "bestAndFairest": null,
         "longevity": 0.648,
         "production": 0.206
-      }
+      },
+      "popularityBase": 80
     },
     {
       "id": "nick_daffy_98",
@@ -24483,7 +24926,8 @@
         "bestAndFairest": null,
         "longevity": 0.517,
         "production": 0.381
-      }
+      },
+      "popularityBase": 72
     },
     {
       "id": "brendon_gale_98",
@@ -24523,7 +24967,8 @@
         "bestAndFairest": null,
         "longevity": 0.805,
         "production": 0.472
-      }
+      },
+      "popularityBase": 79
     },
     {
       "id": "matthew_richardson_99",
@@ -24603,7 +25048,8 @@
         "bestAndFairest": null,
         "longevity": 0.3,
         "production": 0.083
-      }
+      },
+      "popularityBase": 60
     }
   ],
   "Richmond_2000s": [
@@ -24645,7 +25091,8 @@
         "bestAndFairest": null,
         "longevity": 0.308,
         "production": 0.765
-      }
+      },
+      "popularityBase": 61
     },
     {
       "id": "greg_tivendale_03",
@@ -24685,7 +25132,8 @@
         "bestAndFairest": null,
         "longevity": 0.667,
         "production": 0.638
-      }
+      },
+      "popularityBase": 73
     },
     {
       "id": "joel_bowden_01",
@@ -24725,7 +25173,8 @@
         "bestAndFairest": null,
         "longevity": 0.823,
         "production": 0.397
-      }
+      },
+      "popularityBase": 82
     },
     {
       "id": "wayne_campbell_00",
@@ -24765,7 +25214,8 @@
         "bestAndFairest": null,
         "longevity": 0.657,
         "production": 0.625
-      }
+      },
+      "popularityBase": 76
     },
     {
       "id": "mark_coughlan_03",
@@ -24805,7 +25255,8 @@
         "bestAndFairest": null,
         "longevity": 0.288,
         "production": 0.549
-      }
+      },
+      "popularityBase": 76
     },
     {
       "id": "shane_tuck_09",
@@ -24845,7 +25296,8 @@
         "bestAndFairest": null,
         "longevity": 0.459,
         "production": 0.549
-      }
+      },
+      "popularityBase": 67
     },
     {
       "id": "troy_simmonds_06",
@@ -24885,7 +25337,8 @@
         "bestAndFairest": null,
         "longevity": 0.425,
         "production": 0.581
-      }
+      },
+      "popularityBase": 56
     },
     {
       "id": "matthew_richardson_08",
@@ -24964,7 +25417,8 @@
         "bestAndFairest": null,
         "longevity": 0.393,
         "production": 0.263
-      }
+      },
+      "popularityBase": 44
     }
   ],
   "Richmond_2010s": [
@@ -25046,7 +25500,8 @@
         "bestAndFairest": null,
         "longevity": 0.812,
         "production": 0.663
-      }
+      },
+      "popularityBase": 70
     },
     {
       "id": "dustin_martin_17",
@@ -25166,7 +25621,8 @@
         "bestAndFairest": null,
         "longevity": 0.679,
         "production": 0.625
-      }
+      },
+      "popularityBase": 82
     },
     {
       "id": "shaun_grigg_16",
@@ -25206,7 +25662,8 @@
         "bestAndFairest": null,
         "longevity": 0.747,
         "production": 0.397
-      }
+      },
+      "popularityBase": 76
     },
     {
       "id": "toby_nankervis_18",
@@ -25246,7 +25703,8 @@
         "bestAndFairest": null,
         "longevity": 0.4,
         "production": 0.321
-      }
+      },
+      "popularityBase": 49
     },
     {
       "id": "jack_riewoldt_10",
@@ -25326,7 +25784,8 @@
         "bestAndFairest": null,
         "longevity": 0.957,
         "production": 0.657
-      }
+      },
+      "popularityBase": 62
     }
   ],
   "Richmond_2020s": [
@@ -25368,7 +25827,8 @@
         "bestAndFairest": null,
         "longevity": 0.397,
         "production": 0.164
-      }
+      },
+      "popularityBase": 52
     },
     {
       "id": "liam_baker_24",
@@ -25408,7 +25868,8 @@
         "bestAndFairest": null,
         "longevity": 0.458,
         "production": 0.663
-      }
+      },
+      "popularityBase": 58
     },
     {
       "id": "shai_bolton_23",
@@ -25448,7 +25909,8 @@
         "bestAndFairest": null,
         "longevity": 0.462,
         "production": 0.35
-      }
+      },
+      "popularityBase": 81
     },
     {
       "id": "dustin_martin_23",
@@ -25528,7 +25990,8 @@
         "bestAndFairest": null,
         "longevity": 0.487,
         "production": 0.447
-      }
+      },
+      "popularityBase": 77
     },
     {
       "id": "tim_taranto_23",
@@ -25568,7 +26031,8 @@
         "bestAndFairest": null,
         "longevity": 0.27,
         "production": 0.91
-      }
+      },
+      "popularityBase": 71
     },
     {
       "id": "toby_nankervis_23",
@@ -25608,7 +26072,8 @@
         "bestAndFairest": null,
         "longevity": 0.433,
         "production": 0.515
-      }
+      },
+      "popularityBase": 51
     },
     {
       "id": "tom_j_lynch_22",
@@ -25687,7 +26152,8 @@
         "bestAndFairest": null,
         "longevity": 0.521,
         "production": 0.346
-      }
+      },
+      "popularityBase": 42
     }
   ],
   "StKilda_1970s": [
@@ -25733,7 +26199,8 @@
         "bestAndFairest": null,
         "longevity": 0.868,
         "production": 0.158
-      }
+      },
+      "popularityBase": 43
     },
     {
       "id": "barry_breen_71",
@@ -25821,7 +26288,8 @@
         "bestAndFairest": null,
         "longevity": 0.569,
         "production": 0.411
-      }
+      },
+      "popularityBase": 43
     },
     {
       "id": "jeff_sarau_77",
@@ -25865,7 +26333,8 @@
         "bestAndFairest": null,
         "longevity": 0.631,
         "production": 0.689
-      }
+      },
+      "popularityBase": 43
     },
     {
       "id": "kevin_neale_75",
@@ -25909,7 +26378,8 @@
         "bestAndFairest": null,
         "longevity": 0.714,
         "production": 0.148
-      }
+      },
+      "popularityBase": 43
     },
     {
       "id": "carl_ditterich_71",
@@ -25953,7 +26423,8 @@
         "bestAndFairest": null,
         "longevity": 0.557,
         "production": 0.559
-      }
+      },
+      "popularityBase": 42
     },
     {
       "id": "allan_davis_71",
@@ -25997,7 +26468,8 @@
         "bestAndFairest": null,
         "longevity": 0.584,
         "production": 0.383
-      }
+      },
+      "popularityBase": 43
     },
     {
       "id": "george_young_73",
@@ -26041,7 +26513,8 @@
         "bestAndFairest": null,
         "longevity": 0.411,
         "production": 0.366
-      }
+      },
+      "popularityBase": 42
     },
     {
       "id": "stephen_theodore_72",
@@ -26085,7 +26558,8 @@
         "bestAndFairest": null,
         "longevity": 0.577,
         "production": 0.157
-      }
+      },
+      "popularityBase": 42
     }
   ],
   "StKilda_1980s": [
@@ -26130,7 +26604,8 @@
         "bestAndFairest": null,
         "longevity": 0.58,
         "production": 0.039
-      }
+      },
+      "popularityBase": 48
     },
     {
       "id": "peter_mcconville_86",
@@ -26174,7 +26649,8 @@
         "bestAndFairest": null,
         "longevity": 0.351,
         "production": 0.35
-      }
+      },
+      "popularityBase": 55
     },
     {
       "id": "nicky_winmar_87",
@@ -26261,7 +26737,8 @@
         "bestAndFairest": null,
         "longevity": 0.711,
         "production": 0.122
-      }
+      },
+      "popularityBase": 61
     },
     {
       "id": "greg_burns_87",
@@ -26304,7 +26781,8 @@
         "bestAndFairest": null,
         "longevity": 0.557,
         "production": 0.22
-      }
+      },
+      "popularityBase": 59
     },
     {
       "id": "paul_morwood_85",
@@ -26348,7 +26826,8 @@
         "bestAndFairest": null,
         "longevity": 0.338,
         "production": 0.232
-      }
+      },
+      "popularityBase": 55
     },
     {
       "id": "stewart_loewe_89",
@@ -26391,7 +26870,8 @@
         "bestAndFairest": null,
         "longevity": 0.528,
         "production": 0.433
-      }
+      },
+      "popularityBase": 60
     },
     {
       "id": "tony_lockett_89",
@@ -26477,7 +26957,8 @@
         "bestAndFairest": null,
         "longevity": 0.216,
         "production": 0.671
-      }
+      },
+      "popularityBase": 49
     }
   ],
   "StKilda_1990s": [
@@ -26522,7 +27003,8 @@
         "bestAndFairest": null,
         "longevity": 0.465,
         "production": 0.342
-      }
+      },
+      "popularityBase": 55
     },
     {
       "id": "justin_peckett_98",
@@ -26562,7 +27044,8 @@
         "bestAndFairest": null,
         "longevity": 0.668,
         "production": 0.03
-      }
+      },
+      "popularityBase": 55
     },
     {
       "id": "robert_harvey_98",
@@ -26642,7 +27125,8 @@
         "bestAndFairest": null,
         "longevity": 0.924,
         "production": 0.549
-      }
+      },
+      "popularityBase": 83
     },
     {
       "id": "nicky_winmar_98",
@@ -26722,7 +27206,8 @@
         "bestAndFairest": null,
         "longevity": 0.694,
         "production": 0.775
-      }
+      },
+      "popularityBase": 67
     },
     {
       "id": "stewart_loewe_96",
@@ -26765,7 +27250,8 @@
         "bestAndFairest": null,
         "longevity": 0.924,
         "production": 0.851
-      }
+      },
+      "popularityBase": 83
     },
     {
       "id": "tony_lockett_91",
@@ -26847,7 +27333,8 @@
         "bestAndFairest": null,
         "longevity": 0.229,
         "production": 0.107
-      }
+      },
+      "popularityBase": 42
     }
   ],
   "StKilda_2000s": [
@@ -26889,7 +27376,8 @@
         "bestAndFairest": null,
         "longevity": 0.729,
         "production": 0.558
-      }
+      },
+      "popularityBase": 48
     },
     {
       "id": "austinn_jones_03",
@@ -26929,7 +27417,8 @@
         "bestAndFairest": null,
         "longevity": 0.605,
         "production": 0.183
-      }
+      },
+      "popularityBase": 68
     },
     {
       "id": "lenny_hayes_09",
@@ -26969,7 +27458,8 @@
         "bestAndFairest": null,
         "longevity": 0.946,
         "production": 0.742
-      }
+      },
+      "popularityBase": 84
     },
     {
       "id": "nick_santo_09",
@@ -27009,7 +27499,8 @@
         "bestAndFairest": null,
         "longevity": 0.89,
         "production": 0.617
-      }
+      },
+      "popularityBase": 83
     },
     {
       "id": "robert_harvey_03",
@@ -27089,7 +27580,8 @@
         "bestAndFairest": null,
         "longevity": 0.46,
         "production": 0.873
-      }
+      },
+      "popularityBase": 57
     },
     {
       "id": "nick_riewoldt_09",
@@ -27169,7 +27661,8 @@
         "bestAndFairest": null,
         "longevity": 0.704,
         "production": 0.526
-      }
+      },
+      "popularityBase": 81
     },
     {
       "id": "stephen_milne_08",
@@ -27209,7 +27702,8 @@
         "bestAndFairest": null,
         "longevity": 0.898,
         "production": 0.55
-      }
+      },
+      "popularityBase": 72
     }
   ],
   "StKilda_2010s": [
@@ -27251,7 +27745,8 @@
         "bestAndFairest": null,
         "longevity": 0.654,
         "production": 0.427
-      }
+      },
+      "popularityBase": 49
     },
     {
       "id": "clinton_jones_11",
@@ -27291,7 +27786,8 @@
         "bestAndFairest": null,
         "longevity": 0.462,
         "production": 0.613
-      }
+      },
+      "popularityBase": 53
     },
     {
       "id": "leigh_montagna_10",
@@ -27331,7 +27827,8 @@
         "bestAndFairest": null,
         "longevity": 0.79,
         "production": 0.721
-      }
+      },
+      "popularityBase": 83
     },
     {
       "id": "jack_steven_16",
@@ -27371,7 +27868,8 @@
         "bestAndFairest": null,
         "longevity": 0.652,
         "production": 0.721
-      }
+      },
+      "popularityBase": 82
     },
     {
       "id": "david_armitage_15",
@@ -27411,7 +27909,8 @@
         "bestAndFairest": null,
         "longevity": 0.552,
         "production": 0.849
-      }
+      },
+      "popularityBase": 81
     },
     {
       "id": "lenny_hayes_10",
@@ -27451,7 +27950,8 @@
         "bestAndFairest": null,
         "longevity": 0.585,
         "production": 0.791
-      }
+      },
+      "popularityBase": 81
     },
     {
       "id": "rowan_marshall_19",
@@ -27491,7 +27991,8 @@
         "bestAndFairest": null,
         "longevity": 0.232,
         "production": 0.705
-      }
+      },
+      "popularityBase": 50
     },
     {
       "id": "nick_riewoldt_16",
@@ -27571,7 +28072,8 @@
         "bestAndFairest": null,
         "longevity": 0.587,
         "production": 0.626
-      }
+      },
+      "popularityBase": 57
     }
   ],
   "StKilda_2020s": [
@@ -27613,7 +28115,8 @@
         "bestAndFairest": null,
         "longevity": 0.583,
         "production": 0.657
-      }
+      },
+      "popularityBase": 59
     },
     {
       "id": "hunter_clark_24",
@@ -27652,7 +28155,8 @@
         "bestAndFairest": null,
         "longevity": 0.315,
         "production": 0.501
-      }
+      },
+      "popularityBase": 42
     },
     {
       "id": "jack_steele_21",
@@ -27692,7 +28196,8 @@
         "bestAndFairest": null,
         "longevity": 0.487,
         "production": 0.99
-      }
+      },
+      "popularityBase": 83
     },
     {
       "id": "jack_sinclair_24",
@@ -27732,7 +28237,8 @@
         "bestAndFairest": null,
         "longevity": 0.497,
         "production": 0.366
-      }
+      },
+      "popularityBase": 80
     },
     {
       "id": "brad_crouch_22",
@@ -27772,7 +28278,8 @@
         "bestAndFairest": null,
         "longevity": 0.356,
         "production": 0.769
-      }
+      },
+      "popularityBase": 78
     },
     {
       "id": "zak_jones_21",
@@ -27812,7 +28319,8 @@
         "bestAndFairest": null,
         "longevity": 0.32,
         "production": 0.366
-      }
+      },
+      "popularityBase": 56
     },
     {
       "id": "rowan_marshall_24",
@@ -27852,7 +28360,8 @@
         "bestAndFairest": null,
         "longevity": 0.43,
         "production": 0.893
-      }
+      },
+      "popularityBase": 80
     },
     {
       "id": "max_king_23",
@@ -27932,7 +28441,8 @@
         "bestAndFairest": null,
         "longevity": 0.346,
         "production": 0.202
-      }
+      },
+      "popularityBase": 55
     }
   ],
   "Sydney_1970s": [
@@ -27978,7 +28488,8 @@
         "bestAndFairest": null,
         "longevity": 0.054,
         "production": 0.039
-      }
+      },
+      "popularityBase": 38
     },
     {
       "id": "gary_brice_73",
@@ -28023,7 +28534,8 @@
         "bestAndFairest": null,
         "longevity": 0.613,
         "production": 0.398
-      }
+      },
+      "popularityBase": 42
     },
     {
       "id": "david_mcleish_75",
@@ -28068,7 +28580,8 @@
         "bestAndFairest": null,
         "longevity": 0.737,
         "production": 0.071
-      }
+      },
+      "popularityBase": 42
     },
     {
       "id": "norm_goss_74",
@@ -28113,7 +28626,8 @@
         "bestAndFairest": null,
         "longevity": 0.54,
         "production": 0.606
-      }
+      },
+      "popularityBase": 42
     },
     {
       "id": "ricky_quade_73",
@@ -28158,7 +28672,8 @@
         "bestAndFairest": null,
         "longevity": 0.566,
         "production": 0.163
-      }
+      },
+      "popularityBase": 42
     },
     {
       "id": "steve_hoffman_73",
@@ -28202,7 +28717,8 @@
         "bestAndFairest": null,
         "longevity": 0.492,
         "production": 0.254
-      }
+      },
+      "popularityBase": 42
     },
     {
       "id": "graham_teasdale_77",
@@ -28247,7 +28763,8 @@
         "bestAndFairest": null,
         "longevity": 0.367,
         "production": 0.762
-      }
+      },
+      "popularityBase": 42
     },
     {
       "id": "peter_bedford_73",
@@ -28292,7 +28809,8 @@
         "bestAndFairest": null,
         "longevity": 0.515,
         "production": 0.681
-      }
+      },
+      "popularityBase": 43
     },
     {
       "id": "stewart_gull_76",
@@ -28336,7 +28854,8 @@
         "bestAndFairest": null,
         "longevity": 0.296,
         "production": 0.292
-      }
+      },
+      "popularityBase": 40
     }
   ],
   "Sydney_1980s": [
@@ -28383,7 +28902,8 @@
         "bestAndFairest": null,
         "longevity": 0.569,
         "production": 0.631
-      }
+      },
+      "popularityBase": 54
     },
     {
       "id": "david_ackerly_84",
@@ -28428,7 +28948,8 @@
         "bestAndFairest": null,
         "longevity": 0.525,
         "production": 0.138
-      }
+      },
+      "popularityBase": 49
     },
     {
       "id": "greg_williams_89",
@@ -28557,7 +29078,8 @@
         "bestAndFairest": null,
         "longevity": 0.432,
         "production": 0.156
-      }
+      },
+      "popularityBase": 77
     },
     {
       "id": "tony_morwood_88",
@@ -28601,7 +29123,8 @@
         "bestAndFairest": null,
         "longevity": 0.779,
         "production": 0.242
-      }
+      },
+      "popularityBase": 74
     },
     {
       "id": "john_ironmonger_87",
@@ -28643,7 +29166,8 @@
         "bestAndFairest": null,
         "longevity": 0.237,
         "production": 0.007
-      }
+      },
+      "popularityBase": 63
     },
     {
       "id": "warwick_capper_87",
@@ -28728,7 +29252,8 @@
         "bestAndFairest": null,
         "longevity": 0.376,
         "production": 0.093
-      }
+      },
+      "popularityBase": 58
     }
   ],
   "Sydney_1990s": [
@@ -28770,7 +29295,8 @@
         "bestAndFairest": null,
         "longevity": 0.724,
         "production": 0.039
-      }
+      },
+      "popularityBase": 61
     },
     {
       "id": "paul_roos_96",
@@ -28813,7 +29339,8 @@
         "bestAndFairest": null,
         "longevity": 0.627,
         "production": 0.373
-      }
+      },
+      "popularityBase": 67
     },
     {
       "id": "paul_kelly_98",
@@ -28893,7 +29420,8 @@
         "bestAndFairest": null,
         "longevity": 0.758,
         "production": 0.679
-      }
+      },
+      "popularityBase": 81
     },
     {
       "id": "dale_lewis_97",
@@ -28936,7 +29464,8 @@
         "bestAndFairest": null,
         "longevity": 0.673,
         "production": 0.423
-      }
+      },
+      "popularityBase": 80
     },
     {
       "id": "wayne_schwass_99",
@@ -28976,7 +29505,8 @@
         "bestAndFairest": null,
         "longevity": 0.463,
         "production": 0.423
-      }
+      },
+      "popularityBase": 78
     },
     {
       "id": "greg_stafford_99",
@@ -29016,7 +29546,8 @@
         "bestAndFairest": null,
         "longevity": 0.501,
         "production": 0.321
-      }
+      },
+      "popularityBase": 72
     },
     {
       "id": "tony_lockett_95",
@@ -29099,7 +29630,8 @@
         "bestAndFairest": null,
         "longevity": 0.623,
         "production": 0.022
-      }
+      },
+      "popularityBase": 62
     }
   ],
   "Sydney_2000s": [
@@ -29141,7 +29673,8 @@
         "bestAndFairest": null,
         "longevity": 0.767,
         "production": 0.313
-      }
+      },
+      "popularityBase": 73
     },
     {
       "id": "nic_fosdike_07",
@@ -29181,7 +29714,8 @@
         "bestAndFairest": null,
         "longevity": 0.675,
         "production": 0.423
-      }
+      },
+      "popularityBase": 65
     },
     {
       "id": "adam_goodes_09",
@@ -29301,7 +29835,8 @@
         "bestAndFairest": null,
         "longevity": 1,
         "production": 0.508
-      }
+      },
+      "popularityBase": 84
     },
     {
       "id": "ryan_okeefe_09",
@@ -29341,7 +29876,8 @@
         "bestAndFairest": null,
         "longevity": 0.916,
         "production": 0.549
-      }
+      },
+      "popularityBase": 83
     },
     {
       "id": "jason_ball_01",
@@ -29381,7 +29917,8 @@
         "bestAndFairest": null,
         "longevity": 0.518,
         "production": 0.705
-      }
+      },
+      "popularityBase": 55
     },
     {
       "id": "barry_hall_06",
@@ -29460,7 +29997,8 @@
         "bestAndFairest": null,
         "longevity": 0.182,
         "production": 0.176
-      }
+      },
+      "popularityBase": 46
     }
   ],
   "Sydney_2010s": [
@@ -29502,7 +30040,8 @@
         "bestAndFairest": null,
         "longevity": 0.811,
         "production": 0.039
-      }
+      },
+      "popularityBase": 52
     },
     {
       "id": "jake_lloyd_19",
@@ -29542,7 +30081,8 @@
         "bestAndFairest": null,
         "longevity": 0.754,
         "production": 0.75
-      }
+      },
+      "popularityBase": 57
     },
     {
       "id": "josh_p_kennedy_16",
@@ -29622,7 +30162,8 @@
         "bestAndFairest": null,
         "longevity": 0.98,
         "production": 0.872
-      }
+      },
+      "popularityBase": 85
     },
     {
       "id": "dan_hannebery_15",
@@ -29662,7 +30203,8 @@
         "bestAndFairest": null,
         "longevity": 0.894,
         "production": 0.721
-      }
+      },
+      "popularityBase": 85
     },
     {
       "id": "kieren_jack_13",
@@ -29702,7 +30244,8 @@
         "bestAndFairest": null,
         "longevity": 0.946,
         "production": 0.679
-      }
+      },
+      "popularityBase": 85
     },
     {
       "id": "shane_mumford_11",
@@ -29742,7 +30285,8 @@
         "bestAndFairest": null,
         "longevity": 0.549,
         "production": 0.298
-      }
+      },
+      "popularityBase": 62
     },
     {
       "id": "lance_franklin_14",
@@ -29822,7 +30366,8 @@
         "bestAndFairest": null,
         "longevity": 0.679,
         "production": 0.459
-      }
+      },
+      "popularityBase": 53
     }
   ],
   "Sydney_2020s": [
@@ -29864,7 +30409,8 @@
         "bestAndFairest": null,
         "longevity": 0.415,
         "production": 0.631
-      }
+      },
+      "popularityBase": 44
     },
     {
       "id": "jake_lloyd_21",
@@ -29904,7 +30450,8 @@
         "bestAndFairest": null,
         "longevity": 0.65,
         "production": 0.59
-      }
+      },
+      "popularityBase": 50
     },
     {
       "id": "isaac_heeney_24",
@@ -29984,7 +30531,8 @@
         "bestAndFairest": null,
         "longevity": 0.667,
         "production": 0.769
-      }
+      },
+      "popularityBase": 82
     },
     {
       "id": "errol_gulden_23",
@@ -30064,7 +30612,8 @@
         "bestAndFairest": null,
         "longevity": 0.414,
         "production": 0.721
-      }
+      },
+      "popularityBase": 81
     },
     {
       "id": "tom_hickey_21",
@@ -30104,7 +30653,8 @@
         "bestAndFairest": null,
         "longevity": 0.331,
         "production": 0.414
-      }
+      },
+      "popularityBase": 47
     },
     {
       "id": "lance_franklin_21",
@@ -30184,7 +30734,8 @@
         "bestAndFairest": null,
         "longevity": 0.554,
         "production": 0.519
-      }
+      },
+      "popularityBase": 73
     }
   ],
   "WestCoast_1980s": [
@@ -30228,7 +30779,8 @@
         "bestAndFairest": null,
         "longevity": 0.138,
         "production": 0.287
-      }
+      },
+      "popularityBase": 40
     },
     {
       "id": "guy_mckenna_89",
@@ -30314,7 +30866,8 @@
         "bestAndFairest": null,
         "longevity": 0.332,
         "production": 0.203
-      }
+      },
+      "popularityBase": 55
     },
     {
       "id": "chris_mainwaring_88",
@@ -30357,7 +30910,8 @@
         "bestAndFairest": null,
         "longevity": 0.379,
         "production": 0.193
-      }
+      },
+      "popularityBase": 69
     },
     {
       "id": "john_annear_87",
@@ -30400,7 +30954,8 @@
         "bestAndFairest": null,
         "longevity": 0.319,
         "production": 0.185
-      }
+      },
+      "popularityBase": 53
     },
     {
       "id": "chris_lewis_89",
@@ -30485,7 +31040,8 @@
         "bestAndFairest": null,
         "longevity": 0.19,
         "production": 0.173
-      }
+      },
+      "popularityBase": 49
     },
     {
       "id": "ross_glendinning_88",
@@ -30571,7 +31127,8 @@
         "bestAndFairest": null,
         "longevity": 0.097,
         "production": 0.371
-      }
+      },
+      "popularityBase": 46
     }
   ],
   "WestCoast_1990s": [
@@ -30613,7 +31170,8 @@
         "bestAndFairest": null,
         "longevity": 0.924,
         "production": 0.384
-      }
+      },
+      "popularityBase": 82
     },
     {
       "id": "guy_mckenna_98",
@@ -30776,7 +31334,8 @@
         "bestAndFairest": null,
         "longevity": 0.711,
         "production": 0.319
-      }
+      },
+      "popularityBase": 81
     },
     {
       "id": "chris_lewis_97",
@@ -30859,7 +31418,8 @@
         "bestAndFairest": null,
         "longevity": 0.567,
         "production": 0.276
-      }
+      },
+      "popularityBase": 62
     },
     {
       "id": "peter_sumich_91",
@@ -30902,7 +31462,8 @@
         "bestAndFairest": null,
         "longevity": 0.614,
         "production": 0.775
-      }
+      },
+      "popularityBase": 65
     },
     {
       "id": "tony_evans_92",
@@ -30945,7 +31506,8 @@
         "bestAndFairest": null,
         "longevity": 0.516,
         "production": 0.157
-      }
+      },
+      "popularityBase": 51
     }
   ],
   "WestCoast_2000s": [
@@ -30987,7 +31549,8 @@
         "bestAndFairest": null,
         "longevity": 0.808,
         "production": 0.755
-      }
+      },
+      "popularityBase": 69
     },
     {
       "id": "david_wirrpanda_08",
@@ -31027,7 +31590,8 @@
         "bestAndFairest": null,
         "longevity": 0.825,
         "production": 0.469
-      }
+      },
+      "popularityBase": 80
     },
     {
       "id": "chris_judd_06",
@@ -31187,7 +31751,8 @@
         "bestAndFairest": null,
         "longevity": 0.732,
         "production": 0.35
-      }
+      },
+      "popularityBase": 82
     },
     {
       "id": "dean_cox_09",
@@ -31267,7 +31832,8 @@
         "bestAndFairest": null,
         "longevity": 0.728,
         "production": 0.395
-      }
+      },
+      "popularityBase": 67
     },
     {
       "id": "phillip_matera_00",
@@ -31307,7 +31873,8 @@
         "bestAndFairest": null,
         "longevity": 0.532,
         "production": 0.371
-      }
+      },
+      "popularityBase": 54
     }
   ],
   "WestCoast_2010s": [
@@ -31388,7 +31955,8 @@
         "bestAndFairest": null,
         "longevity": 0.446,
         "production": 0.57
-      }
+      },
+      "popularityBase": 46
     },
     {
       "id": "luke_shuey_16",
@@ -31428,7 +31996,8 @@
         "bestAndFairest": null,
         "longevity": 0.912,
         "production": 0.742
-      }
+      },
+      "popularityBase": 85
     },
     {
       "id": "matt_priddis_15",
@@ -31468,7 +32037,8 @@
         "bestAndFairest": null,
         "longevity": 0.815,
         "production": 0.916
-      }
+      },
+      "popularityBase": 84
     },
     {
       "id": "andrew_gaff_19",
@@ -31508,7 +32078,8 @@
         "bestAndFairest": null,
         "longevity": 0.942,
         "production": 0.634
-      }
+      },
+      "popularityBase": 84
     },
     {
       "id": "elliot_yeo_19",
@@ -31548,7 +32119,8 @@
         "bestAndFairest": null,
         "longevity": 0.673,
         "production": 0.742
-      }
+      },
+      "popularityBase": 83
     },
     {
       "id": "dean_cox_11",
@@ -31668,7 +32240,8 @@
         "bestAndFairest": null,
         "longevity": 0.526,
         "production": 0.263
-      }
+      },
+      "popularityBase": 46
     }
   ],
   "WestCoast_2020s": [
@@ -31710,7 +32283,8 @@
         "bestAndFairest": null,
         "longevity": 0.39,
         "production": 0.362
-      }
+      },
+      "popularityBase": 45
     },
     {
       "id": "liam_ryan_24",
@@ -31749,7 +32323,8 @@
         "bestAndFairest": null,
         "longevity": 0.288,
         "production": 0.158
-      }
+      },
+      "popularityBase": 44
     },
     {
       "id": "tim_kelly_23",
@@ -31789,7 +32364,8 @@
         "bestAndFairest": null,
         "longevity": 0.413,
         "production": 0.705
-      }
+      },
+      "popularityBase": 81
     },
     {
       "id": "dom_sheed_21",
@@ -31829,7 +32405,8 @@
         "bestAndFairest": null,
         "longevity": 0.346,
         "production": 0.484
-      }
+      },
+      "popularityBase": 77
     },
     {
       "id": "elliot_yeo_24",
@@ -31869,7 +32446,8 @@
         "bestAndFairest": null,
         "longevity": 0.368,
         "production": 0.634
-      }
+      },
+      "popularityBase": 65
     },
     {
       "id": "andrew_gaff_21",
@@ -31909,7 +32487,8 @@
         "bestAndFairest": null,
         "longevity": 0.522,
         "production": 0.287
-      }
+      },
+      "popularityBase": 63
     },
     {
       "id": "nic_naitanui_21",
@@ -32028,7 +32607,8 @@
         "bestAndFairest": null,
         "longevity": 0.137,
         "production": 0.219
-      }
+      },
+      "popularityBase": 41
     }
   ],
   "WesternBulldogs_1970s": [
@@ -32075,7 +32655,8 @@
         "bestAndFairest": null,
         "longevity": 0.429,
         "production": 0.243
-      }
+      },
+      "popularityBase": 40
     },
     {
       "id": "stephen_power_71",
@@ -32120,7 +32701,8 @@
         "bestAndFairest": null,
         "longevity": 0.613,
         "production": 0.1
-      }
+      },
+      "popularityBase": 41
     },
     {
       "id": "david_thorpe_71",
@@ -32165,7 +32747,8 @@
         "bestAndFairest": null,
         "longevity": 0.341,
         "production": 0.577
-      }
+      },
+      "popularityBase": 42
     },
     {
       "id": "gary_dempsey_73",
@@ -32210,7 +32793,8 @@
         "bestAndFairest": null,
         "longevity": 0.793,
         "production": 0.821
-      }
+      },
+      "popularityBase": 44
     },
     {
       "id": "barry_round_72",
@@ -32255,7 +32839,8 @@
         "bestAndFairest": null,
         "longevity": 0.641,
         "production": 0.559
-      }
+      },
+      "popularityBase": 42
     },
     {
       "id": "kelvin_templeton_78",
@@ -32300,7 +32885,8 @@
         "bestAndFairest": null,
         "longevity": 0.451,
         "production": 0.941
-      }
+      },
+      "popularityBase": 44
     },
     {
       "id": "bernie_quinlan_71",
@@ -32390,7 +32976,8 @@
         "bestAndFairest": null,
         "longevity": 0.505,
         "production": 0.254
-      }
+      },
+      "popularityBase": 42
     },
     {
       "id": "peter_welsh_74",
@@ -32434,7 +33021,8 @@
         "bestAndFairest": null,
         "longevity": 0.537,
         "production": 0.609
-      }
+      },
+      "popularityBase": 42
     }
   ],
   "WesternBulldogs_1980s": [
@@ -32480,7 +33068,8 @@
         "bestAndFairest": null,
         "longevity": 0.331,
         "production": 0.128
-      }
+      },
+      "popularityBase": 47
     },
     {
       "id": "brad_hardie_86",
@@ -32525,7 +33114,8 @@
         "bestAndFairest": null,
         "longevity": 0.32,
         "production": 0.373
-      }
+      },
+      "popularityBase": 74
     },
     {
       "id": "brian_royal_87",
@@ -32569,7 +33159,8 @@
         "bestAndFairest": null,
         "longevity": 0.616,
         "production": 0.447
-      }
+      },
+      "popularityBase": 80
     },
     {
       "id": "doug_hawkins_89",
@@ -32657,7 +33248,8 @@
         "bestAndFairest": null,
         "longevity": 0.471,
         "production": 0.254
-      }
+      },
+      "popularityBase": 78
     },
     {
       "id": "stephen_wallis_85",
@@ -32702,7 +33294,8 @@
         "bestAndFairest": null,
         "longevity": 0.693,
         "production": 0.3
-      }
+      },
+      "popularityBase": 73
     },
     {
       "id": "andrew_purser_84",
@@ -32747,7 +33340,8 @@
         "bestAndFairest": null,
         "longevity": 0.436,
         "production": 0.108
-      }
+      },
+      "popularityBase": 65
     },
     {
       "id": "simon_beasley_82",
@@ -32792,7 +33386,8 @@
         "bestAndFairest": null,
         "longevity": 0.566,
         "production": 0.429
-      }
+      },
+      "popularityBase": 65
     },
     {
       "id": "stephen_macpherson_87",
@@ -32836,7 +33431,8 @@
         "bestAndFairest": null,
         "longevity": 0.529,
         "production": 0.321
-      }
+      },
+      "popularityBase": 46
     }
   ],
   "WesternBulldogs_1990s": [
@@ -32882,7 +33478,8 @@
         "bestAndFairest": null,
         "longevity": 0.335,
         "production": 0.491
-      }
+      },
+      "popularityBase": 65
     },
     {
       "id": "rohan_smith_99",
@@ -32967,7 +33564,8 @@
         "bestAndFairest": null,
         "longevity": 0.941,
         "production": 0.366
-      }
+      },
+      "popularityBase": 82
     },
     {
       "id": "scott_west_99",
@@ -33008,7 +33606,8 @@
         "bestAndFairest": null,
         "longevity": 0.806,
         "production": 0.271
-      }
+      },
+      "popularityBase": 82
     },
     {
       "id": "leon_cameron_93",
@@ -33052,7 +33651,8 @@
         "bestAndFairest": null,
         "longevity": 0.794,
         "production": 0.127
-      }
+      },
+      "popularityBase": 80
     },
     {
       "id": "simon_atkins_92",
@@ -33096,7 +33696,8 @@
         "bestAndFairest": null,
         "longevity": 0.498,
         "production": 0.271
-      }
+      },
+      "popularityBase": 72
     },
     {
       "id": "scott_wynd_98",
@@ -33137,7 +33738,8 @@
         "bestAndFairest": null,
         "longevity": 0.846,
         "production": 0.211
-      }
+      },
+      "popularityBase": 82
     },
     {
       "id": "chris_grant_98",
@@ -33218,7 +33820,8 @@
         "bestAndFairest": null,
         "longevity": 0.427,
         "production": 0.07
-      }
+      },
+      "popularityBase": 54
     }
   ],
   "WesternBulldogs_2000s": [
@@ -33260,7 +33863,8 @@
         "bestAndFairest": null,
         "longevity": 0.728,
         "production": 0.584
-      }
+      },
+      "popularityBase": 56
     },
     {
       "id": "nathan_eagleton_07",
@@ -33300,7 +33904,8 @@
         "bestAndFairest": null,
         "longevity": 0.908,
         "production": 0.613
-      }
+      },
+      "popularityBase": 79
     },
     {
       "id": "scott_west_01",
@@ -33340,7 +33945,8 @@
         "bestAndFairest": null,
         "longevity": 0.804,
         "production": 0.652
-      }
+      },
+      "popularityBase": 82
     },
     {
       "id": "adam_cooney_07",
@@ -33380,7 +33986,8 @@
         "bestAndFairest": null,
         "longevity": 0.707,
         "production": 0.496
-      }
+      },
+      "popularityBase": 82
     },
     {
       "id": "daniel_cross_05",
@@ -33420,7 +34027,8 @@
         "bestAndFairest": null,
         "longevity": 0.665,
         "production": 0.508
-      }
+      },
+      "popularityBase": 80
     },
     {
       "id": "matthew_boyd_09",
@@ -33460,7 +34068,8 @@
         "bestAndFairest": null,
         "longevity": 0.769,
         "production": 0.733
-      }
+      },
+      "popularityBase": 80
     },
     {
       "id": "luke_darcy_02",
@@ -33500,7 +34109,8 @@
         "bestAndFairest": null,
         "longevity": 0.568,
         "production": 0.918
-      }
+      },
+      "popularityBase": 81
     },
     {
       "id": "brad_johnson_06",
@@ -33622,7 +34232,8 @@
         "bestAndFairest": null,
         "longevity": 0.671,
         "production": 0.491
-      }
+      },
+      "popularityBase": 53
     },
     {
       "id": "brian_lake_10",
@@ -33662,7 +34273,8 @@
         "bestAndFairest": null,
         "longevity": 0.428,
         "production": 0.663
-      }
+      },
+      "popularityBase": 59
     },
     {
       "id": "matthew_boyd_11",
@@ -33702,7 +34314,8 @@
         "bestAndFairest": null,
         "longevity": 0.798,
         "production": 0.916
-      }
+      },
+      "popularityBase": 84
     },
     {
       "id": "jack_macrae_18",
@@ -33742,7 +34355,8 @@
         "bestAndFairest": null,
         "longevity": 0.699,
         "production": 0.966
-      }
+      },
+      "popularityBase": 83
     },
     {
       "id": "marcus_bontempelli_19",
@@ -33822,7 +34436,8 @@
         "bestAndFairest": null,
         "longevity": 0.585,
         "production": 0.791
-      }
+      },
+      "popularityBase": 82
     },
     {
       "id": "will_minson_13",
@@ -33862,7 +34477,8 @@
         "bestAndFairest": null,
         "longevity": 0.49,
         "production": 0.248
-      }
+      },
+      "popularityBase": 49
     },
     {
       "id": "daniel_giansiracusa_11",
@@ -33902,7 +34518,8 @@
         "bestAndFairest": null,
         "longevity": 0.578,
         "production": 0.526
-      }
+      },
+      "popularityBase": 57
     },
     {
       "id": "jake_stringer_15",
@@ -33942,7 +34559,8 @@
         "bestAndFairest": null,
         "longevity": 0.518,
         "production": 0.69
-      }
+      },
+      "popularityBase": 54
     }
   ],
   "WesternBulldogs_2020s": [
@@ -33984,7 +34602,8 @@
         "bestAndFairest": null,
         "longevity": 0.513,
         "production": 0.697
-      }
+      },
+      "popularityBase": 45
     },
     {
       "id": "james_harmes_24",
@@ -34023,7 +34642,8 @@
         "bestAndFairest": null,
         "longevity": 0.221,
         "production": 0.279
-      }
+      },
+      "popularityBase": 44
     },
     {
       "id": "marcus_bontempelli_23",
@@ -34103,7 +34723,8 @@
         "bestAndFairest": null,
         "longevity": 0.63,
         "production": 0.925
-      }
+      },
+      "popularityBase": 83
     },
     {
       "id": "tom_liberatore_23",
@@ -34143,7 +34764,8 @@
         "bestAndFairest": null,
         "longevity": 0.585,
         "production": 0.904
-      }
+      },
+      "popularityBase": 82
     },
     {
       "id": "adam_treloar_24",
@@ -34183,7 +34805,8 @@
         "bestAndFairest": null,
         "longevity": 0.559,
         "production": 0.839
-      }
+      },
+      "popularityBase": 82
     },
     {
       "id": "tim_english_23",
@@ -34223,7 +34846,8 @@
         "bestAndFairest": null,
         "longevity": 0.467,
         "production": 0.792
-      }
+      },
+      "popularityBase": 72
     },
     {
       "id": "aaron_naughton_22",
@@ -34263,7 +34887,8 @@
         "bestAndFairest": null,
         "longevity": 0.491,
         "production": 0.158
-      }
+      },
+      "popularityBase": 60
     },
     {
       "id": "cody_weightman_24",
@@ -34303,7 +34928,8 @@
         "bestAndFairest": null,
         "longevity": 0.317,
         "production": 0.186
-      }
+      },
+      "popularityBase": 47
     }
   ]
 }

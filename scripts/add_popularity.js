@@ -27,6 +27,25 @@ const path = require('path');
 const SRC  = path.join(__dirname, '..', 'players.json');
 const db   = JSON.parse(fs.readFileSync(SRC, 'utf8'));
 
+// ─── Global popularity scale ─────────────────────────────────────────────────
+// Single knob for a league-wide popularity adjustment, applied at the
+// assignment point below. Without it, any global change made directly to
+// players.json is silently reverted the next time this script runs.
+//
+// Currently 1.0 — identity, no behaviour change. The upstream NBA game runs
+// 0.4 (a 60% cut); do NOT copy that value here. Measured over our 828 entries
+// popularity is min 38 / median 72 / max 99, and simulation.js clamps at
+// POP_FLOOR = 35, so a 0.4 scale drops the median to ~29 — under the floor.
+// popNorm would pin to 0 for nearly every roster and flatten fan hype, the
+// Fans First mode, and the AI draft's popularity weight, without erroring.
+// The FLOOR_WARN check at the end of this file guards exactly that mistake.
+// Pick a real value from the Phase C sweeps (docs/afl-build-out-plan.md), and
+// consider re-deriving POP_FLOOR/POP_CEIL from the real distribution instead.
+const POPULARITY_SCALE = 1.0;
+
+// Mirror of simulation.js's POP_FLOOR — only used for the sanity warning.
+const POP_FLOOR = 35;
+
 // ─── Curated household names (name → popularity) ─────────────────────────────
 // Names must match the DISAMBIGUATED names in players.json (Gary Ablett Sr /
 // Gary Ablett Jr, Josh P. / Josh J. Kennedy) — see scripts/afl_positions.mjs.
@@ -110,28 +129,69 @@ function formulaPopularity(player) {
 }
 
 // ─── Apply ────────────────────────────────────────────────────────────────────
+// Each run resolves an UNSCALED base first, then writes
+// `popularity = round(base * POPULARITY_SCALE)`. Re-running with a different
+// scale therefore re-derives from the base rather than compounding on the
+// already-scaled value.
+//
+// Only the pipeline branch has to persist its base (as `popularityBase`),
+// because it is the one input this script cannot recompute: afl_build_db.mjs
+// wrote it, and that needs the gitignored ~137 MB corpus. NAMED and the
+// formula are both re-derived from source on every run, so they stay
+// idempotent with nothing stored — and NAMED keeps winning outright, so
+// editing the table above still takes effect on the next run.
+//
+// `popularityBase` is stripped from the shipped bundle by inline_players.js
+// (PIPELINE_ONLY); it lives in players.json, the source of truth.
 let total = 0, named = 0, kept = 0, formula = 0;
+const scaled = [];
 
 for (const key of Object.keys(db)) {
   for (const player of db[key]) {
+    let base;
     if (NAMED[player.name] !== undefined) {
-      player.popularity = NAMED[player.name];
+      base = NAMED[player.name];
       named++;
+    } else if (Number.isInteger(player.popularityBase) && player.popularityBase >= 1) {
+      base = player.popularityBase;                 // captured on an earlier run
+      kept++;
     } else if (Number.isInteger(player.popularity) && player.popularity >= 1) {
-      kept++;   // pipeline-computed value (Brownlow/games/finals informed)
+      base = player.popularityBase = player.popularity;  // first run — capture it
+      kept++;
     } else {
-      player.popularity = formulaPopularity(player);
+      base = formulaPopularity(player);
       formula++;
     }
+
+    player.popularity = Math.max(0, Math.round(base * POPULARITY_SCALE));
+    scaled.push(player.popularity);
     total++;
   }
 }
 
 fs.writeFileSync(SRC, JSON.stringify(db, null, 2), 'utf8');
 
+scaled.sort((a, b) => a - b);
+const median = scaled[Math.floor(scaled.length / 2)];
+
 console.log(`Done.`);
 console.log(`  Total players       : ${total}`);
 console.log(`  Curated overrides   : ${named}`);
 console.log(`  Pipeline-computed   : ${kept}`);
 console.log(`  Formula fallback    : ${formula}`);
+console.log(`  Scale applied       : ${POPULARITY_SCALE}`);
+console.log(`  Popularity min/med/max : ${scaled[0]} / ${median} / ${scaled[scaled.length - 1]}`);
+
+// Self-check: a scale that pushes the median under simulation.js's POP_FLOOR
+// silently kills fan hype rather than reducing it. Warn loudly.
+if (median < POP_FLOOR) {
+  console.warn(
+    `\n  ⚠  WARNING: median popularity ${median} is below POP_FLOOR (${POP_FLOOR}).\n` +
+    `     simulation.js clamps popNorm at 0 under that floor, so fan hype, the\n` +
+    `     Fans First mode and the AI draft's popularity weight are now flat for\n` +
+    `     most rosters. Lower POPULARITY_SCALE is not the knob you want here —\n` +
+    `     re-derive POP_FLOOR/POP_CEIL from the real distribution instead.`
+  );
+}
+
 console.log(`Wrote ${SRC}`);

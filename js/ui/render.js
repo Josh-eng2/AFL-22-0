@@ -829,7 +829,7 @@ function renderModeDraftBanner() {
   if (S.mode === 'defense') {
     return `<div class="rounded-xl border px-3 py-2 text-xs font-semibold mode-banner mode-banner--defense"
       style="border-color:color-mix(in srgb, #8b5cf6 35%, var(--border));background:color-mix(in srgb, #8b5cf6 14%, var(--card));color:var(--fg)">
-      🛡️ Defense Only — stocks &amp; boards carry this sim. Scoring volume matters less.
+      🛡️ Stoppers Only — marks, tackles &amp; clearances carry this sim. Goalkicking volume matters less.
     </div>`;
   }
   if (S.mode === 'fans') {
@@ -837,16 +837,20 @@ function renderModeDraftBanner() {
     const avg = starters.length
       ? starters.reduce((s, p) => s + (p.popularity || 50), 0) / starters.length
       : 0;
-    const fansM = Math.pow(Math.max(0, Math.min(1, (avg - 35) / 65)), 1.5) * 38 + 2;
-    // Estimate wins from star power instead of hardcoding 50 — keeps the
-    // "live proj" honest while the season hasn't been simulated yet.
+    // Upper clamp removed to match simulation.js — an above-100 average keeps
+    // scaling instead of capping, so the projection can't undersell the sim.
+    const fansM = Math.pow(Math.max(0, (avg - 35) / 65), 1.5) * 38 + 2;
+    // Estimate wins from star power instead of hardcoding a constant — keeps
+    // the "live proj" honest while the season hasn't been simulated yet.
+    // Bands rescaled from the NBA original's 82-game figures (25 base, 50
+    // range, clamped 18–72) to this game's 22-game home-and-away season.
     const estWins = starters.length
-      ? Math.round(Math.min(72, Math.max(18, 25 + ((avg - 40) / 60) * 50)))
+      ? Math.round(Math.min(19, Math.max(5, 7 + ((avg - 40) / 60) * 13)))
       : null;
     const proj = starters.length ? fansFirstScore(avg, fansM, estWins) : null;
     return `<div class="rounded-xl border px-3 py-2 text-xs font-semibold mode-banner mode-banner--fans"
       style="border-color:color-mix(in srgb, #ec4899 35%, var(--border));background:color-mix(in srgb, #ec4899 14%, var(--card));color:var(--fg)">
-      📣 Fans First — optimize star power. Pass needs ≥70 avg popularity and ≥35 wins. Score ≈ pop×10 + fansM×5 + wins×2${proj != null ? ` · live proj ~${Math.round(proj)} (@~${estWins}W)` : ''}.
+      📣 Fans First — optimize star power. Pass needs ≥70 avg popularity and ≥9 wins. Score ≈ pop×10 + fansM×5 + wins×2${proj != null ? ` · live proj ~${Math.round(proj)} (@~${estWins}W)` : ''}.
     </div>`;
   }
   if (S.mode === 'dynasty-duel' && S.dynastyOpponent) {
