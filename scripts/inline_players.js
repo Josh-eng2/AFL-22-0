@@ -26,12 +26,15 @@ keys.forEach(k => { playerCount += db[k].length; });
 //
 //   ratingRaw            intermediate weighted-stat value behind `rating`
 //   overallParts         per-input breakdown behind `overall`
+//   popularityBase       unscaled popularity behind `popularity`. Kept in
+//                        players.json so add_popularity.js can re-apply a
+//                        changed POPULARITY_SCALE without compounding.
 //   decade* / career*    career signals joined from the source corpus. Kept in
 //   coleman* / oneClub   players.json specifically so add_overall.js can
 //                        rebuild the composite with the gitignored ~137 MB
 //                        corpus absent.
 const PIPELINE_ONLY = [
-  'ratingRaw', 'overallParts',
+  'ratingRaw', 'overallParts', 'popularityBase',
   'decadeBrownlow', 'decadeBrownlowGames', 'decadeGames', 'decadeFinals',
   'seasonBrownlow', 'careerGames', 'oneClub',
   'colemanWins', 'colemanTop3', 'colemanTop10',

@@ -34,11 +34,27 @@
   --surface-sky:    #f8fbff;
   --surface-muted:  #f8fafc;
   --surface-track:  #eef2ff;
-  /* "Perfect / 82-0" gold accents (leaderboard rows, champ badges) */
+  /* "Perfect / 22-0" gold accents (leaderboard rows, champ badges) */
   --amber-badge-bg: #fef3c7;
   --amber-border:   #fcd34d;
   --amber-text:     #92400e;
   --amber-strong:   #b45309;
+  /* ── Broadcast band (results + finals screens) ──────────────
+     One identity across both end-of-season screens: a dark turf
+     gradient under lights, with teal as the single live accent.
+     Teal deliberately isn't a primary colour for any of the 18
+     clubs, so no supporter reads the UI as barracking. Gold is
+     reserved for the season grade and premiership moments. */
+  --acc:            #0d9488;
+  --acc-deep:       #0f766e;
+  --acc-soft:       rgba(13, 148, 136, 0.16);
+  --turf-from:      #0b1410;
+  --turf-to:        #16261b;
+  --gold-from:      #f59e0b;
+  --gold-to:        #d97706;
+  --pip-win:        #16a34a;
+  --pip-loss:       #fda4af;
+  --primary-soft:   rgba(37, 99, 235, 0.28);
 }
 
 [data-theme="dark"] {
@@ -74,6 +90,16 @@
   --amber-border:   rgba(251, 191, 36, 0.4);
   --amber-text:     #fbbf24;
   --amber-strong:   #fbbf24;
+  --acc:            #2dd4bf;
+  --acc-deep:       #14b8a6;
+  --acc-soft:       rgba(45, 212, 191, 0.22);
+  --turf-from:      #060b08;
+  --turf-to:        #101c13;
+  --gold-from:      #fbbf24;
+  --gold-to:        #b45309;
+  --pip-win:        #4ade80;
+  --pip-loss:       #7f1d1d;
+  --primary-soft:   rgba(96, 165, 250, 0.30);
 }
 
 *, *::before, *::after { box-sizing: border-box; }
@@ -1757,57 +1783,320 @@ button.draft-roster-slot {
   background: var(--muted);
 }
 
-/* ── Results screen — responsive Submit card placement ───────── */
+/* ────────────────────────────────────────────────────────────────
+   BROADCAST BAND — results + finals screens
+   Both end-of-season screens share one identity: a dark turf
+   gradient band with teal (--acc) as the only live accent. Every
+   colour here is a token (see :root), so the theme toggle drives
+   light/dark with no JS branching.
+   ──────────────────────────────────────────────────────────────── */
+.boundary-hero {
+  position: relative;
+  overflow: hidden;
+  border-radius: 20px;
+  padding: 20px 20px 18px;
+  background: linear-gradient(150deg, var(--turf-from), var(--turf-to));
+  box-shadow: 0 12px 32px var(--shadow);
+}
+
+.boundary-hero--perfect {
+  box-shadow: 0 0 0 2px var(--gold-from), 0 12px 40px var(--shadow);
+}
+
+.boundary-hero__top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+.boundary-hero__eyebrow {
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.55);
+  margin: 0;
+}
+
+.boundary-hero__tier {
+  font-size: 11px;
+  font-weight: 800;
+  padding: 4px 10px;
+  border-radius: 999px;
+  white-space: nowrap;
+  background: var(--acc-soft);
+  color: var(--acc);
+  border: 1px solid color-mix(in srgb, var(--acc) 34%, transparent);
+}
+
+.boundary-hero__body {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.boundary-hero__col { min-width: 0; flex: 1; }
+
+.boundary-hero__sub {
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.6);
+  margin: 6px 0 0;
+}
+
+.boundary-hero__sub b { color: var(--acc); font-weight: 800; }
+
+.boundary-grade {
+  flex-shrink: 0;
+  width: 58px;
+  height: 58px;
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 26px;
+  font-weight: 900;
+  line-height: 1;
+  color: #1a1206;
+  background: linear-gradient(135deg, var(--gold-from), var(--gold-to));
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35);
+}
+
+.boundary-record {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  line-height: 0.9;
+}
+
+.boundary-record__w {
+  font-size: 54px;
+  font-weight: 900;
+  color: #fff;
+  letter-spacing: -0.02em;
+}
+
+.boundary-record__dash {
+  font-size: 28px;
+  font-weight: 300;
+  color: rgba(255, 255, 255, 0.35);
+}
+
+.boundary-record__l {
+  font-size: 38px;
+  font-weight: 800;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+/* 22-pip season strip. Far roomier than the NBA original's 82 pips,
+   so the pips are wider and keep a real gap between them. */
+.season-strip { margin-top: 14px; }
+
+.season-strip__pips {
+  display: flex;
+  gap: 3px;
+  align-items: stretch;
+  height: 12px;
+}
+
+.season-strip__pip {
+  flex: 1 1 0;
+  min-width: 0;
+  border-radius: 2px;
+  background: var(--pip-win);
+}
+
+.season-strip__pip--loss { background: var(--pip-loss); }
+
+.season-strip__meta {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  margin-top: 7px;
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.season-strip__streak { color: var(--acc); }
+.season-strip__count  { color: rgba(255, 255, 255, 0.45); }
+
+/* Quick tiles — OVR / CHEM / FANS / COACH */
+.quick-tiles {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.quick-tile {
+  border: 1px solid var(--border);
+  background: var(--card);
+  border-radius: 14px;
+  padding: 10px 6px;
+  text-align: center;
+  box-shadow: 0 1px 2px var(--shadow2);
+}
+
+.quick-tile__label {
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted-fg);
+  margin: 0 0 3px;
+}
+
+.quick-tile__value {
+  font-size: 20px;
+  font-weight: 900;
+  margin: 0;
+  line-height: 1;
+}
+
+.quick-tile__value small { font-size: 11px; font-weight: 700; }
+
+/* Full-width primary CTA. Flat --primary rather than the accent
+   gradient, so it reads as the app's normal primary action instead
+   of competing with the band's teal. */
+.boundary-cta {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  text-align: left;
+  border: none;
+  cursor: pointer;
+  border-radius: 16px;
+  padding: 14px 16px;
+  background: var(--primary);
+  color: #fff;
+  box-shadow: 0 8px 22px var(--primary-soft);
+  transition: transform 0.12s ease, box-shadow 0.12s ease;
+}
+
+.boundary-cta:hover { transform: translateY(-1px); box-shadow: 0 10px 26px var(--primary-soft); }
+
+.boundary-cta__icon  { font-size: 22px; flex-shrink: 0; }
+.boundary-cta__title { font-size: 14px; font-weight: 900; margin: 0; }
+.boundary-cta__sub   { font-size: 11px; margin: 2px 0 0; opacity: 0.85; }
+.boundary-cta__chev  { margin-left: auto; flex-shrink: 0; opacity: 0.8; }
+
+.boundary-cta--locked {
+  background: var(--card);
+  color: var(--fg);
+  border: 1px solid var(--border);
+  box-shadow: 0 1px 2px var(--shadow2);
+  cursor: default;
+}
+
+.boundary-cta--locked:hover { transform: none; box-shadow: 0 1px 2px var(--shadow2); }
+.boundary-cta--locked .boundary-cta__sub { color: var(--muted-fg); opacity: 1; }
+
+/* Slim autopsy strip — doubles as run-it-back outside Daily. */
+.autopsy-strip {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  text-align: left;
+  border: 1px solid color-mix(in srgb, #dc2626 32%, var(--border));
+  background: var(--surface-red);
+  border-radius: 14px;
+  padding: 10px 14px;
+}
+
+button.autopsy-strip { cursor: pointer; }
+button.autopsy-strip:hover { border-color: #dc2626; }
+
+.autopsy-strip__title {
+  font-size: 12px;
+  font-weight: 800;
+  color: #dc2626;
+  margin: 0;
+}
+
+.autopsy-strip__fix {
+  font-size: 11px;
+  color: var(--muted-fg);
+  margin: 1px 0 0;
+}
+
+.autopsy-strip__cta {
+  margin-left: auto;
+  flex-shrink: 0;
+  font-size: 10px;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #dc2626;
+}
+
+.autopsy-strip--gold {
+  border-color: var(--gold-from);
+  background: var(--surface-cream);
+}
+
+.autopsy-strip--gold .autopsy-strip__title { color: var(--amber-strong); }
+.autopsy-strip--gold .autopsy-strip__fix   { color: var(--amber-strong); opacity: 0.85; }
+
+/* Broadcast title band — the finals screen's header. */
+.broadcast-band {
+  border-radius: 20px;
+  padding: 16px 20px;
+  background: linear-gradient(150deg, var(--turf-from), var(--turf-to));
+  box-shadow: 0 12px 32px var(--shadow);
+}
+
+.broadcast-band__eyebrow {
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.5);
+  margin: 0 0 4px;
+}
+
+.broadcast-band__title {
+  font-size: 26px;
+  font-weight: 900;
+  color: #fff;
+  margin: 0;
+  line-height: 1.05;
+  letter-spacing: -0.01em;
+}
+
+.broadcast-band__sub {
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.6);
+  margin: 6px 0 0;
+}
+
+.broadcast-band__sub b { color: var(--acc); font-weight: 800; }
+
+@media (max-width: 420px) {
+  .boundary-record__w { font-size: 44px; }
+  .boundary-record__l { font-size: 30px; }
+  .broadcast-band__title { font-size: 21px; }
+  .quick-tile__value { font-size: 17px; }
+}
+
+/* ── Results screen — block order ─────────────────────────────
+   One order at every width: hero, the six you picked, what to do
+   next (finals CTA), why it went wrong (autopsy), then save/share.
+   The finals CTA sits ahead of the save card on phones too — it
+   used to fall behind it under 640px, which buried the one action
+   the screen exists to offer. */
 .results-layout {
   display: flex;
   flex-direction: column;
 }
 
-.results-layout > * {
-  order: 40;
-}
-
-.results-layout > .results-block--record {
-  order: 10;
-}
-
-@media (max-width: 639px) {
-  .results-layout > .results-block--save {
-    order: 20;
-  }
-
-  .results-layout > .results-block--playoffs {
-    order: 30;
-  }
-}
-
-@media (min-width: 640px) {
-  .results-layout > .results-block--playoffs {
-    order: 20;
-  }
-
-  .results-layout > .results-block--save {
-    order: 30;
-  }
-}
-
-/* Season sim — fixed skip button + stable ticker height */
-.season-sim-ticker {
-  min-height: 15.5rem;
-  height: 15.5rem;
-  overflow: hidden;
-}
-
-.season-skip-btn {
-  position: fixed;
-  left: 50%;
-  transform: translateX(-50%);
-  bottom: max(0.75rem, env(safe-area-inset-bottom, 0px));
-  z-index: 45;
-  width: min(28rem, calc(100% - 2rem));
-  box-shadow: 0 6px 24px var(--shadow);
-  background: var(--card) !important;
-}
+.results-layout > *                        { order: 40; }
+.results-layout > .results-block--record   { order: 10; }
+.results-layout > .results-block--six      { order: 15; }
+.results-layout > .results-block--playoffs { order: 20; }
+.results-layout > .results-block--autopsy  { order: 25; }
+.results-layout > .results-block--save     { order: 30; }
 
 /* ── Static SEO content (index.html below-game guide + daily.html archive) ──
    Plain CSS on the shared theme tokens — deliberately not Tailwind classes,

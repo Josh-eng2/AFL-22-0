@@ -151,11 +151,26 @@
        (docs/afl-port-plan.md AGENTS.md). -->
   <link rel="icon" href="favicon.ico" sizes="48x48" />
   <link rel="icon" href="favicon.svg" type="image/svg+xml" />
-  <!-- max-image-preview:large — Google may show a full-size image preview.
-       "none" previously suppressed image previews entirely AND made the site
-       ineligible for Google Discover, which requires "large". og-image.png is
-       already 1200x630, the asset size Google wants for large previews. -->
-  <meta name="robots" content="max-image-preview:large" />
+  <!-- Progressive Web App — installable from Chrome/Edge/Safari "Add to Home Screen".
+       All paths relative: this ships to a GitHub Pages subpath (/AFL-22-0/),
+       where a leading-slash path would resolve to the domain root. -->
+  <link rel="manifest" href="manifest.webmanifest" />
+  <meta name="theme-color" content="#0b1410" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="22-0" />
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png" />
+  <!-- max-image-preview:none — suppresses the large thumbnail Google shows
+       beside this result in Search. Tradeoff (documented, chosen anyway):
+       Google Discover requires "large" to surface any content at all, so
+       this opts the page out of Discover. The upstream NBA game ran it the
+       other way for two days specifically for Discover eligibility and then
+       reverted, on the grounds that the thumbnail was not wanted; this port
+       follows that decision. og:image / twitter:image below are untouched —
+       they only feed social share cards (Facebook, Twitter/X, Slack,
+       iMessage, …), which this directive does not affect. -->
+  <meta name="robots" content="max-image-preview:none" />
 
   <!-- Open Graph / Social sharing -->
   <meta property="og:type"        content="website" />
@@ -174,7 +189,12 @@
   <meta name="twitter:description" content="Draft an all-time AFL team, pick your coach, and run the season simulator — can you go a perfect 22-0?" />
   <meta name="twitter:image"       content="https://josh-eng2.github.io/AFL-22-0/og-image.png" />
 
-  <!-- Structured data: helps Google identify the game as an entity -->
+  <!-- Structured data: helps Google identify the game as an entity.
+       "image" is deliberately omitted — Google can surface a JSON-LD image
+       as a search thumbnail independent of the max-image-preview directive
+       above, so dropping it here closes that second path too. Social share
+       previews are unaffected: they read og:image / twitter:image, not
+       structured data. -->
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -183,7 +203,6 @@
     "alternateName": ["22-0", "22-0 AFL Team Generator", "AFL Team Generator", "AFL All-Time Roster Builder", "AFL Season Simulator"],
     "url": "https://josh-eng2.github.io/AFL-22-0/",
     "description": "A free browser game: draft an all-time AFL team from legends across every era, build team chemistry, pick your coach, and run the season simulator to chase a perfect 22-0 record.",
-    "image": "https://josh-eng2.github.io/AFL-22-0/og-image.png",
     "genre": ["Sports", "Simulation", "Strategy"],
     "applicationCategory": "GameApplication",
     "gamePlatform": "Web Browser",
@@ -315,6 +334,17 @@
 
   <!-- Single ES-module entry point — all other JS is imported from here -->
   <script type="module" src="js/main.js"></script>
+
+  <!-- Register the service worker so the game is installable + offline-capable.
+       Failures are silent — the browser game still works without a SW, and it
+       is unavailable entirely over file:// and on some privacy settings. -->
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', function () {
+        navigator.serviceWorker.register('./sw.js').catch(function () {});
+      });
+    }
+  </script>
 
 </body>
 </html>

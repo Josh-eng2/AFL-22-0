@@ -11,6 +11,7 @@
  */
 
 import { chemTier } from '../logic/chemistry.js';
+import { fmtTeamName } from './render.js';
 
 const W = 1080, H = 1200;
 
@@ -219,7 +220,7 @@ function drawCard(ctx, data) {
     ctx.fillStyle = '#f97316';
     ctx.fillText(s.pos, panelX + 40, rowY);
 
-    const teamLabel = [s.team, s.decade].filter(Boolean).join(' ');
+    const teamLabel = [fmtTeamName(s.team), s.decade].filter(Boolean).join(' ');
     ctx.font = '500 21px Arial, sans-serif';
     const teamW = teamLabel ? ctx.measureText(teamLabel).width : 0;
     const nameMaxW = panelW - 80 - 108 - (teamW ? teamW + 28 : 0);

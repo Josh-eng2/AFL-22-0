@@ -42,7 +42,10 @@ function scoreCandidate(player, roster, coachId) {
   // 74–99 window carried over from the NBA original's percentile-equivalent
   // scoring band on the `overall` scale.
   const ratingNorm = Math.max(0, Math.min(1, ((player.overall ?? 77) - 74) / 25));
-  const popNorm    = Math.max(0, Math.min(1, ((player.popularity ?? 50) - 35) / 65));
+  // No upper clamp: a popularity above 100 keeps scaling the AI's draft weight
+  // instead of pulling exactly as hard as a 100. Inert today — the DB tops out
+  // at 99 — but it stops a future NAMED override above 100 capping silently.
+  const popNorm    = Math.max(0, ((player.popularity ?? 50) - 35) / 65);
 
   const slots = emptySlots(roster);
   let posNeed = 0;
