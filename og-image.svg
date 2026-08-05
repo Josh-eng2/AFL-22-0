@@ -1,12 +1,20 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" width="1200" height="630">
+  <!-- Social share card (1200x630). Rasterized to og-image.png by
+       scripts/build_og_image.sh — crawlers don't render SVG, so the PNG is
+       what og:image / twitter:image actually point at.
+
+       Same identity as the in-app broadcast band: night-footy turf gradient,
+       teal as the single accent, gold reserved for premiership moments. The
+       crest is the app's real logo (favicon.svg / logo-badge.svg), not a
+       watermark, so a shared link and the installed icon match. -->
   <defs>
     <radialGradient id="bg" cx="65%" cy="50%" r="80%">
-      <stop offset="0%" stop-color="#1e293b"/>
-      <stop offset="100%" stop-color="#0a1120"/>
+      <stop offset="0%" stop-color="#16261b"/>
+      <stop offset="100%" stop-color="#060b08"/>
     </radialGradient>
     <radialGradient id="crestBg" cx="50%" cy="36%" r="72%">
-      <stop offset="0%" stop-color="#243357"/>
-      <stop offset="100%" stop-color="#0d1526"/>
+      <stop offset="0%" stop-color="#1d3325"/>
+      <stop offset="100%" stop-color="#0b1410"/>
     </radialGradient>
     <!-- Same bottom-hugging arc formula as logo-badge.svg's crestArc,
          scaled ×1.7157 and re-centered so the ring clears the canvas edge
@@ -19,55 +27,60 @@
 
   <!-- Roundel crest (right side) — the app's actual logo, not a watermark -->
   <g transform="translate(950,315)">
-    <circle r="175" fill="url(#crestBg)" stroke="#f97316" stroke-width="12"/>
-    <circle r="154" fill="none" stroke="#f97316" stroke-width="2.4" opacity="0.32"/>
-    <g transform="translate(0,-69)">
-      <circle r="50" fill="#f97316"/>
-      <circle r="50" fill="none" stroke="#9a3412" stroke-width="3"/>
-      <line x1="-50" y1="0" x2="50" y2="0" stroke="#9a3412" stroke-width="2.7"/>
-      <path d="M0 -50 Q-31 0 0 50" fill="none" stroke="#9a3412" stroke-width="2.7"/>
-      <path d="M0 -50 Q31 0 0 50" fill="none" stroke="#9a3412" stroke-width="2.7"/>
+    <circle r="175" fill="url(#crestBg)" stroke="#0d9488" stroke-width="12"/>
+    <circle r="154" fill="none" stroke="#0d9488" stroke-width="2.4" opacity="0.32"/>
+    <!-- Sherrin, tilted the way a drop punt sits -->
+    <g transform="translate(0,-69) rotate(-24)">
+      <path d="M -65 0 Q 0 -58 65 0 Q 0 58 -65 0 Z"
+        fill="#b5342b" stroke="#6d1f1a" stroke-width="3.4"/>
+      <path d="M -65 0 Q 0 -14 65 0" fill="none" stroke="#6d1f1a" stroke-width="2.6" opacity="0.65"/>
+      <path d="M -26 -16 Q 0 -21 26 -16" fill="none" stroke="#f5efe1" stroke-width="5.1" stroke-linecap="round"/>
+      <g stroke="#f5efe1" stroke-width="3.8" stroke-linecap="round">
+        <line x1="-17" y1="-21.5" x2="-17" y2="-10.5"/>
+        <line x1="0" y1="-23" x2="0" y2="-11.4"/>
+        <line x1="17" y1="-21.5" x2="17" y2="-10.5"/>
+      </g>
     </g>
     <text x="0" y="57" text-anchor="middle"
       font-family="'Arial Black','Helvetica Neue',Arial,sans-serif"
-      font-weight="900" font-size="79" letter-spacing="-3.5" fill="#f5efe1">82-0</text>
+      font-weight="900" font-size="79" letter-spacing="-3.5" fill="#f5efe1">22-0</text>
   </g>
   <text font-family="'Arial Black','Helvetica Neue',Arial,sans-serif"
-    font-weight="700" font-size="21" letter-spacing="6" fill="#f97316">
-    <textPath href="#ogArc" startOffset="50%" text-anchor="middle">EST. 2025</textPath>
+    font-weight="700" font-size="21" letter-spacing="6" fill="#0d9488">
+    <textPath href="#ogArc" startOffset="50%" text-anchor="middle">EST. 2026</textPath>
   </text>
 
-  <!-- Subtle grid lines for depth -->
-  <line x1="0" y1="628" x2="1200" y2="628" stroke="#f97316" stroke-width="3" opacity="0.6"/>
-  <line x1="0" y1="2" x2="1200" y2="2" stroke="#f97316" stroke-width="2" opacity="0.15"/>
+  <!-- Boundary lines for depth -->
+  <line x1="0" y1="628" x2="1200" y2="628" stroke="#0d9488" stroke-width="3" opacity="0.6"/>
+  <line x1="0" y1="2" x2="1200" y2="2" stroke="#0d9488" stroke-width="2" opacity="0.15"/>
 
   <!-- Left accent bar -->
-  <rect x="100" y="178" width="72" height="5" fill="#f97316" rx="2.5"/>
+  <rect x="100" y="178" width="72" height="5" fill="#0d9488" rx="2.5"/>
 
   <!-- "CAN YOU GO" label -->
   <text x="100" y="163"
     font-family="'Arial Black', 'Helvetica Neue', Arial, sans-serif"
-    font-size="30" font-weight="900" fill="#f97316"
+    font-size="30" font-weight="900" fill="#0d9488"
     letter-spacing="10">CAN YOU GO</text>
 
-  <!-- "82-0" hero text -->
+  <!-- "22-0" hero text -->
   <text x="80" y="415"
     font-family="'Arial Black', 'Helvetica Neue', Arial, sans-serif"
     font-size="248" font-weight="900" fill="#ffffff"
-    letter-spacing="-12">82-0</text>
+    letter-spacing="-12">22-0</text>
 
   <!-- Subtitle -->
   <text x="104" y="476"
     font-family="'Helvetica Neue', Arial, sans-serif"
-    font-size="21" font-weight="400" fill="#64748b"
-    letter-spacing="7">THE ALL-TIME NBA ROSTER BUILDER</text>
+    font-size="21" font-weight="400" fill="#7d9488"
+    letter-spacing="7">THE ALL-TIME AFL TEAM BUILDER</text>
 
   <!-- Domain -->
   <text x="104" y="522"
     font-family="'Helvetica Neue', Arial, sans-serif"
-    font-size="15" font-weight="400" fill="#334155"
-    letter-spacing="3">canyougo820.com</text>
+    font-size="15" font-weight="400" fill="#4a5f52"
+    letter-spacing="3">josh-eng2.github.io/AFL-22-0</text>
 
-  <!-- Orange dot accent beside subtitle -->
-  <circle cx="91" cy="470" r="5" fill="#f97316"/>
+  <!-- Teal dot accent beside subtitle -->
+  <circle cx="91" cy="470" r="5" fill="#0d9488"/>
 </svg>
