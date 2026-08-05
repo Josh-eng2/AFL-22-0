@@ -233,14 +233,6 @@ function toastContainer() {
   return c;
 }
 
-/** Removes any still-visible toast tagged with `kind` immediately (no fade-out
- *  wait). Used so a stale "streak ends" toast can't linger onscreen next to a
- *  toast about a brand-new streak that has since replaced it — those two read
- *  as a contradiction when the reveal cadence outpaces the toast duration,
- *  even though they're about two different streaks at two different moments. */
-export function clearToastsOfKind(kind) {
-  toastContainer().querySelectorAll(`[data-toast-kind="${kind}"]`).forEach(el => el.remove());
-}
 
 export function showToast(msg, duration = 2500, kind = null) {
   const el = document.createElement('div');
@@ -1664,112 +1656,6 @@ function _renderBalanceDiagnosis(d) {
   };
 }
 
-// ── Paced season reveal ───────────────────────────────────────────────────────
-/** Live win-streak display for the season-sim screen — escalates with heat. */
-export function liveStreakLabel(n) {
-  if (n === 0)  return { text: '', color: '#94a3b8' };
-  if (n >= 30)  return { text: `🔥🔥🔥 ${n} STRAIGHT`, color: '#dc2626' };
-  if (n >= 15)  return { text: `🔥🔥 ${n} straight wins`, color: '#d97706' };
-  if (n >= 5)   return { text: `🔥 ${n} straight wins`, color: '#2563eb' };
-  return { text: `${n} in a row`, color: '#94a3b8' };
-}
-
-export function renderSeasonTickerRows() {
-  const idx    = S.seasonRevealIdx || 0;
-  const recent = (S.seasonGames || []).slice(Math.max(0, idx - 8), idx).reverse();
-  return recent.map((g, i) => {
-    const latest   = i === 0;
-    const col      = g.won ? '#16a34a' : '#dc2626';
-    const lateLoss = !g.won && (g.num || 0) > 60;
-    const rowStyle = g.rival
-      ? `background:#fffbeb;border:1px solid #fde68a${latest ? '' : ';opacity:0.75'}`
-      : g.revenge
-      ? `background:#f5f3ff;border:1px solid #ddd6fe${latest ? '' : ';opacity:0.75'}`
-      : latest ? '' : 'opacity:0.55';
-    const chip = g.rival
-      ? `<span class="text-[9px] font-black px-1.5 py-0.5 rounded-full flex-shrink-0" style="background:#0f172a;color:#fbbf24">🔥 RIVALRY</span>`
-      : g.revenge
-      ? `<span class="text-[9px] font-black px-1.5 py-0.5 rounded-full flex-shrink-0" style="background:#4c1d95;color:#c4b5fd">⚡ REVENGE</span>`
-      : g.isFirstLoss
-      ? `<span class="text-[9px] font-black px-1.5 py-0.5 rounded-full flex-shrink-0" style="background:#450a0a;color:#fca5a5">STREAK ENDED</span>`
-      : lateLoss
-      ? `<span class="text-[9px] font-bold px-1.5 py-0.5 rounded-full flex-shrink-0" style="background:#fef2f2;color:#b91c1c">GUT PUNCH</span>`
-      : g.type === 'close'
-      ? `<span class="text-[9px] font-bold px-1.5 py-0.5 rounded-full flex-shrink-0" style="background:#fef3c7;color:#a16207">CLUTCH</span>`
-      : '';
-    return `
-    <div class="flex items-center gap-2 py-1.5 px-3 rounded-lg${latest ? ' bg-white card-shadow' : ''}"${rowStyle ? ` style="${rowStyle}"` : ''}>
-      <span class="text-[10px] font-black w-8 flex-shrink-0 text-muted-fg">G${g.num}</span>
-      <span class="text-xs font-bold flex-1 truncate text-foreground">vs ${g.opp}</span>
-      ${chip}
-      <span class="text-xs font-semibold text-muted-fg" style="font-variant-numeric:tabular-nums">${g.ps}–${g.os}</span>
-      <span class="text-sm font-black w-5 text-center flex-shrink-0" style="color:${col}">${g.won ? 'W' : 'L'}</span>
-    </div>`;
-  }).join('');
-}
-
-function renderSeasonSim() {
-  const idx    = S.seasonRevealIdx || 0;
-  const total  = (S.seasonGames || []).length || 22;
-  const played = (S.seasonGames || []).slice(0, idx);
-  const w      = played.filter(g => g.won).length;
-  const l      = played.length - w;
-  const pct    = (played.length / total) * 100;
-  const done   = idx >= total;
-  const g1     = S.seasonGames?.[0];
-  let liveN = 0;
-  for (let i = played.length - 1; i >= 0 && played[i].won; i--) liveN++;
-  const streakLbl = liveStreakLabel(liveN);
-  return `
-  <div class="flex flex-col min-h-screen main-gradient">
-    ${renderHeader(true)}
-    <main class="flex-1 flex flex-col items-center px-4 pt-8 pb-24 season-sim-main">
-      <div class="w-full max-w-md flex flex-col gap-4 animate-fade-up">
-
-        <div class="text-center">
-          <p class="text-xs font-bold uppercase tracking-widest text-muted-fg mb-1.5">Season in progress</p>
-          <p id="sim-record" class="text-5xl font-black text-foreground leading-none" style="font-variant-numeric:tabular-nums">${w}–${l}</p>
-          <p id="sim-gp" class="text-xs text-muted-fg mt-2">Game ${played.length} of ${total}</p>
-          <p id="sim-streak" class="text-xs font-bold mt-1" style="color:${streakLbl.color}">${streakLbl.text}</p>
-          <p id="sim-beststart" class="text-xs font-bold mt-0.5 text-muted-fg" style="min-height:1em"></p>
-        </div>
-
-        <div class="h-2 rounded-full overflow-hidden" style="background:var(--border)">
-          <div id="sim-progress" class="h-full rounded-full" style="width:${pct}%;background:var(--primary);transition:width 0.15s linear"></div>
-        </div>
-
-        ${S.seasonPaused && g1 ? `
-        <div class="rounded-2xl bg-white p-5 card-shadow text-center animate-scale-in" style="border:2px solid #fbbf24">
-          <p class="text-sm font-black text-foreground mb-1">🏆 Game 1: W ${g1.ps}–${g1.os} over the ${g1.opp}!</p>
-          <p class="text-xs text-muted-fg mb-4">GAME 2 — <b style="color:#b45309">TOUGH MATCHUP</b>. The road only gets harder from here.</p>
-          <button data-action="season-continue"
-            class="w-full py-3 rounded-xl font-black text-sm uppercase tracking-widest text-white cursor-pointer animate-pulse-glow"
-            style="background:#d97706">Play Game 2 →</button>
-        </div>` : ''}
-
-        ${S.rivalTease ? (() => {
-          const rival = (S.seasonGames || []).find(g => g.rival);
-          return `
-          <div class="rounded-2xl p-5 text-center card-shadow animate-scale-in" style="background:#0f172a;border:2px solid #f59e0b">
-            <p class="text-[10px] font-black uppercase mb-1.5" style="color:#fbbf24;letter-spacing:0.25em">🔥 Rivalry Night</p>
-            <p class="text-base font-black text-white">The ${rival ? rival.opp : 'legends'} are in town.</p>
-            <p class="text-[11px] mt-1 text-muted-fg">Statement game. The whole league is watching.</p>
-          </div>`;
-        })() : ''}
-
-        <div id="sim-ticker" class="flex flex-col gap-1 season-sim-ticker">${renderSeasonTickerRows()}</div>
-
-        ${!done && !S.seasonPaused ? `
-        <button data-action="season-skip" id="season-skip-btn"
-          class="season-skip-btn py-2.5 rounded-xl font-bold text-xs border border-border bg-card2 text-muted-fg hover:border-primary hover:text-primary transition-all cursor-pointer">
-          Skip to Final Record ⏭
-        </button>` : ''}
-
-      </div>
-    </main>
-    ${renderFooter()}
-  </div>`;
-}
 
 function renderSaveRunCard() {
   const r = S.result;
@@ -3071,7 +2957,7 @@ function renderSeriesSim() {
 // Phases where the player is actively drafting/simulating, as opposed to a
 // menu or a results/summary screen — drives the CrazyGames gameplayStart/Stop
 // calls so their platform knows when it's safe to show an ad.
-const CG_GAMEPLAY_PHASES = new Set(['drafting', 'season-sim', 'playoffs', 'series-sim']);
+const CG_GAMEPLAY_PHASES = new Set(['drafting', 'playoffs', 'series-sim']);
 let _cgGameplayActive = null;
 
 function updateCrazyGamesGameplayState() {
@@ -3111,7 +2997,6 @@ const HASH_BY_PHASE = {
   'mode-select':    '#/',
   'more-modes':     '#/challenges',
   'drafting':       '#/draft',
-  'season-sim':     '#/season',
   'results':        '#/results',
   'playoffs':       '#/playoffs',
   'trophy-room':    '#/trophies',
@@ -3141,7 +3026,6 @@ export function render() {
   if      (S.phase === 'mode-select')   $app.innerHTML = renderModeSelect();
   else if (S.phase === 'more-modes')    $app.innerHTML = renderMoreModesScreen();
   else if (S.phase === 'drafting')      $app.innerHTML = renderDrafting();
-  else if (S.phase === 'season-sim')    $app.innerHTML = renderSeasonSim();
   else if (S.phase === 'results')       $app.innerHTML = renderResults();
   else if (S.phase === 'playoffs')      $app.innerHTML = renderPlayoffs();
   else if (S.phase === 'trophy-room')   $app.innerHTML = renderTrophyRoom();

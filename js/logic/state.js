@@ -299,7 +299,7 @@ export function buildBracket(playerSeed, playerStrength) {
 
 /** @type {object} */
 export let S = {
-  phase:          'mode-select', // 'mode-select' | 'more-modes' | 'drafting' | 'season-sim' | 'results' | 'playoffs' | 'trophy-room' | 'series-result'
+  phase:          'mode-select', // 'mode-select' | 'more-modes' | 'drafting' | 'results' | 'playoffs' | 'trophy-room' | 'series-result'
   mode:           null,          // 'solo' | '1v1'
   currentPlayer:  1,             // 1 or 2 (1v1 only)
   p1:             null,          // snapshot of P1 after sequential draft (old 1v1 flow — kept for compat)
@@ -367,12 +367,9 @@ export function startGame(era = 'all') {
     globalSubmitError:    null,
     globalSubmittedChampion: false,
 
-    // Paced season reveal
+    // Full season game log in presented order (post cold-open reorder, post
+    // Rivalry Night dressing) — feeds the results screen's season strip.
     seasonGames:     [],
-    seasonRevealIdx: 0,
-    seasonPaused:    false,
-    rivalTease:      false,  // Rivalry Night banner currently showing
-    rivalTeased:     false,  // one-shot guard — tease fires once per season
 
     // Daily Challenge context (null outside daily runs)
     dailyChallenge,
