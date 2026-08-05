@@ -1,37 +1,47 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 220">
   <!-- Favicon — full roundel crest (same artwork as logo-badge.svg).
-       "82-0" stays legible even at 16px thanks to the bold weight and
-       navy/white contrast; "EST. 2025" is decorative-only at that size. -->
+       "22-0" stays legible even at 16px thanks to the bold weight and
+       navy/white contrast; "EST. 2026" is decorative-only at that size.
+       Accent is the app's teal (--acc), deliberately not any one club's
+       colour. Placeholder-grade art: replace in the Phase E branding pass
+       (docs/afl-build-out-plan.md) without touching the manifest, which
+       references this file by name. -->
   <defs>
     <radialGradient id="crestBg" cx="50%" cy="36%" r="72%">
-      <stop offset="0%" stop-color="#1e2d4d"/>
-      <stop offset="100%" stop-color="#0d1526"/>
+      <stop offset="0%" stop-color="#16261b"/>
+      <stop offset="100%" stop-color="#0b1410"/>
     </radialGradient>
     <path id="crestArc" d="M 56.4 155 A 70 70 0 0 0 163.6 155" fill="none"/>
   </defs>
 
   <!-- outer ring -->
-  <circle cx="110" cy="110" r="102" fill="url(#crestBg)" stroke="#f97316" stroke-width="7"/>
+  <circle cx="110" cy="110" r="102" fill="url(#crestBg)" stroke="#0d9488" stroke-width="7"/>
   <!-- inner hairline ring -->
-  <circle cx="110" cy="110" r="90" fill="none" stroke="#f97316" stroke-width="1.4" opacity="0.35"/>
+  <circle cx="110" cy="110" r="90" fill="none" stroke="#0d9488" stroke-width="1.4" opacity="0.35"/>
 
-  <!-- basketball -->
-  <g>
-    <circle cx="110" cy="70" r="29" fill="#f97316"/>
-    <circle cx="110" cy="70" r="29" fill="none" stroke="#9a3412" stroke-width="1.8"/>
-    <line x1="81" y1="70" x2="139" y2="70" stroke="#9a3412" stroke-width="1.6"/>
-    <path d="M110 41 Q92 70 110 99" fill="none" stroke="#9a3412" stroke-width="1.6"/>
-    <path d="M110 41 Q128 70 110 99" fill="none" stroke="#9a3412" stroke-width="1.6"/>
+  <!-- Sherrin — pointed-oval silhouette, tilted the way a drop punt sits -->
+  <g transform="rotate(-24 110 70)">
+    <path d="M 72 70 Q 110 36 148 70 Q 110 104 72 70 Z"
+      fill="#b5342b" stroke="#6d1f1a" stroke-width="2"/>
+    <!-- seam down the long axis -->
+    <path d="M 72 70 Q 110 62 148 70" fill="none" stroke="#6d1f1a" stroke-width="1.5" opacity="0.65"/>
+    <!-- lacing panel -->
+    <path d="M 95 60.5 Q 110 57.5 125 60.5" fill="none" stroke="#f5efe1" stroke-width="3" stroke-linecap="round"/>
+    <g stroke="#f5efe1" stroke-width="2.2" stroke-linecap="round">
+      <line x1="100" y1="57.5" x2="100" y2="64"/>
+      <line x1="110" y1="56.6" x2="110" y2="63.4"/>
+      <line x1="120" y1="57.5" x2="120" y2="64"/>
+    </g>
   </g>
 
-  <!-- 82-0 -->
+  <!-- 22-0 -->
   <text x="110" y="143" text-anchor="middle"
     font-family="'Arial Black','Helvetica Neue',Arial,sans-serif"
-    font-weight="900" font-size="46" letter-spacing="-2" fill="#f5efe1">82-0</text>
+    font-weight="900" font-size="46" letter-spacing="-2" fill="#f5efe1">22-0</text>
 
-  <!-- curved EST. 2025 -->
+  <!-- curved EST. 2026 -->
   <text font-family="'Arial Black','Helvetica Neue',Arial,sans-serif"
-    font-weight="700" font-size="12" letter-spacing="3.5" fill="#f97316">
-    <textPath href="#crestArc" startOffset="50%" text-anchor="middle">EST. 2025</textPath>
+    font-weight="700" font-size="12" letter-spacing="3.5" fill="#0d9488">
+    <textPath href="#crestArc" startOffset="50%" text-anchor="middle">EST. 2026</textPath>
   </text>
 </svg>

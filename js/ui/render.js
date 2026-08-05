@@ -44,12 +44,18 @@ const esc = s => String(s)
 let _chemCache = { key: null, result: null };
 
 // ── SVG icons ─────────────────────────────────────────────────────────────────
+/** Sherrin glyph — the app's mark, in the header of every screen. Was a
+ *  basketball (circle + seams) carried over from the NBA original.
+ *
+ *  Filled and tilted rather than a stroked outline with lacing: at the 20px
+ *  the header renders it, an outlined pointed oval with interior ticks reads
+ *  unmistakably as an eye. The tilted solid silhouette is the shape that
+ *  survives being small. */
 function iconBall(cls = '') {
-  return `<svg class="${cls}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-    <circle cx="12" cy="12" r="10"/>
-    <path d="M4.93 4.93a14.5 14.5 0 0 1 0 14.14"/>
-    <path d="M19.07 4.93a14.5 14.5 0 0 0 0 14.14"/>
-    <path d="M2 12h20"/><path d="M12 2v20"/>
+  return `<svg class="${cls}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+    <g transform="rotate(-32 12 12)">
+      <path d="M2.5 12 Q12 5 21.5 12 Q12 19 2.5 12 Z" fill="currentColor" stroke="none"/>
+    </g>
   </svg>`;
 }
 function iconCheck(cls = '') {
