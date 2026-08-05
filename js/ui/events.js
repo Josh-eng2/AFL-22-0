@@ -40,7 +40,7 @@ import { isDualDraft, getModeConfig, fansFirstScore, fansFirstPassed } from '../
 import { seasonTier } from '../logic/seasonTier.js';
 import {
   render, $app, fmtDecadeShort, showToast,
-  computeAutopsy, withConfetti,
+  computeAutopsy, withConfetti, showTeamReportModal, closeTeamReportModal,
 } from '../ui/render.js'; // circular — safe (used only inside function bodies)
 
 // Expose modal close helpers globally — inline onclicks in modal HTML are outside #app
@@ -48,6 +48,7 @@ window.closeLeaderboardModal       = closeLeaderboardModal;
 window.closeGlobalLeaderboardModal = closeGlobalLeaderboardModal;
 window.closeDailyLeaderboardModal  = closeDailyLeaderboardModal;
 window.closeDailyStatsModal        = closeDailyStatsModal;
+window.closeTeamReportModal        = closeTeamReportModal;
 
 // ── Event binding ─────────────────────────────────────────────────────────────
 
@@ -292,6 +293,7 @@ function dispatch(action) {
 
   // ── Season & playoffs ──────────────────────────────────────────────────────
   if (action === 'simulate')            { doSimulate();          return; }
+  if (action === 'open-team-report')     { showTeamReportModal(); return; }
   if (action === 'save-run')             { doSaveRun();           return; }
   if (action === 'advance-to-playoffs') { doAdvanceToPlayoffs(); return; }
   if (action === 'sim-next-round')      { doSimNextRound();      return; }

@@ -1604,7 +1604,7 @@ export function computeAutopsy() {
       detail: (eliteOverall
         ? `Your starting six's chemistry grades out ${tier.label} overall — but this one gap let opponents exploit it all season: `
         : '') + chemPenalty.replace('🔴', '').trim(),
-      fix:    'One roster change removes this penalty — check the Team Chemistry Report below.',
+      fix:    'One roster change removes this penalty — check the Team Chemistry Report.',
     };
   }
 
@@ -1786,6 +1786,342 @@ function renderDailySubmitCard() {
   </div>`;
 }
 
+// ── Team Report popup ─────────────────────────────────────────────────────────
+// The analysis half of the results screen. These used to be six cards in the
+// main results scroll; they now live behind the "Team Report" button so the
+// results screen itself stays on the record, the finals CTA, and save/share.
+//
+// Each builder reads S.result / S.roster directly rather than taking the
+// locals renderResults had in scope — the modal is rendered on demand, well
+// after that function has returned.
+
+/** Per-starter row for the report cards. `fit` drives the positional badge. */
+function reportRosterRow(p, posLabel, isStarter, fit, simById) {
+  if (!p) return '';
+  // Out-of-position is the -12% `Versatile` penalty — red, with a warning
+  // glyph rather than the "+" that used to read as a bonus.
+  const fitBg    = fit === 'primary' ? (isDark() ? 'rgba(34,197,94,0.15)' : '#dcfce7') : fit === 'flex' ? (isDark() ? 'rgba(234,179,8,0.15)' : '#fef9c3') : fit ? (isDark() ? 'rgba(239,68,68,0.15)' : '#fee2e2') : null;
+  const fitColor = fit === 'primary' ? (isDark() ? '#4ade80' : '#15803d') : fit === 'flex' ? (isDark() ? '#fbbf24' : '#a16207') : fit ? (isDark() ? '#f87171' : '#dc2626') : null;
+  const fitText  = fit === 'primary' ? '✓' : fit === 'flex' ? '↔' : fit ? '!' : null;
+  const fitBadge = fit
+    ? `<span class="text-[8px] font-black px-1 py-0.5 rounded leading-none ml-0.5" style="background:${fitBg};color:${fitColor}">${fitText}</span>`
+    : '';
+  // Prefer this season's simulated line; fall back to the player's real
+  // averages if stats weren't generated (e.g. an older cached result).
+  const s = (simById || {})[p.id] || p;
+  return `
+  <div class="flex items-center gap-3 py-2.5 border-b border-border last:border-0">
+    <div class="flex items-center gap-0 w-12 flex-shrink-0">
+      <span class="text-[10px] font-black ${isStarter ? 'text-primary' : 'text-muted-fg'}">${posLabel}</span>${fitBadge}
+    </div>
+    <div class="flex-1 min-w-0">
+      <p class="font-semibold text-sm text-foreground truncate">${p.name}</p>
+      <div class="flex items-center gap-1.5 mt-0.5">
+        <p class="text-xs text-muted-fg">${p.team || ''} ${p.decade ? fmtDecadeShort(p.decade) : ''}</p>
+        ${p.archetype ? archetypeBadge(p.archetype) : ''}
+        <span class="text-[9px] font-bold px-1.5 py-0.5 rounded-full flex-shrink-0" style="background:${ovrColor(p.overall)}18;color:${ovrColor(p.overall)}">OVR ${Math.round(p.overall ?? 0)}</span>
+      </div>
+    </div>
+    <div class="flex gap-3 text-xs text-muted-fg flex-shrink-0">
+      <span><span class="font-semibold text-foreground">${fmtPG(s.goals)}</span> GLS</span>
+      <span><span class="font-semibold text-foreground">${fmtPG(s.marks)}</span> MKS</span>
+      <span class="hidden sm:inline"><span class="font-semibold text-foreground">${fmtPG(s.disposals)}</span> DSP</span>
+    </div>
+  </div>`;
+}
+
+// Scaled to 6-starter per-game sums. Shared with the draft screen's statBar —
+// one set of AFL ranges, so the two screens can't disagree. Still first-pass
+// estimates pending the Phase C sweeps (docs/afl-build-out-plan.md §C.2.6).
+const REPORT_STAT_MAXES = { goals: 16, marks: 35, disposals: 160, tackles: 28, clearances: 30 };
+
+function reportStatBar(key, lbl, val) {
+  const pct   = Math.min(100, (val / REPORT_STAT_MAXES[key]) * 100);
+  const color = pct >= 70 ? (isDark() ? '#60a5fa' : '#2563eb') : pct >= 45 ? (isDark() ? '#fbbf24' : '#d97706') : (isDark() ? '#cbd5e1' : '#94a3b8');
+  return `
+  <div>
+    <div class="flex justify-between text-xs mb-1.5">
+      <span class="text-muted-fg font-medium">${lbl}</span>
+      <span class="font-bold text-foreground">${val.toFixed(1)}</span>
+    </div>
+    <div class="h-1.5 rounded-full bg-border overflow-hidden">
+      <div class="h-full rounded-full stat-bar-fill" style="width:${pct}%;background:${color}"></div>
+    </div>
+  </div>`;
+}
+
+/** Season Impact — the Team OVR Elo and coach-mastery detail that used to sit
+ *  as chips on the main results screen. First section of the report. */
+function renderSeasonImpactReportCard() {
+  const r = S.result;
+  if (!r) return '';
+  const teamOvr     = Math.round(r.avgRating ?? 0);
+  const ratingDelta = r.ratingEloDelta ?? 0;
+  const ratingPct   = ratingDelta / (r.baseStrength || 1) * 100;
+  const coachObj    = S.coach ? COACHES.find(c => c.id === S.coach) : null;
+
+  const rows = [];
+  rows.push(`
+    <div class="flex items-center justify-between py-2 border-b border-border last:border-0">
+      <span class="text-xs text-muted-fg font-medium">Team OVR</span>
+      <span class="text-sm font-black" style="color:${ovrColor(teamOvr)}">${teamOvr}${Math.abs(ratingPct) >= 0.1 ? ` · ${ratingPct >= 0 ? '+' : ''}${ratingPct.toFixed(1)}% Elo` : ''}</span>
+    </div>`);
+  if (r.coachBoost && coachObj) {
+    const pctOfMax = r.coachBoost / 0.040;
+    const grade    = pctOfMax >= 0.75 ? 'Mastered' : pctOfMax >= 0.4 ? 'Building' : 'Faint';
+    rows.push(`
+    <div class="flex items-center justify-between py-2 border-b border-border last:border-0">
+      <span class="text-xs text-muted-fg font-medium">Coach — ${coachObj.system}</span>
+      <span class="text-sm font-black" style="color:${coachObj.accent}">+${(r.coachBoost * 100).toFixed(1)}% · ${grade}</span>
+    </div>`);
+  }
+  rows.push(`
+    <div class="flex items-center justify-between py-2 border-b border-border last:border-0">
+      <span class="text-xs text-muted-fg font-medium">Strength Index</span>
+      <span class="text-sm font-black text-foreground">${r.strength}</span>
+    </div>`);
+
+  return `
+  <div class="rounded-2xl border border-border bg-white p-4 card-shadow">
+    <p class="text-xs font-bold uppercase tracking-widest text-muted-fg mb-2">Season Impact</p>
+    <div class="flex flex-col">${rows.join('')}</div>
+  </div>`;
+}
+
+function renderAutopsyReportCard() {
+  const r = S.result;
+  if (!r || seasonTier(r.wins).id === 'perfect') return '';
+  const autopsy = computeAutopsy();
+  if (!autopsy) return '';
+  return `
+  <div class="rounded-2xl bg-white p-4 card-shadow flex flex-col" style="border:1.5px solid #fecaca">
+    <p class="text-xs font-bold uppercase tracking-widest mb-2.5" style="color:#dc2626">
+      Loss Autopsy — ${r.losses} ${r.losses === 1 ? 'loss' : 'losses'}
+    </p>
+    <div class="flex items-start gap-3 flex-1">
+      <span class="text-2xl flex-shrink-0">${autopsy.icon}</span>
+      <div class="min-w-0 flex-1">
+        <p class="text-sm font-black text-foreground mb-0.5">${autopsy.title}</p>
+        <p class="text-xs text-muted-fg leading-relaxed">${autopsy.detail}</p>
+        <p class="text-xs font-bold mt-2" style="color:var(--primary)">💡 ${autopsy.fix}</p>
+      </div>
+    </div>
+  </div>`;
+}
+
+function renderChemistryReportCard() {
+  const r = S.result;
+  if (!r) return '';
+  const chemReportHtml = r.chemReport && r.chemReport.length > 0
+    ? r.chemReport.map(item => {
+        const isGood = item.startsWith('🟢');
+        return `<div class="rounded-lg px-3 py-2 text-sm font-medium border"
+          style="background:${isGood ? 'var(--surface-green)' : 'var(--surface-red)'};border-color:${isGood ? (isDark() ? 'rgba(74,222,128,0.35)' : '#bbf7d0') : (isDark() ? 'rgba(248,113,113,0.35)' : '#fecaca')};color:${isGood ? (isDark() ? '#4ade80' : '#15803d') : (isDark() ? '#f87171' : '#dc2626')}">${item}</div>`;
+      }).join('')
+    : `<p class="text-sm text-muted-fg py-1">No synergies or penalties — balanced roster.</p>`;
+  const badge = r.chemScore !== undefined ? (() => {
+    const t = chemTier(r.chemScore);
+    const { color, bg } = chemTierColors(t.id, isDark());
+    return `<span class="text-xs font-bold px-2 py-0.5 rounded-full border" style="background:${bg};color:${color};border-color:${color}30">${t.label}</span>`;
+  })() : '';
+  return `
+  <div class="rounded-2xl border border-border bg-white p-4 card-shadow">
+    <div class="flex items-center justify-between mb-3">
+      <p class="text-xs font-bold uppercase tracking-widest text-muted-fg">Team Chemistry Report</p>
+      ${badge}
+    </div>
+    <div class="flex flex-col gap-2">${chemReportHtml}</div>
+  </div>`;
+}
+
+function renderFansReportCard() {
+  const r = S.result;
+  if (!r) return '';
+  const popDelta  = r.popEloDelta ?? 0;
+  const teamFans  = calcTeamFans(POSITIONS.map(p => S.roster[p]));
+  const popBarCol = fansBarCol(teamFans.avg);
+  const pos       = popDelta >= 0;
+  const eloPct    = (popDelta / (r.baseStrength || 1) * 100).toFixed(1);
+  return `
+  <div class="rounded-2xl border border-border bg-white p-4 card-shadow">
+    <div class="flex items-center justify-between mb-3">
+      <p class="text-xs font-bold uppercase tracking-widest text-muted-fg">Fans</p>
+      <span class="text-xs font-bold px-2 py-0.5 rounded-full border"
+        style="background:var(--surface-muted);color:${popBarCol};border-color:${popBarCol}30">${teamFans.tier}</span>
+    </div>
+    <div class="mb-3">
+      <div class="flex justify-between text-xs mb-1.5">
+        <span class="text-muted-fg font-medium">Team Fans</span>
+        <span class="font-bold text-foreground">${Math.round(teamFans.sum)}M</span>
+      </div>
+      <div class="h-2 rounded-full bg-border overflow-hidden">
+        <div class="h-full rounded-full stat-bar-fill" style="width:${teamFans.pct}%;background:${popBarCol}"></div>
+      </div>
+    </div>
+    <!-- Fans Elo detail folds in here rather than getting its own section. -->
+    <div class="flex gap-3 flex-wrap">
+      <div class="flex-1 rounded-xl border px-3 py-2.5 text-center"
+        style="background:${pos ? 'var(--surface-green)' : 'var(--surface-red)'};border-color:${pos ? (isDark() ? 'rgba(74,222,128,0.35)' : '#bbf7d0') : (isDark() ? 'rgba(248,113,113,0.35)' : '#fecaca')}">
+        <p class="text-[10px] font-bold uppercase tracking-wider mb-1" style="color:${pos ? (isDark() ? '#4ade80' : '#15803d') : (isDark() ? '#f87171' : '#dc2626')}">${pos ? '📈 Hype Boost' : '📉 Hype Penalty'} · ${pos ? 'High Fans' : 'Low Fans'}</p>
+        <p class="text-xl font-black" style="color:${pos ? (isDark() ? '#4ade80' : '#15803d') : (isDark() ? '#f87171' : '#dc2626')}">${pos ? '+' : ''}${eloPct}% Elo</p>
+      </div>
+    </div>
+    <div class="mt-3 flex flex-col gap-1.5">
+      ${[...Object.entries(S.roster)].filter(([, p]) => p).map(([pos_, p]) => {
+        const pop    = p.popularity ?? 50;
+        const pct    = Math.max(0, Math.round(((pop - 35) / 65) * 100));
+        const barCol = pop >= 80 ? (isDark() ? '#60a5fa' : '#2563eb') : pop >= 60 ? (isDark() ? '#fbbf24' : '#d97706') : (isDark() ? '#cbd5e1' : '#94a3b8');
+        return `<div class="flex items-center gap-2">
+          <span class="text-[10px] font-black w-6 flex-shrink-0 text-muted-fg">${pos_}</span>
+          <span class="text-xs font-semibold text-foreground w-28 flex-shrink-0 truncate">${p.name}</span>
+          <div class="flex-1 h-1.5 rounded-full bg-border overflow-hidden">
+            <div class="h-full rounded-full" style="width:${pct}%;background:${barCol}"></div>
+          </div>
+          <span class="text-[10px] font-bold text-muted-fg w-9 text-right flex-shrink-0">${pop}M</span>
+        </div>`;
+      }).join('')}
+    </div>
+  </div>`;
+}
+
+function renderSeasonLeadersReportCard() {
+  const leaders = S.result?.statLeaders;
+  if (!leaders) return '';
+  const rows = [
+    { icon: '🎯', label: 'Goals',      key: 'goals',      e: leaders.scoring    },
+    { icon: '🪃', label: 'Marks',      key: 'marks',      e: leaders.marking    },
+    { icon: '🏉', label: 'Disposals',  key: 'disposals',  e: leaders.disposals  },
+    { icon: '🧤', label: 'Tackles',    key: 'tackles',    e: leaders.tackling   },
+    { icon: '🛡️', label: 'Clearances', key: 'clearances', e: leaders.clearances },
+  ].filter(row => row.e);
+  if (!rows.length) return '';
+  return `
+  <div class="rounded-2xl border border-border bg-white p-4 card-shadow">
+    <div class="flex items-center justify-between mb-3">
+      <p class="text-xs font-bold uppercase tracking-widest text-muted-fg">Season Leaders</p>
+      <span class="text-[10px] font-bold text-muted-fg">22-game averages</span>
+    </div>
+    <div class="flex flex-col gap-1.5">
+      ${rows.map(({ icon, label, key, e }) => `
+        <div class="flex items-center gap-3 py-1">
+          <span class="text-base w-6 flex-shrink-0 text-center">${icon}</span>
+          <span class="text-[10px] font-bold uppercase tracking-wider text-muted-fg w-16 flex-shrink-0">${label}</span>
+          <span class="text-sm font-semibold text-foreground flex-1 min-w-0 truncate">${e.name}</span>
+          <span class="text-sm font-black text-foreground flex-shrink-0">${e.val.toFixed(1)}</span>
+          <span class="text-[10px] font-bold text-muted-fg w-8 flex-shrink-0">${key.toUpperCase()}</span>
+        </div>`).join('')}
+    </div>
+  </div>`;
+}
+
+function renderTeamStatsReportCard() {
+  const r = S.result;
+  const t = r?.simTotals || r?.totals;
+  if (!t) return '';
+  return `
+  <div class="rounded-2xl border border-border bg-white p-4 card-shadow">
+    <p class="text-xs font-bold uppercase tracking-widest text-muted-fg mb-4">Team Statistics</p>
+    <div class="flex flex-col gap-3">
+      ${reportStatBar('goals', 'Goals Per Game', t.goals)}
+      ${reportStatBar('marks', 'Marks Per Game', t.marks)}
+      ${reportStatBar('disposals', 'Disposals Per Game', t.disposals)}
+      ${reportStatBar('tackles', 'Tackles Per Game', t.tackles)}
+      ${reportStatBar('clearances', 'Clearances Per Game', t.clearances)}
+    </div>
+  </div>`;
+}
+
+function renderOptimizedLineupReportCard() {
+  const r = S.result;
+  if (!r) return '';
+  const simById = Object.fromEntries((r.playerStats || []).map(l => [l.id, l]));
+  return `
+  <div class="rounded-2xl border border-border bg-white p-4 card-shadow">
+    <div class="flex items-center justify-between mb-3">
+      <p class="text-xs font-bold uppercase tracking-widest text-muted-fg">Optimized Lineup</p>
+      ${r.lineupAssignment?.length === 6 ? (() => {
+        const allPrimary = r.lineupAssignment.every(a => a.fit === 'primary');
+        const hasOOP     = r.lineupAssignment.some(a => a.fit === 'oop');
+        // Three states, not two: an out-of-position lineup is carrying a
+        // -12%-per-starter penalty and reads red, while a flex lineup
+        // (secondary position, 0%) stays amber.
+        const bg    = allPrimary ? (isDark() ? 'rgba(34,197,94,0.12)' : '#f0fdf4') : hasOOP ? (isDark() ? 'rgba(239,68,68,0.12)' : '#fef2f2') : (isDark() ? 'rgba(234,179,8,0.12)' : '#fefce8');
+        const color = allPrimary ? (isDark() ? '#4ade80' : '#15803d') : hasOOP ? (isDark() ? '#f87171' : '#dc2626') : (isDark() ? '#fbbf24' : '#a16207');
+        const label = allPrimary ? '🟢 Flawless' : hasOOP ? '🔴 Out of Position' : '🟡 Flex Lineup';
+        return `<span class="text-[11px] font-bold px-2.5 py-0.5 rounded-full border" style="background:${bg};color:${color};border-color:${color}30">${label}</span>`;
+      })() : ''}
+    </div>
+    <p class="text-[10px] font-bold uppercase tracking-wider text-primary mb-1">Starters — Engine Optimal Position Assignment</p>
+    <div class="flex flex-col mb-1">
+      ${r.lineupAssignment?.length
+        ? r.lineupAssignment.map(({ slot, player, fit }) => reportRosterRow(player, slot, true, fit, simById)).join('')
+        : POSITIONS.map(pos => reportRosterRow(S.roster[pos], pos, true, null, simById)).join('')}
+    </div>
+  </div>`;
+}
+
+function renderTeamReportModal() {
+  return `
+  <div id="team-report-backdrop" onclick="if(event.target===this)window.closeTeamReportModal()"
+    style="position:fixed;inset:0;background:var(--overlay);z-index:9998;display:flex;
+           align-items:center;justify-content:center;padding:16px">
+    <div role="dialog" aria-labelledby="team-report-title" aria-modal="true"
+      style="background:var(--card);border:1.5px solid var(--border);border-radius:20px;width:100%;
+             max-width:560px;max-height:90vh;overflow-y:auto;padding:24px 20px 20px;
+             font-family:Fira Sans,sans-serif;color:var(--fg);
+             animation:scaleIn 0.2s ease-out;box-shadow:0 20px 60px var(--shadow)">
+      <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:16px">
+        <h2 id="team-report-title" style="font-size:18px;font-weight:900;margin:0;color:var(--fg)">📊 Team Report</h2>
+        <button onclick="window.closeTeamReportModal()" aria-label="Close"
+          style="background:var(--card2);border:1px solid var(--border);color:var(--muted-fg);border-radius:999px;
+                 width:32px;height:32px;font-size:16px;cursor:pointer;display:flex;
+                 align-items:center;justify-content:center;flex-shrink:0">✕</button>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:14px">
+        ${renderSeasonImpactReportCard()}
+        ${renderAutopsyReportCard()}
+        ${renderChemistryReportCard()}
+        ${renderFansReportCard()}
+        ${renderSeasonLeadersReportCard()}
+        ${renderTeamStatsReportCard()}
+        ${renderOptimizedLineupReportCard()}
+      </div>
+    </div>
+  </div>`;
+}
+
+// Mounted on document.body, OUTSIDE #app — the delegated data-action listener
+// only covers #app, so this modal's buttons use inline onclick + the window
+// exports below. Same arrangement as the leaderboard / daily-stats modals.
+export function showTeamReportModal() {
+  closeTeamReportModal();
+  const div = document.createElement('div');
+  div.id = 'team-report-root';
+  div.innerHTML = renderTeamReportModal();
+  document.body.appendChild(div);
+  const onKey = e => { if (e.key === 'Escape') closeTeamReportModal(); };
+  document.addEventListener('keydown', onKey);
+  div._removeKey = () => document.removeEventListener('keydown', onKey);
+  const focusable = div.querySelectorAll('button, [tabindex]:not([tabindex="-1"])');
+  const first = focusable[0], last = focusable[focusable.length - 1];
+  div.addEventListener('keydown', e => {
+    if (e.key !== 'Tab' || !first) return;
+    if (e.shiftKey ? document.activeElement === first : document.activeElement === last) {
+      e.preventDefault();
+      (e.shiftKey ? last : first).focus();
+    }
+  });
+  first?.focus();
+}
+
+export function closeTeamReportModal() {
+  const el = document.getElementById('team-report-root');
+  if (el) {
+    if (el._removeKey) el._removeKey();
+    el.remove();
+  }
+}
+
 function renderResults() {
   const r          = S.result;
   const tier       = seasonTier(r.wins);
@@ -1828,42 +2164,9 @@ function renderResults() {
     ? ` · ${ratingPct >= 0 ? '+' : ''}${ratingPct.toFixed(1)}% Elo`
     : '';
 
-  // ── Per-player season stats (this simulated run) ──────────────────────────
-  // Frozen in r by the engine — the renderer only reads. Look up each starter's
-  // line by id so the roster rows and leaders show the season that was saved.
-  const simById   = Object.fromEntries((r.playerStats || []).map(l => [l.id, l]));
-  const leaders   = r.statLeaders || null;
-  const leaderRows = leaders ? [
-    { icon: '🎯', label: 'Goals',      key: 'goals',      e: leaders.scoring    },
-    { icon: '🪃', label: 'Marks',      key: 'marks',      e: leaders.marking    },
-    { icon: '🏉', label: 'Disposals',  key: 'disposals',  e: leaders.disposals  },
-    { icon: '🧤', label: 'Tackles',    key: 'tackles',    e: leaders.tackling   },
-    { icon: '🛡️', label: 'Clearances', key: 'clearances', e: leaders.clearances },
-  ].filter(row => row.e) : [];
-  const seasonLeadersCard = leaderRows.length ? `
-    <div class="rounded-2xl border border-border bg-white p-4 card-shadow">
-      <div class="flex items-center justify-between mb-3">
-        <p class="text-xs font-bold uppercase tracking-widest text-muted-fg">Season Leaders</p>
-        <span class="text-[10px] font-bold text-muted-fg">22-game averages</span>
-      </div>
-      <div class="flex flex-col gap-1.5">
-        ${leaderRows.map(({ icon, label, key, e }) => `
-          <div class="flex items-center gap-3 py-1">
-            <span class="text-base w-6 flex-shrink-0 text-center">${icon}</span>
-            <span class="text-[10px] font-bold uppercase tracking-wider text-muted-fg w-16 flex-shrink-0">${label}</span>
-            <span class="text-sm font-semibold text-foreground flex-1 min-w-0 truncate">${e.name}</span>
-            <span class="text-sm font-black text-foreground flex-shrink-0">${e.val.toFixed(1)}</span>
-            <span class="text-[10px] font-bold text-muted-fg w-8 flex-shrink-0">${key.toUpperCase()}</span>
-          </div>`).join('')}
-      </div>
-    </div>` : '';
-
   // ── Popularity / Fan-Hype display helpers ─────────────────────────────────
   const popDelta    = r.popEloDelta ?? 0;
   const teamFans    = calcTeamFans(POSITIONS.map(p => S.roster[p]));
-  const popBarPct   = teamFans.pct;
-  const popBarCol   = fansBarCol(teamFans.avg);
-  const popTier     = teamFans.tier;
 
   const hypeBadge = (() => {
     if (Math.abs(popDelta) < 0.002) return ''; // negligible — don't show
@@ -1880,76 +2183,8 @@ function renderResults() {
     </span>`;
   })();
 
-  // Scaled to 6-starter sums (an elite roster reads ~85-95%) — first-pass
-  // estimates from the 41-player stub DB, not swept against a full dataset
-  // yet (docs/afl-port-plan.md §9).
-  const maxes = { goals: 16, marks: 35, disposals: 160, tackles: 28, clearances: 30 };
-  const statBar = (key, lbl, val) => {
-    const pct   = Math.min(100, (val / maxes[key]) * 100);
-    const color = pct >= 70 ? (isDark() ? '#60a5fa' : '#2563eb') : pct >= 45 ? (isDark() ? '#fbbf24' : '#d97706') : (isDark() ? '#cbd5e1' : '#94a3b8');
-    return `
-    <div>
-      <div class="flex justify-between text-xs mb-1.5">
-        <span class="text-muted-fg font-medium">${lbl}</span>
-        <span class="font-bold text-foreground">${val.toFixed(1)}</span>
-      </div>
-      <div class="h-1.5 rounded-full bg-border overflow-hidden">
-        <div class="h-full rounded-full stat-bar-fill" style="width:${pct}%;background:${color}"></div>
-      </div>
-    </div>`;
-  };
-
-  const rosterRow = (p, posLabel, isStarter, fit = null) => {
-    if (!p) return '';
-    // Out-of-position is the -12% `Versatile` penalty, so it gets red and a
-    // warning glyph — the old amber "+" read as a bonus for what is the
-    // harshest per-starter penalty in chemistry.js.
-    const fitBg    = fit === 'primary' ? (isDark() ? 'rgba(34,197,94,0.15)' : '#dcfce7') : fit === 'flex' ? (isDark() ? 'rgba(234,179,8,0.15)' : '#fef9c3') : fit ? (isDark() ? 'rgba(239,68,68,0.15)' : '#fee2e2') : null;
-    const fitColor = fit === 'primary' ? (isDark() ? '#4ade80' : '#15803d') : fit === 'flex' ? (isDark() ? '#fbbf24' : '#a16207') : fit ? (isDark() ? '#f87171' : '#dc2626') : null;
-    const fitText  = fit === 'primary' ? '✓' : fit === 'flex' ? '↔' : fit ? '!' : null;
-    const fitBadge = fit
-      ? `<span class="text-[8px] font-black px-1 py-0.5 rounded leading-none ml-0.5" style="background:${fitBg};color:${fitColor}">${fitText}</span>`
-      : '';
-    // Prefer this season's simulated line; fall back to the player's real
-    // averages if stats weren't generated (e.g. an older cached result).
-    const s = simById[p.id] || p;
-    return `
-    <div class="flex items-center gap-3 py-2.5 border-b border-border last:border-0">
-      <div class="flex items-center gap-0 w-12 flex-shrink-0">
-        <span class="text-[10px] font-black ${isStarter ? 'text-primary' : 'text-muted-fg'}">${posLabel}</span>${fitBadge}
-      </div>
-      <div class="flex-1 min-w-0">
-        <p class="font-semibold text-sm text-foreground truncate">${p.name}</p>
-        <div class="flex items-center gap-1.5 mt-0.5">
-          <p class="text-xs text-muted-fg">${p.team || ''} ${p.decade ? fmtDecadeShort(p.decade) : ''}</p>
-          ${p.archetype ? archetypeBadge(p.archetype) : ''}
-          <span class="text-[9px] font-bold px-1.5 py-0.5 rounded-full flex-shrink-0" style="background:${ovrColor(p.overall)}18;color:${ovrColor(p.overall)}">OVR ${Math.round(p.overall ?? 0)}</span>
-        </div>
-      </div>
-      <div class="flex gap-3 text-xs text-muted-fg flex-shrink-0">
-        <span><span class="font-semibold text-foreground">${fmtPG(s.goals)}</span> GLS</span>
-        <span><span class="font-semibold text-foreground">${fmtPG(s.marks)}</span> MKS</span>
-        <span class="hidden sm:inline"><span class="font-semibold text-foreground">${fmtPG(s.disposals)}</span> DSP</span>
-      </div>
-    </div>`;
-  };
-
-  const chemReportHtml = r.chemReport && r.chemReport.length > 0
-    ? r.chemReport.map(item => {
-        const isGood = item.startsWith('🟢');
-        return `<div class="rounded-lg px-3 py-2 text-sm font-medium border"
-          style="background:${isGood ? 'var(--surface-green)' : 'var(--surface-red)'};border-color:${isGood ? (isDark() ? 'rgba(74,222,128,0.35)' : '#bbf7d0') : (isDark() ? 'rgba(248,113,113,0.35)' : '#fecaca')};color:${isGood ? (isDark() ? '#4ade80' : '#15803d') : (isDark() ? '#f87171' : '#dc2626')}">${item}</div>`;
-      }).join('')
-    : `<p class="text-sm text-muted-fg py-1">No synergies or penalties — balanced roster.</p>`;
-
   // Hoisted once — autopsy for imperfect seasons; congrats card uses isPerfect inline.
   const autopsy = !isPerfect ? computeAutopsy() : null;
-
-  const chemScoreBadge = r.chemScore !== undefined ? (() => {
-    const tier = chemTier(r.chemScore);
-    const { color: scColor, bg: scBg } = chemTierColors(tier.id, isDark());
-    return `<span class="text-xs font-bold px-2 py-0.5 rounded-full border" style="background:${scBg};color:${scColor};border-color:${scColor}30">${tier.label}</span>`;
-  })() : '';
 
   // Surfaced next to the headline Team OVR chip below — OVR alone is a poor
   // predictor of the record (fit/archetype synergy swings wins far more than
@@ -2037,7 +2272,6 @@ function renderResults() {
               <span class="text-2xl flex-shrink-0">${autopsy.icon}</span>
               <div class="min-w-0 flex-1">
                 <p class="text-sm font-black text-foreground mb-0.5">${autopsy.title}</p>
-                <p class="text-xs text-muted-fg leading-relaxed">${autopsy.detail}</p>
                 <p class="text-xs font-bold mt-2" style="color:var(--primary)">💡 ${autopsy.fix}</p>
               </div>
             </div>
@@ -2064,89 +2298,17 @@ function renderResults() {
         ${renderDailyResultBanner()}
         ${renderDailySubmitCard()}
 
-        <div class="rounded-2xl border border-border bg-white p-4 card-shadow">
-          <div class="flex items-center justify-between mb-3">
-            <p class="text-xs font-bold uppercase tracking-widest text-muted-fg">Team Chemistry Report</p>
-            ${chemScoreBadge}
+        <!-- Analysis lives in the Team Report popup — the results screen keeps
+             the record, the finals CTA and save/share. See renderTeamReportModal. -->
+        <button data-action="open-team-report" type="button"
+          class="w-full rounded-2xl border border-border bg-white p-4 card-shadow flex items-center gap-3 text-left cursor-pointer transition-all hover:border-primary">
+          <span class="text-2xl flex-shrink-0">📊</span>
+          <div class="min-w-0 flex-1">
+            <p class="text-sm font-black text-foreground">Team Report</p>
+            <p class="text-xs text-muted-fg mt-0.5">Chemistry, fans, season leaders, team stats &amp; the optimised lineup</p>
           </div>
-          <div class="flex flex-col gap-2">${chemReportHtml}</div>
-        </div>
-        <!-- ── Fans card ───────────────────────────────────────────────── -->
-        <div class="rounded-2xl border border-border bg-white p-4 card-shadow">
-          <div class="flex items-center justify-between mb-3">
-            <p class="text-xs font-bold uppercase tracking-widest text-muted-fg">Fans</p>
-            <span class="text-xs font-bold px-2 py-0.5 rounded-full border"
-              style="background:var(--surface-muted);color:${popBarCol};border-color:${popBarCol}30">${popTier}</span>
-          </div>
-          <!-- Popularity bar -->
-          <div class="mb-3">
-            <div class="flex justify-between text-xs mb-1.5">
-              <span class="text-muted-fg font-medium">Team Fans</span>
-              <span class="font-bold text-foreground">${Math.round(teamFans.sum)}M</span>
-            </div>
-            <div class="h-2 rounded-full bg-border overflow-hidden">
-              <div class="h-full rounded-full stat-bar-fill" style="width:${popBarPct}%;background:${popBarCol}"></div>
-            </div>
-          </div>
-          <!-- Elo impact row -->
-          <div class="flex gap-3 flex-wrap">
-            <div class="flex-1 rounded-xl border px-3 py-2.5 text-center"
-              style="background:${popDelta >= 0 ? 'var(--surface-green)' : 'var(--surface-red)'};border-color:${popDelta >= 0 ? (isDark() ? 'rgba(74,222,128,0.35)' : '#bbf7d0') : (isDark() ? 'rgba(248,113,113,0.35)' : '#fecaca')}">
-              <p class="text-[10px] font-bold uppercase tracking-wider mb-1" style="color:${popDelta >= 0 ? (isDark() ? '#4ade80' : '#15803d') : (isDark() ? '#f87171' : '#dc2626')}">${popDelta >= 0 ? '📈 Hype Boost' : '📉 Hype Penalty'}</p>
-              <p class="text-xl font-black" style="color:${popDelta >= 0 ? (isDark() ? '#4ade80' : '#15803d') : (isDark() ? '#f87171' : '#dc2626')}">${popDelta >= 0 ? '+' : ''}${(popDelta / (r.baseStrength || 1) * 100).toFixed(1)}% Elo</p>
-            </div>
-          </div>
-          <!-- Player popularity breakdown -->
-          <div class="mt-3 flex flex-col gap-1.5">
-            ${[...Object.entries(S.roster)].filter(([,p]) => p).map(([pos, p]) => {
-              const pop     = p.popularity ?? 50;
-              const pct     = Math.max(0, Math.round(((pop - 35) / 65) * 100));
-              const barCol  = pop >= 80 ? (isDark() ? '#60a5fa' : '#2563eb') : pop >= 60 ? (isDark() ? '#fbbf24' : '#d97706') : (isDark() ? '#cbd5e1' : '#94a3b8');
-              return `<div class="flex items-center gap-2">
-                <span class="text-[10px] font-black w-6 flex-shrink-0 text-muted-fg">${pos}</span>
-                <span class="text-xs font-semibold text-foreground w-28 flex-shrink-0 truncate">${p.name}</span>
-                <div class="flex-1 h-1.5 rounded-full bg-border overflow-hidden">
-                  <div class="h-full rounded-full" style="width:${pct}%;background:${barCol}"></div>
-                </div>
-                <span class="text-[10px] font-bold text-muted-fg w-9 text-right flex-shrink-0">${pop}M</span>
-              </div>`;
-            }).join('')}
-          </div>
-        </div>
-        ${seasonLeadersCard}
-        <div class="rounded-2xl border border-border bg-white p-4 card-shadow">
-          <p class="text-xs font-bold uppercase tracking-widest text-muted-fg mb-4">Team Statistics</p>
-          <div class="flex flex-col gap-3">
-            ${(() => { const t = r.simTotals || r.totals; return `
-            ${statBar('goals', 'Goals Per Game',      t.goals)}
-            ${statBar('marks', 'Marks Per Game',      t.marks)}
-            ${statBar('disposals', 'Disposals Per Game', t.disposals)}
-            ${statBar('tackles', 'Tackles Per Game',  t.tackles)}
-            ${statBar('clearances', 'Clearances Per Game', t.clearances)}`; })()}
-          </div>
-        </div>
-        <div class="rounded-2xl border border-border bg-white p-4 card-shadow">
-          <div class="flex items-center justify-between mb-3">
-            <p class="text-xs font-bold uppercase tracking-widest text-muted-fg">Optimized Lineup</p>
-            ${r.lineupAssignment?.length === 6 ? (() => {
-              const allPrimary = r.lineupAssignment.every(a => a.fit === 'primary');
-              const hasOOP     = r.lineupAssignment.some(a => a.fit === 'oop');
-              // Three states, not two: an out-of-position lineup is carrying a
-              // -12%-per-starter penalty and reads red, while a flex lineup
-              // (secondary position, 0%) stays amber.
-              const bg    = allPrimary ? (isDark() ? 'rgba(34,197,94,0.12)' : '#f0fdf4') : hasOOP ? (isDark() ? 'rgba(239,68,68,0.12)' : '#fef2f2') : (isDark() ? 'rgba(234,179,8,0.12)' : '#fefce8');
-              const color = allPrimary ? (isDark() ? '#4ade80' : '#15803d') : hasOOP ? (isDark() ? '#f87171' : '#dc2626') : (isDark() ? '#fbbf24' : '#a16207');
-              const label = allPrimary ? '🟢 Flawless' : hasOOP ? '🔴 Out of Position' : '🟡 Flex Lineup';
-              return `<span class="text-[11px] font-bold px-2.5 py-0.5 rounded-full border" style="background:${bg};color:${color};border-color:${color}30">${label}</span>`;
-            })() : ''}
-          </div>
-          <p class="text-[10px] font-bold uppercase tracking-wider text-primary mb-1">Starters — Engine Optimal Position Assignment</p>
-          <div class="flex flex-col mb-4">
-            ${r.lineupAssignment?.length
-              ? r.lineupAssignment.map(({ slot, player, fit }) => rosterRow(player, slot, true, fit)).join('')
-              : POSITIONS.map(pos => rosterRow(S.roster[pos], pos, true)).join('')}
-          </div>
-        </div>
+          <span class="text-muted-fg flex-shrink-0">&rsaquo;</span>
+        </button>
         <!-- ── Action buttons ────────────────────────────────────────── -->
         <div class="grid grid-cols-2 gap-3">
           ${S.mode === 'daily'
