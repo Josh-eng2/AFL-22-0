@@ -5,7 +5,33 @@ plan) and [`afl-build-out-plan.md`](afl-build-out-plan.md) (what's left to finis
 the AFL game). This document covers a third, separate thing: **the NBA original
 has kept shipping since we forked it, and none of that work exists here.**
 
-Nothing in this document is implemented. It is a plan only.
+> **Status: all ten units landed.** This document is kept as the record of
+> *why* each port was done the way it was — the AFL-specific departures in §0.2
+> and §2 are the parts worth re-reading before touching this code again.
+>
+> | Unit | Commit | Notes |
+> |---|---|---|
+> | 2.1 Popularity knob | `2bb4047` | Shipped at **1.0**, not upstream's 0.4 — see §0.2 |
+> | 2.2 OOP penalty | `6681868` | −12%, measured on real rosters first |
+> | 2.10 SEO / generator | `22b9707` | Also de-NBA'd the daily-page template |
+> | 2.3 `seasonGrade()` | `f7c3422` | Rescaled to 22 games |
+> | 2.4 Drop season-sim | `a3be30d` | Straight to results in ~140 ms |
+> | 2.5 Team Report popup | `3ce661b` | Season Impact pulled forward from 2.8 |
+> | 2.6 + 2.8 Results hero | `1b62737` | Teal/turf palette; Starting **Six** |
+> | 2.7 Finals band | `96e83ca` | Final Eight double-chance handled |
+> | 2.9 PWA | `39b181d` | AFL mark drawn to unblock it |
+>
+> **Two decisions taken during implementation**, both flagged here as open:
+> - **§1 accent** resolved to **teal over a night-footy turf gradient**
+>   (`--acc: #0d9488` / `#2dd4bf`, `--turf-*`), with CSS classes renamed
+>   `.courtside-*` → `.boundary-*`. Gold kept for grade and premiership.
+> - **§2.9's Phase E block** was cleared by drawing a placeholder Sherrin
+>   crest rather than deferring the PWA. `og-image.svg` is still NBA art and
+>   remains Phase E work.
+>
+> Still outstanding from the wider build-out: Phase C balance (which owns the
+> real `POPULARITY_SCALE` value), Phase D daily pages, Phase E branding
+> proper, Phase F infrastructure.
 
 ---
 
